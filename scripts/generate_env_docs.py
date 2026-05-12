@@ -422,7 +422,7 @@ def build_capability_page(env: str, lang: str, vendor: str, capability: str, mod
     )
 
 
-def build_vendor_readme(lang: str, vendor: str, capabilities: list[str]) -> str:
+def build_vendor_summary(lang: str, vendor: str, capabilities: list[str]) -> str:
     title = f"# {vendor_name(vendor)}"
     capability_lines = "\n".join(
         f"- [{capability_title(capability, lang)}]({capability_filename(capability)})" for capability in capabilities
@@ -432,11 +432,11 @@ def build_vendor_readme(lang: str, vendor: str, capabilities: list[str]) -> str:
 
 def category_vendor_target(category_key: str, vendor: str) -> str:
     if category_key == "chat":
-        return f"{vendor}/README.md"
+        return f"{vendor}/SUMMARY.md"
     return f"{vendor}.md"
 
 
-def build_category_readme(lang: str, category_key: str, vendors: list[str]) -> str:
+def build_category_summary(lang: str, category_key: str, vendors: list[str]) -> str:
     cfg = LANG_CONFIG[lang]
     title_map = {
         "chat": cfg["chat_root"],
@@ -475,30 +475,33 @@ def render_env(env: str) -> None:
         summary_path = base / "SUMMARY.md"
         if summary_path.exists():
             summary_path.unlink()
+        for stale_readme in base.rglob("README.md"):
+            if stale_readme != base / "README.md":
+                stale_readme.unlink()
 
-        write_text(base / "chat-completion" / "README.md", build_category_readme(lang, "chat", env_index["chat_vendors"]))
-        write_text(base / "completions" / "README.md", build_category_readme(lang, "completions", env_index["completion_vendors"]))
+        write_text(base / "chat-completion" / "SUMMARY.md", build_category_summary(lang, "chat", env_index["chat_vendors"]))
+        write_text(base / "completions" / "SUMMARY.md", build_category_summary(lang, "completions", env_index["completion_vendors"]))
         write_text(
-            base / "image-generations" / "README.md",
-            build_category_readme(lang, "image_generations", env_index["image_gen_vendors"]),
+            base / "image-generations" / "SUMMARY.md",
+            build_category_summary(lang, "image_generations", env_index["image_gen_vendors"]),
         )
         write_text(
-            base / "image-edits" / "README.md",
-            build_category_readme(lang, "image_edits", env_index["image_edit_vendors"]),
+            base / "image-edits" / "SUMMARY.md",
+            build_category_summary(lang, "image_edits", env_index["image_edit_vendors"]),
         )
         write_text(
-            base / "audio-transcriptions" / "README.md",
-            build_category_readme(lang, "audio_transcriptions", env_index["audio_vendors"]),
+            base / "audio-transcriptions" / "SUMMARY.md",
+            build_category_summary(lang, "audio_transcriptions", env_index["audio_vendors"]),
         )
 
         summary_lines = [cfg["summary_title"], "", f"* [{cfg['intro']}](README.md)"]
 
-        summary_lines.append(f"* [{cfg['chat_root']}](chat-completion/README.md)")
+        summary_lines.append(f"* [{cfg['chat_root']}](chat-completion/SUMMARY.md)")
         for vendor in env_index["chat_vendors"]:
-            summary_lines.append(f"  * [{vendor_name(vendor)}](chat-completion/{vendor}/README.md)")
+            summary_lines.append(f"  * [{vendor_name(vendor)}](chat-completion/{vendor}/SUMMARY.md)")
             write_text(
-                base / "chat-completion" / vendor / "README.md",
-                build_vendor_readme(lang, vendor, env_index["chat_capabilities"][vendor]),
+                base / "chat-completion" / vendor / "SUMMARY.md",
+                build_vendor_summary(lang, vendor, env_index["chat_capabilities"][vendor]),
             )
             for capability in env_index["chat_capabilities"][vendor]:
                 filename = capability_filename(capability)
@@ -510,7 +513,7 @@ def render_env(env: str) -> None:
                     build_capability_page(env, lang, vendor, capability, models_for_capability(env_index, vendor, capability)),
                 )
 
-        summary_lines.append(f"* [{cfg['completions_root']}](completions/README.md)")
+        summary_lines.append(f"* [{cfg['completions_root']}](completions/SUMMARY.md)")
         for vendor in env_index["completion_vendors"]:
             summary_lines.append(f"  * [{vendor_name(vendor)}](completions/{vendor}.md)")
             write_text(
@@ -518,7 +521,7 @@ def render_env(env: str) -> None:
                 build_capability_page(env, lang, vendor, "completions", models_for_capability(env_index, vendor, "completions")),
             )
 
-        summary_lines.append(f"* [{cfg['image_gen_root']}](image-generations/README.md)")
+        summary_lines.append(f"* [{cfg['image_gen_root']}](image-generations/SUMMARY.md)")
         for vendor in env_index["image_gen_vendors"]:
             summary_lines.append(f"  * [{vendor_name(vendor)}](image-generations/{vendor}.md)")
             write_text(
@@ -533,7 +536,7 @@ def render_env(env: str) -> None:
             )
 
         if env_index["image_edit_vendors"]:
-            summary_lines.append(f"* [{cfg['image_edit_root']}](image-edits/README.md)")
+            summary_lines.append(f"* [{cfg['image_edit_root']}](image-edits/SUMMARY.md)")
             for vendor in env_index["image_edit_vendors"]:
                 summary_lines.append(f"  * [{vendor_name(vendor)}](image-edits/{vendor}.md)")
                 write_text(
@@ -548,7 +551,7 @@ def render_env(env: str) -> None:
                 )
 
         if env_index["audio_vendors"]:
-            summary_lines.append(f"* [{cfg['audio_root']}](audio-transcriptions/README.md)")
+            summary_lines.append(f"* [{cfg['audio_root']}](audio-transcriptions/SUMMARY.md)")
             for vendor in env_index["audio_vendors"]:
                 summary_lines.append(f"  * [{vendor_name(vendor)}](audio-transcriptions/{vendor}.md)")
                 write_text(
