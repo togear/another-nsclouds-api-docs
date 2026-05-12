@@ -1,0 +1,20 @@
+# Xiaomi - Chat Completions
+
+### 1. 概述
+
+Xiaomi 的对话生成能力。
+
+{% hint style="success" %}
+本 API 与 OpenAI Chat Completions 接口格式兼容。
+{% endhint %}
+
+**模型列表：**
+
+* `mimo-v2.5`
+
+
+### 2. 接口详情
+
+{% openapi-operation spec="xiaomi-zh-cn" path="/v1/chat/completions" method="post" %}
+[OpenAPI Xiaomi](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/cn/zh/xiaomi.bundled.yaml)
+{% endopenapi-operation %}

@@ -289,6 +289,146 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorResponse'
 
+  /v1/messages:
+    post:
+      tags:
+        - chat_completions_openai
+      summary: 创建 Messages 消息
+      description: 使用 Messages 兼容格式创建消息响应。
+      operationId: createMessage_openai
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - messages
+              properties:
+                model:
+                  type: string
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                      content:
+                        oneOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: object
+                max_tokens:
+                  type: integer
+                stream:
+                  type: boolean
+                  default: false
+            examples:
+              default:
+                summary: 基础
+                value:
+                  model: gpt-5.4
+                  messages:
+                    - role: user
+                      content: Hello
+                  max_tokens: 128
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    id: msg_123
+                    type: message
+                    role: assistant
+                    model: gpt-5.4
+                    content:
+                      - type: text
+                        text: Hello! How can I help you today?
+                    stop_reason: end_turn
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 9
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/responses:
+    post:
+      tags:
+        - chat_completions_openai
+      summary: 创建 Responses 响应
+      description: 使用 OpenAI Responses 兼容格式创建模型响应。
+      operationId: createResponse_openai
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - input
+              properties:
+                model:
+                  type: string
+                input:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: object
+                stream:
+                  type: boolean
+                  default: false
+            examples:
+              default:
+                summary: 基础
+                value:
+                  model: gpt-5.4
+                  input: Hello
+                  stream: false
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    id: resp_123
+                    object: response
+                    model: gpt-5.4
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
   # ========== 向量嵌入 ==========
   /v1/embeddings:
     post:

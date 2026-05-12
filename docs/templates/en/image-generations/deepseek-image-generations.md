@@ -19,12 +19,6 @@ This API is compatible with OpenAI interface format.
 
 * `deepseek-image-gen`
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ⏳ Pending Verification | Supported |
-
 ### 2. API Details
 
 {% openapi-operation spec="deepseek-en-{{ENV}}" path="/v1/images/generations" method="post" %}

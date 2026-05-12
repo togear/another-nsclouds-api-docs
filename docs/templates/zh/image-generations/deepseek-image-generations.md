@@ -12,12 +12,6 @@
 
 * `deepseek-image-gen`
 
-### 功能验证说明
-
-| 功能 | 状态 | 说明 |
-|------|------|------|
-| 基础请求 | ⏳ 待验证 | 支持 |
-
 ### 2. 接口详情
 
 {% openapi-operation spec="deepseek-zh-{{ENV}}" path="/v1/images/generations" method="post" %}

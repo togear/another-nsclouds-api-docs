@@ -20,13 +20,6 @@ This API is compatible with OpenAI interface format.
 * `gpt-5` (chat mode, supports completion)
 * `gpt-5.2` (chat mode, supports completion)
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ✅ Verified | /v1/completions verified |
-| Streaming Response | ❌ Not Verified | - |
-
 ### 2. API Details
 
 {% openapi-operation spec="openai-en-{{ENV}}" path="/v1/completions" method="post" %}

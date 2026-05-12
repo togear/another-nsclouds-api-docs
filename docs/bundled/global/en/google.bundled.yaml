@@ -31,27 +31,22 @@ tags:
     x-parent: chat_completions
     x-page-title: Google
     x-page-icon: brain
-    description: Google's chat completion API
-  - name: embeddings_google
-    x-parent: embeddings
+    description: Google's chat completions API
+  - name: completions_google
+    x-parent: chat_completions
     x-page-title: Google
     x-page-icon: brain
-    description: Google's vector embedding API
-  - name: image_generations_google
-    x-parent: image_generations
+    description: Google's text completions API
+  - name: messages_google
+    x-parent: chat_completions
     x-page-title: Google
     x-page-icon: brain
-    description: Google's image generation API
-  - name: image_edits_google
-    x-parent: image_edits
+    description: Google's Messages protocol API
+  - name: gemini_native_google
+    x-parent: chat_completions
     x-page-title: Google
     x-page-icon: brain
-    description: Google's image editing API
-  - name: audio_transcriptions_google
-    x-parent: audio_transcriptions
-    x-page-title: Google
-    x-page-icon: brain
-    description: Google's audio transcription API
+    description: Google's Gemini native API
 paths:
   /v1/chat/completions:
     post:
@@ -73,7 +68,7 @@ paths:
                 summary: Basic
                 description: A simple conversation example with system prompt and user message.
                 value:
-                  model: gemini-2.5-flash
+                  model: gemini-3-flash-preview
                   messages:
                     - role: system
                       content: You are a helpful assistant.
@@ -87,7 +82,7 @@ paths:
                 summary: Streaming
                 description: 'Enable streaming response by setting stream: true.'
                 value:
-                  model: gemini-2.5-flash
+                  model: gemini-3-flash-preview
                   messages:
                     - role: system
                       content: You are a helpful assistant.
@@ -100,7 +95,7 @@ paths:
                 summary: Image Input (Multimodal)
                 description: Use vision-enabled model to analyze images.
                 value:
-                  model: gemini-2.5-flash
+                  model: gemini-3-flash-preview
                   messages:
                     - role: user
                       content:
@@ -114,7 +109,7 @@ paths:
                 summary: Function Calling
                 description: Define tools (functions) and let the model decide whether to call them.
                 value:
-                  model: gemini-2.5-flash
+                  model: gemini-3-flash-preview
                   messages:
                     - role: user
                       content: What's the weather in Boston?
@@ -153,7 +148,7 @@ paths:
                     id: chatcmpl-9AP1q66BDnIuuBx14ROTmOQFTQjZm
                     object: chat.completion
                     created: 1773220495
-                    model: gemini-2.5-flash
+                    model: gemini-3-flash-preview
                     choices:
                       - index: 0
                         message:
@@ -173,7 +168,7 @@ paths:
                     id: chatcmpl-789
                     object: chat.completion
                     created: 1677652300
-                    model: gemini-2.5-flash
+                    model: gemini-3-flash-preview
                     choices:
                       - index: 0
                         message:
@@ -191,7 +186,7 @@ paths:
                     id: chatcmpl-abc
                     object: chat.completion
                     created: 1677652310
-                    model: gemini-2.5-flash
+                    model: gemini-3-flash-preview
                     choices:
                       - index: 0
                         message:
@@ -217,10 +212,10 @@ paths:
                   summary: Streaming Response Example
                   description: Shows events sent continuously during streaming chat process.
                   value: |
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-2.5-flash","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-2.5-flash","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-2.5-flash","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-2.5-flash","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-3-flash-preview","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-3-flash-preview","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-3-flash-preview","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-3-flash-preview","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
                     data: [DONE]
         '400':
           $ref: '#/components/responses/ErrorResponse'
@@ -231,7 +226,7 @@ paths:
   /v1/completions:
     post:
       tags:
-        - chat_completions_google
+        - completions_google
       summary: Create text completion
       description: Generate one or more completions based on the provided prompt. Compatible with OpenAI's Completions API.
       operationId: createCompletion_google
@@ -248,7 +243,7 @@ paths:
                 summary: Basic
                 description: A simple text completion example.
                 value:
-                  model: gemini-2.5-flash
+                  model: gemini-3-flash-preview
                   prompt: Once upon a time
                   max_tokens: 50
                   temperature: 0.7
@@ -258,7 +253,7 @@ paths:
                 summary: Streaming
                 description: 'Enable streaming response by setting stream: true.'
                 value:
-                  model: gemini-2.5-flash
+                  model: gemini-3-flash-preview
                   prompt: The future of AI is
                   max_tokens: 30
                   temperature: 0.8
@@ -278,7 +273,7 @@ paths:
                     id: chatcmpl-a51a50d7-0f0a-4db9-a268-ba0e4d49342b
                     object: text_completion
                     created: 1773220530
-                    model: mgg-4
+                    model: gemini-3-flash-preview
                     choices:
                       - finish_reason: length
                         index: 0
@@ -312,13 +307,13 @@ paths:
                   summary: Streaming Response Example
                   description: Shows events sent continuously during streaming text completion process.
                   value: |
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"mgg-4","choices":[{"text":"The","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"mgg-4","choices":[{"text":" future","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"mgg-4","choices":[{"text":" of","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"mgg-4","choices":[{"text":" AI","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"mgg-4","choices":[{"text":" is","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"mgg-4","choices":[{"text":" bright","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"mgg-4","choices":[{"text":".","index":0,"finish_reason":"length"}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"gemini-3-flash-preview","choices":[{"text":"The","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"gemini-3-flash-preview","choices":[{"text":" future","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"gemini-3-flash-preview","choices":[{"text":" of","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"gemini-3-flash-preview","choices":[{"text":" AI","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"gemini-3-flash-preview","choices":[{"text":" is","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"gemini-3-flash-preview","choices":[{"text":" bright","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"gemini-3-flash-preview","choices":[{"text":".","index":0,"finish_reason":"length"}]}
                     data: [DONE]
         '400':
           $ref: '#/components/responses/ErrorResponse'
@@ -326,13 +321,13 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
-  /v1/embeddings:
+  /v1/messages:
     post:
       tags:
-        - embeddings_google
-      summary: Create embedding vectors
-      description: Get vector representation of given input. Compatible with OpenAI's Embeddings API.
-      operationId: createEmbedding_google
+        - messages_google
+      summary: Create Message
+      description: Create a message using the Messages-compatible payload.
+      operationId: createMessage_google
       security:
         - APIKeyHeader: []
       requestBody:
@@ -340,388 +335,240 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateEmbeddingRequest'
+              type: object
+              required:
+                - model
+                - messages
+              properties:
+                model:
+                  type: string
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                      content:
+                        oneOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: object
+                max_tokens:
+                  type: integer
+                stream:
+                  type: boolean
+                  default: false
             examples:
               default:
                 summary: Basic
-                description: Generate embedding vector for a single string input.
                 value:
-                  model: text-embedding-ada-002
-                  input: The quick brown fox jumps over the lazy dog
-              multiple-inputs:
-                summary: Multiple Inputs
-                description: Generate embedding vectors for multiple string inputs.
-                value:
-                  model: text-embedding-ada-002
-                  input:
-                    - Hello world
-                    - OpenAI is amazing
-              base64-format:
-                summary: Base64 Format
-                description: Return embedding vectors in base64 encoding.
-                value:
-                  model: text-embedding-3-small
-                  input: Example text
-                  encoding_format: base64
-              with-dimensions:
-                summary: Specify Dimensions
-                description: Specify output dimensions.
-                value:
-                  model: text-embedding-3-small
-                  input: Example text
-                  dimensions: 256
+                  model: gemini-3-flash-preview
+                  messages:
+                    - role: user
+                      content: Hello
+                  max_tokens: 128
       responses:
         '200':
-          description: Successful response
+          description: Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmbeddingResponse'
+                type: object
+                additionalProperties: true
               examples:
-                default-response:
+                default:
                   summary: Basic Response
-                  description: Basic response corresponding to single input.
                   value:
-                    object: list
-                    data:
-                      - object: embedding
-                        embedding:
-                          - -0.006929283495992422
-                          - -0.005336422007530928
-                          - -0.024047505110502243
-                        index: 0
-                    model: text-embedding-ada-002
+                    id: msg_123
+                    type: message
+                    role: assistant
+                    model: gemini-3-flash-preview
+                    content:
+                      - type: text
+                        text: Hello! How can I help you today?
+                    stop_reason: end_turn
                     usage:
-                      prompt_tokens: 8
-                      total_tokens: 8
-                multiple-inputs-response:
-                  summary: Multiple Inputs Response
-                  description: 'Response corresponding to multiple inputs, containing multiple embedding vectors.'
-                  value:
-                    object: list
-                    data:
-                      - object: embedding
-                        embedding:
-                          - 0.1
-                          - 0.2
-                          - 0.3
-                        index: 0
-                      - object: embedding
-                        embedding:
-                          - 0.4
-                          - 0.5
-                          - 0.6
-                        index: 1
-                    model: text-embedding-ada-002
-                    usage:
-                      prompt_tokens: 6
-                      total_tokens: 6
-                base64-response:
-                  summary: Base64 Response
-                  description: Embedding vectors returned in base64 encoding.
-                  value:
-                    object: list
-                    data:
-                      - object: embedding
-                        embedding: YmFzZTY0X2VuY29kZWRfZGF0YQ==
-                        index: 0
-                    model: text-embedding-3-small
-                    usage:
-                      prompt_tokens: 2
-                      total_tokens: 2
+                      input_tokens: 12
+                      output_tokens: 9
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
-  /v1/images/generations:
+  '/v1/models/{model}:generateContent':
     post:
       tags:
-        - image_generations_google
-      summary: Create image
-      description: Generate image based on text prompt. Compatible with OpenAI's Images API.
-      operationId: createImageGeneration_google
+        - gemini_native_google
+      summary: Gemini Generate Content (v1)
+      description: Gemini native protocol endpoint for generateContent.
+      operationId: generateContentV1_google
       security:
         - APIKeyHeader: []
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateImageGenerationRequest'
+              type: object
+              additionalProperties: true
             examples:
               default:
                 summary: Basic
-                description: Generate a 1024x1024 image.
                 value:
-                  model: imagen-3.0-generate-001
-                  prompt: A cute cat sitting on a windowsill
-                  'n': 1
-                  size: 1024x1024
-              hd-quality:
-                summary: HD Quality
-                description: Generate high-definition quality image.
-                value:
-                  model: imagen-3.0-generate-001
-                  prompt: A futuristic cityscape at sunset
-                  'n': 1
-                  quality: hd
-                  size: 1792x1024
-              b64-json:
-                summary: Base64 Format
-                description: Return base64-encoded image data.
-                value:
-                  model: imagen-3.0-generate-001
-                  prompt: A beautiful landscape
-                  'n': 2
-                  size: 512x512
-                  response_format: b64_json
+                  contents:
+                    - role: user
+                      parts:
+                        - text: Hello
       responses:
         '200':
-          description: Successful response
+          description: Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
+                type: object
+                additionalProperties: true
               examples:
-                default-response:
+                default:
                   summary: Basic Response
-                  description: Complete response including image URL and optional fields.
                   value:
-                    created: 1680000000
-                    background: opaque
-                    output_format: png
-                    quality: high
-                    size: 1024x1024
-                    data:
-                      - url: 'https://example.com/images/cat.png'
-                        revised_prompt: 'A cute cat sitting on a windowsill, looking out at a garden'
-                    usage:
-                      total_tokens: 100
-                      input_tokens: 50
-                      output_tokens: 50
-                      input_tokens_details:
-                        text_tokens: 10
-                        image_tokens: 40
-                b64-response:
-                  summary: Base64 Response
-                  description: Response containing base64-encoded image data and optional fields.
-                  value:
-                    created: 1680000001
-                    background: opaque
-                    output_format: png
-                    quality: high
-                    size: 1024x1024
-                    data:
-                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
-                        revised_prompt: A beautiful landscape with mountains and a lake
-                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
-                    usage:
-                      total_tokens: 200
-                      input_tokens: 100
-                      output_tokens: 100
-                      input_tokens_details:
-                        text_tokens: 20
-                        image_tokens: 80
+                    candidates:
+                      - content:
+                          role: model
+                          parts:
+                            - text: Hello! How can I help you today?
+                        finishReason: STOP
+                    modelVersion: gemini-3-flash-preview
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
-  /v1/images/edits:
+  '/v1beta/models/{model}:generateContent':
     post:
       tags:
-        - image_edits_google
-      summary: Edit image
-      description: Create edited image based on original image and text prompt. Compatible with OpenAI's Images API.
-      operationId: createImageEdit_google
+        - gemini_native_google
+      summary: Gemini Generate Content (v1beta)
+      description: Gemini native protocol endpoint for generateContent (v1beta).
+      operationId: generateContentV1beta_google
       security:
         - APIKeyHeader: []
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              $ref: '#/components/schemas/CreateImageEditRequest'
-            encoding:
-              images:
-                style: form
-                explode: true
-            examples:
-              with-mask:
-                summary: With Mask
-                description: 'Edit using image, mask, and prompt.'
-                value:
-                  model: dall-e-2
-                  images:
-                    - '@person.png'
-                  mask: '@mask.png'
-                  prompt: Add a hat to the person
-                  'n': 1
-                  size: 1024x1024
-              no-mask:
-                summary: No Mask
-                description: Edit using only image and prompt.
-                value:
-                  model: dall-e-2
-                  images:
-                    - '@body-lotion.png'
-                  prompt: Change the background to a beach
-                  'n': 1
-                  size: 1024x1024
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ImageResponse'
-              examples:
-                default-response:
-                  summary: Edit Response
-                  description: Return edited image and related metadata.
-                  value:
-                    created: 1680000002
-                    background: opaque
-                    output_format: png
-                    quality: high
-                    size: 1024x1024
-                    data:
-                      - url: 'https://example.com/images/edited.png'
-                        revised_prompt: 'A person with a hat, standing in a sunny park'
-                    usage:
-                      total_tokens: 120
-                      input_tokens: 60
-                      output_tokens: 60
-                      input_tokens_details:
-                        text_tokens: 12
-                        image_tokens: 48
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-  /v1/audio/transcriptions:
-    post:
-      tags:
-        - audio_transcriptions_google
-      summary: Audio transcription
-      description: Transcribe audio file to text. Compatible with OpenAI's Audio API.
-      operationId: createTranscription_google
-      security:
-        - APIKeyHeader: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateTranscriptionRequest'
+              type: object
+              additionalProperties: true
             examples:
               default:
                 summary: Basic
-                description: Transcribe audio file to JSON format.
                 value:
-                  model: whisper-1
-                  file: (binary)
-                  response_format: json
-              with-timestamps:
-                summary: With Timestamps
-                description: Get detailed transcription with word-level timestamps.
-                value:
-                  model: whisper-1
-                  file: (binary)
-                  response_format: verbose_json
-                  timestamp_granularities:
-                    - word
-              srt-format:
-                summary: SRT Subtitles
-                description: Return transcription in SRT subtitle format.
-                value:
-                  model: whisper-1
-                  file: (binary)
-                  response_format: srt
+                  contents:
+                    - role: user
+                      parts:
+                        - text: Hello
       responses:
         '200':
-          description: Successful response
+          description: Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TranscriptionResponse'
+                type: object
+                additionalProperties: true
               examples:
-                json-response:
-                  summary: JSON Response
-                  description: Default JSON format transcription.
+                default:
+                  summary: Basic Response
                   value:
-                    text: 'Hello, this is a test transcription.'
-                verbose-json-response:
-                  summary: Verbose JSON Response
-                  description: Detailed transcription with word-level timestamps.
+                    candidates:
+                      - content:
+                          role: model
+                          parts:
+                            - text: Hello! How can I help you today?
+                        finishReason: STOP
+                    modelVersion: gemini-3-flash-preview
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  '/v1beta/models/{model}:streamGenerateContent':
+    post:
+      tags:
+        - gemini_native_google
+      summary: Gemini Stream Generate Content (v1beta)
+      description: Gemini native protocol endpoint for streamGenerateContent (v1beta).
+      operationId: streamGenerateContentV1beta_google
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+            examples:
+              default:
+                summary: Streaming
+                value:
+                  contents:
+                    - role: user
+                      parts:
+                        - text: Tell me a short greeting
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: Basic Response
                   value:
-                    task: transcribe
-                    language: english
-                    duration: 2.95
-                    text: 'Hello, this is a test transcription.'
-                    words:
-                      - word: Hello
-                        start: 0.1
-                        end: 0.5
-                      - word: this
-                        start: 0.6
-                        end: 0.8
-                      - word: is
-                        start: 0.9
-                        end: 1
-                      - word: a
-                        start: 1.1
-                        end: 1.2
-                      - word: test
-                        start: 1.3
-                        end: 1.8
-                      - word: transcription
-                        start: 1.9
-                        end: 2.8
-            application/x-srt:
+                    candidates:
+                      - content:
+                          role: model
+                          parts:
+                            - text: Hello there!
+                        finishReason: STOP
+            text/event-stream:
               schema:
                 type: string
-                description: Transcription in SRT subtitle format.
+                description: Server-Sent Events stream.
               examples:
-                srt-response:
-                  summary: SRT Response
+                default:
+                  summary: Streaming Response
                   value: |
-                    1
-                    00:00:00,100 --> 00:00:00,500
-                    Hello
-
-                    2
-                    00:00:00,600 --> 00:00:00,800
-                    this
-
-                    3
-                    00:00:00,900 --> 00:00:01,000
-                    is
-
-                    4
-                    00:00:01,100 --> 00:00:01,200
-                    a
-
-                    5
-                    00:00:01,300 --> 00:00:01,800
-                    test
-
-                    6
-                    00:00:01,900 --> 00:00:02,800
-                    transcription
-            text/plain:
-              schema:
-                type: string
-                description: Transcription in plain text format.
-              examples:
-                text-response:
-                  summary: Plain Text Response
-                  value: 'Hello, this is a test transcription.'
+                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":"Hello"}]}}]}
+                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":" there!"}]},"finishReason":"STOP"}]}
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':

@@ -19,12 +19,6 @@ This API is compatible with OpenAI interface format.
 
 * `deepseek-audio-transcription`
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ⏳ Pending Verification | Supported |
-
 ### 2. API Details
 
 {% openapi-operation spec="deepseek-en-{{ENV}}" path="/v1/audio/transcriptions" method="post" %}

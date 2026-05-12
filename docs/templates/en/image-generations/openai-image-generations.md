@@ -19,13 +19,6 @@ This API is compatible with OpenAI interface format.
 
 * `gpt-image-1` (image_generation mode)
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ✅ Verified | /v1/images/generations verified |
-| Image Edit | ✅ Verified | /v1/images/edits verified |
-
 ### 2. API Details
 
 {% openapi-operation spec="openai-en-{{ENV}}" path="/v1/images/generations" method="post" %}

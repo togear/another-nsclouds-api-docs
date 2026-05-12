@@ -20,12 +20,6 @@ This API is compatible with OpenAI interface format.
 * `volcengine/doubao-seedream-4-5-251128`
 * `volcengine/doubao-seedream-4-0-250828`
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ⏳ Pending Verification | Supported |
-
 ### 2. API Details
 
 {% openapi-operation spec="volcengine-en-{{ENV}}" path="/v1/images/generations" method="post" %}

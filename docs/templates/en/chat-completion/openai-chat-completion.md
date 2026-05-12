@@ -23,15 +23,6 @@ This API is compatible with OpenAI interface format.
 * `gpt-5.4` (chat mode)
 * `gpt-5.3-codex` (chat mode)
 
-### Feature Verification
-
-| Feature | Status | Description |
-|---------|--------|-------------|
-| Basic Request | ✅ Verified | All models available and responding correctly |
-| Streaming | ✅ Verified | All models support streaming responses |
-| Image Input | ✅ Verified | All models support multimodal image input |
-| Function Calling | ✅ Verified | All models correctly handle function call requests |
-
 ### 2. API Details
 
 {% openapi-operation spec="openai-en-{{ENV}}" path="/v1/chat/completions" method="post" %}

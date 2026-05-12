@@ -13,15 +13,6 @@
 * `deepseek-v3.1`
 * `deepseek-v3.2`
 
-### 功能验证说明
-
-| 功能 | 状态 | 说明 |
-|------|------|------|
-| 基础请求 | ✅ 已验证 | 所有模型支持 |
-| 流式响应 | ✅ 已验证 | 所有模型支持 |
-| 图像输入 | ✅ 已验证 | deepseek-v3.1 支持 |
-| 函数调用 | ✅ 已验证 | deepseek-v3.1 支持 |
-
 ### 2.接口详情
 
 {% openapi-operation spec="deepseek-zh-{{ENV}}" path="/v1/chat/completions" method="post" %}

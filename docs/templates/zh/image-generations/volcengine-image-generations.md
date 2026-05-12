@@ -13,12 +13,6 @@
 * `volcengine/doubao-seedream-4-5-251128`
 * `volcengine/doubao-seedream-4-0-250828`
 
-### 功能验证说明
-
-| 功能 | 状态 | 说明 |
-|------|------|------|
-| 基础请求 | ⏳ 待验证 | 支持 |
-
 ### 2. 接口详情
 
 {% openapi-operation spec="volcengine-zh-{{ENV}}" path="/v1/images/generations" method="post" %}

@@ -1,0 +1,21 @@
+# DashScope - Image Edits
+
+### 1. Overview
+
+DashScope's image edits capability.
+
+{% hint style="success" %}
+This API is compatible with the OpenAI Images interface.
+{% endhint %}
+
+**Supported models：**
+
+* `qwen-image-2.0`
+* `qwen-image-2.0-pro`
+
+
+### 2. API Details
+
+{% openapi-operation spec="dashscope-en-global" path="/v1/images/edits" method="post" %}
+[OpenAPI DashScope](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/global/en/dashscope.bundled.yaml)
+{% endopenapi-operation %}

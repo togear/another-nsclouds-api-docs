@@ -316,6 +316,264 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorResponse'
 
+  /v1/messages:
+    post:
+      tags:
+        - chat_completions_google
+      summary: 创建 Messages 消息
+      description: 使用 Messages 兼容格式创建消息响应。
+      operationId: createMessage_google
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - messages
+              properties:
+                model:
+                  type: string
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                      content:
+                        oneOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: object
+                max_tokens:
+                  type: integer
+                stream:
+                  type: boolean
+                  default: false
+            examples:
+              default:
+                summary: 基础
+                value:
+                  model: gemini-2.5-flash
+                  messages:
+                    - role: user
+                      content: Hello
+                  max_tokens: 128
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    id: msg_123
+                    type: message
+                    role: assistant
+                    model: gemini-2.5-flash
+                    content:
+                      - type: text
+                        text: Hello! How can I help you today?
+                    stop_reason: end_turn
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 9
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/models/{model}:generateContent:
+    post:
+      tags:
+        - chat_completions_google
+      summary: Gemini 生成内容 (v1)
+      description: Gemini 原生协议 generateContent 接口。
+      operationId: generateContentV1_google
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+            examples:
+              default:
+                summary: 基础
+                value:
+                  contents:
+                    - role: user
+                      parts:
+                        - text: Hello
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    candidates:
+                      - content:
+                          role: model
+                          parts:
+                            - text: Hello! How can I help you today?
+                        finishReason: STOP
+                    modelVersion: gemini-2.5-flash
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1beta/models/{model}:generateContent:
+    post:
+      tags:
+        - chat_completions_google
+      summary: Gemini 生成内容 (v1beta)
+      description: Gemini 原生协议 generateContent 接口 (v1beta)。
+      operationId: generateContentV1beta_google
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+            examples:
+              default:
+                summary: 基础
+                value:
+                  contents:
+                    - role: user
+                      parts:
+                        - text: Hello
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    candidates:
+                      - content:
+                          role: model
+                          parts:
+                            - text: Hello! How can I help you today?
+                        finishReason: STOP
+                    modelVersion: gemini-2.5-flash
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1beta/models/{model}:streamGenerateContent:
+    post:
+      tags:
+        - chat_completions_google
+      summary: Gemini 流式生成内容 (v1beta)
+      description: Gemini 原生协议 streamGenerateContent 接口 (v1beta)。
+      operationId: streamGenerateContentV1beta_google
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+            examples:
+              default:
+                summary: 流式
+                value:
+                  contents:
+                    - role: user
+                      parts:
+                        - text: Tell me a short greeting
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    candidates:
+                      - content:
+                          role: model
+                          parts:
+                            - text: Hello there!
+                        finishReason: STOP
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-Sent Events 流。
+              examples:
+                default:
+                  summary: 流式响应
+                  value: |
+                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":"Hello"}]}}]}
+                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":" there!"}]},"finishReason":"STOP"}]}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
   # ========== 向量嵌入 ==========
   /v1/embeddings:
     post:

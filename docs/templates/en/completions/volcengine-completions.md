@@ -21,13 +21,6 @@ This API is compatible with OpenAI interface format.
 * `volcengine/doubao-seed-1-6-251015`
 * `volcengine/doubao-seed-1-6-lite-251015`
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ✅ Verified | Supported |
-| Streaming Response | ✅ Verified | Supported |
-
 ### 2. API Details
 
 {% openapi-operation spec="volcengine-en-{{ENV}}" path="/v1/completions" method="post" %}

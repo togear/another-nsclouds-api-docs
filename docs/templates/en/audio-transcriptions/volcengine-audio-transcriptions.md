@@ -19,12 +19,6 @@ This API is compatible with OpenAI interface format.
 
 * `volcengine/doubao-asr-flash-1-6-251015`
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ⏳ Pending Verification | Supported |
-
 ### 2. API Details
 
 {% openapi-operation spec="volcengine-en-{{ENV}}" path="/v1/audio/transcriptions" method="post" %}

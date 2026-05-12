@@ -6,9 +6,6 @@
 #   bash build-docs.sh cn      # 只生成国内版本
 #   bash build-docs.sh global  # 只生成国际版本
 
-# 厂家列表
-VENDORS=("deepseek" "example" "openai" "volcengine" "google" "anthropic" "moonshotai" "minimax")
-
 # 生成 bundled 文件的函数
 generate_bundled() {
   local env=$1
@@ -18,9 +15,7 @@ generate_bundled() {
   # 创建临时目录
   mkdir -p $temp_dir/zh/openapi $temp_dir/en/openapi
   
-  # 复制模板文件到临时目录
-  cp -r docs/templates/zh/openapi/* $temp_dir/zh/openapi/
-  cp -r docs/templates/en/openapi/* $temp_dir/en/openapi/
+  ruby scripts/render_env_openapi.rb "$env" "$temp_dir"
   
   # 根据环境替换占位符
   if [ "$env" == "cn" ]; then
@@ -36,22 +31,25 @@ generate_bundled() {
   fi
   
   # 创建输出目录
+  rm -rf docs/bundled/${output_prefix}zh
+  rm -rf docs/bundled/${output_prefix}en
   mkdir -p docs/bundled/${output_prefix}zh
   mkdir -p docs/bundled/${output_prefix}en
   
   echo "Generating bundled YAML files for ${output_prefix} environment..."
   
-  # 循环处理每个厂家
-  for vendor in "${VENDORS[@]}"; do
-    # Chinese version
-    if [ -f "$temp_dir/zh/openapi/${vendor}.yaml" ]; then
-      swagger-cli bundle $temp_dir/zh/openapi/${vendor}.yaml -o docs/bundled/${output_prefix}zh/${vendor}.bundled.yaml -t yaml
+  for spec in "$temp_dir"/zh/openapi/*.yaml; do
+    vendor=$(basename "$spec" .yaml)
+    if [ "$vendor" != "_common" ]; then
+      swagger-cli bundle "$spec" -o docs/bundled/${output_prefix}zh/${vendor}.bundled.yaml -t yaml
       swagger-cli validate docs/bundled/${output_prefix}zh/${vendor}.bundled.yaml
     fi
-    
-    # English version
-    if [ -f "$temp_dir/en/openapi/${vendor}.yaml" ]; then
-      swagger-cli bundle $temp_dir/en/openapi/${vendor}.yaml -o docs/bundled/${output_prefix}en/${vendor}.bundled.yaml -t yaml
+  done
+
+  for spec in "$temp_dir"/en/openapi/*.yaml; do
+    vendor=$(basename "$spec" .yaml)
+    if [ "$vendor" != "_common" ]; then
+      swagger-cli bundle "$spec" -o docs/bundled/${output_prefix}en/${vendor}.bundled.yaml -t yaml
       swagger-cli validate docs/bundled/${output_prefix}en/${vendor}.bundled.yaml
     fi
   done
@@ -65,6 +63,8 @@ generate_docs() {
   local env=$1
   
   # 创建文档目录
+  rm -rf docs/${env}/zh
+  rm -rf docs/${env}/en
   mkdir -p docs/${env}/zh
   mkdir -p docs/${env}/en
   
@@ -80,6 +80,9 @@ generate_docs() {
   
   # 替换占位符
   find docs/${env} -name "*.md" -exec sed -i '' "s/{{ENV}}/${env}/g" {} \;
+
+  python3 scripts/generate_env_docs.py render-env "${env}"
+  ruby scripts/render_env_openapi.rb "${env}" "docs/${env}"
 }
 
 # 生成国内版本

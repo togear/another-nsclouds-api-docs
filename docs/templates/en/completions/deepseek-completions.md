@@ -19,13 +19,6 @@ This API is compatible with OpenAI interface format.
 
 * `deepseek-v3-1-terminus`
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ✅ Verified | Supported |
-| Streaming Response | ✅ Verified | Supported |
-
 ### 2. API Details
 
 {% openapi-operation spec="deepseek-en-{{ENV}}" path="/v1/completions" method="post" %}

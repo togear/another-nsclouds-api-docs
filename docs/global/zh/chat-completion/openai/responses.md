@@ -1,0 +1,20 @@
+# OpenAI - Responses
+
+### 1. 概述
+
+OpenAI 的 Responses 协议能力。
+
+{% hint style="success" %}
+本 API 与 Responses 协议接口格式兼容。
+{% endhint %}
+
+**模型列表：**
+
+* `gpt-5.4-mini`
+
+
+### 2. 接口详情
+
+{% openapi-operation spec="openai-zh-global" path="/v1/responses" method="post" %}
+[OpenAPI OpenAI](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/global/zh/openai.bundled.yaml)
+{% endopenapi-operation %}

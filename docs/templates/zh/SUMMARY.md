@@ -15,4 +15,9 @@
   * [MiniMax](completions/minimax-completions.md)
 * [图像生成(image generations)](image-generations/README.md)
   * [Google](image-generations/google-image-generations.md)
-
+* [Responses](responses/SUMMARY.md)
+  * [OpenAI](responses/openai-responses.md)
+* [Messages](messages/SUMMARY.md)
+  * [Anthropic](messages/anthropic-messages.md)
+* [Gemini Native](gemini-native/SUMMARY.md)
+  * [Google](gemini-native/google-gemini-native.md)

@@ -1,0 +1,1127 @@
+openapi: 3.1.0
+info:
+  title: LiteLLM API Documentation
+  description: 'Self-hosted LiteLLM gateway API documentation, fully compatible with OpenAI format.'
+  version: 1.11.0
+servers:
+  - url: 'https://aillm.nsclouds.com'
+    description: China Server
+tags:
+  - name: chat_completions
+    x-page-title: Chat Completions
+    x-page-icon: message
+    description: 'Chat completion related APIs, including chat completions and text completions'
+  - name: embeddings
+    x-page-title: Embeddings
+    x-page-icon: database
+    description: Embedding related APIs for generating vector representations of text
+  - name: image_generations
+    x-page-title: Image Generations
+    x-page-icon: image
+    description: Image generation related APIs for creating images from text prompts
+  - name: image_edits
+    x-page-title: Image Edits
+    x-page-icon: edit
+    description: Image editing related APIs for creating edited images from original images and prompts
+  - name: audio_transcriptions
+    x-page-title: Audio Transcriptions
+    x-page-icon: microphone
+    description: Audio transcription related APIs for transcribing audio files to text
+  - name: chat_completions_dashscope
+    x-parent: chat_completions
+    x-page-title: DashScope
+    x-page-icon: brain
+    description: DashScope's chat completions API
+  - name: completions_dashscope
+    x-parent: chat_completions
+    x-page-title: DashScope
+    x-page-icon: brain
+    description: DashScope's text completions API
+  - name: messages_dashscope
+    x-parent: chat_completions
+    x-page-title: DashScope
+    x-page-icon: brain
+    description: DashScope's Messages protocol API
+  - name: responses_dashscope
+    x-parent: chat_completions
+    x-page-title: DashScope
+    x-page-icon: brain
+    description: DashScope's Responses API
+  - name: image_generations_dashscope
+    x-parent: image_generations
+    x-page-title: DashScope
+    x-page-icon: image
+    description: DashScope's image generations API
+  - name: image_edits_dashscope
+    x-parent: image_edits
+    x-page-title: DashScope
+    x-page-icon: image
+    description: DashScope's image edits API
+  - name: audio_transcriptions_dashscope
+    x-parent: audio_transcriptions
+    x-page-title: DashScope
+    x-page-icon: mic
+    description: DashScope's audio transcriptions API
+paths:
+  /v1/chat/completions:
+    post:
+      tags:
+        - chat_completions_dashscope
+      summary: Create Chat Completion
+      description: Generate model responses based on input messages. Fully compatible with OpenAI's Chat API.
+      operationId: createChatCompletion_dashscope
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChatCompletionRequest'
+            examples:
+              default:
+                summary: Basic
+                description: A simple conversation example with system prompt and user message.
+                value:
+                  model: MiniMax-M2.5
+                  messages:
+                    - role: system
+                      content: You are a helpful assistant.
+                    - role: user
+                      content: Hello!
+                  temperature: 1
+                  max_completion_tokens: 50
+                  'n': 1
+                  stream: false
+              streaming:
+                summary: Streaming
+                description: 'Enable streaming response by setting stream: true.'
+                value:
+                  model: MiniMax-M2.5
+                  messages:
+                    - role: system
+                      content: You are a helpful assistant.
+                    - role: user
+                      content: Tell me a story.
+                  temperature: 0.7
+                  max_completion_tokens: 100
+                  stream: true
+              image_input:
+                summary: Image Input (Multimodal)
+                description: Use vision-capable models to analyze images.
+                value:
+                  model: MiniMax-M2.5
+                  messages:
+                    - role: user
+                      content:
+                        - type: text
+                          text: What is in this image?
+                        - type: image_url
+                          image_url:
+                            url: 'https://ark-project.tos-cn-beijing.volces.com/doc_image/seedream4_5_imageToimage.png'
+                  max_completion_tokens: 300
+              functions:
+                summary: Function Calling
+                description: Define tools (functions) and let the model decide whether to call them.
+                value:
+                  model: MiniMax-M2.5
+                  messages:
+                    - role: user
+                      content: Read the content of the file report.txt
+                  tools:
+                    - type: function
+                      function:
+                        name: read_file
+                        description: Read the content of a file
+                        parameters:
+                          type: object
+                          properties:
+                            file_path:
+                              type: string
+                              description: The path to the file to read
+                          required:
+                            - file_path
+                  tool_choice: auto
+                  max_completion_tokens: 150
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+              examples:
+                default-response:
+                  summary: Basic Response
+                  description: Response example for basic chat request.
+                  value:
+                    id: chatcmpl-BPzJw3iWI2jtsjCnR0rRCBvLCETq7
+                    created: 1773197421
+                    model: MiniMax-M2.5
+                    object: chat.completion
+                    choices:
+                      - index: 0
+                        message:
+                          role: assistant
+                          content: 'Hi! How can I help today? I can answer questions, explain topics, brainstorm ideas, write or edit text, solve problems, or analyze images.'
+                        finish_reason: stop
+                    usage:
+                      completion_tokens: 174
+                      prompt_tokens: 8
+                      total_tokens: 182
+                      completion_tokens_details:
+                        reasoning_tokens: 128
+                image_input-response:
+                  summary: Image Input Response
+                  description: Model-generated description based on image content.
+                  value:
+                    id: chatcmpl-s71Ce6GRN8PzAOB0PbVmNFGdSlGjS
+                    created: 1773197559
+                    model: MiniMax-M2.5
+                    object: chat.completion
+                    choices:
+                      - index: 0
+                        message:
+                          role: assistant
+                          content: 'The image shows a person posing in a studio setup against a white backdrop, wearing a shiny, chrome-like metallic outfit with spiky, futuristic elements (including headpiece/hair). The face area is blurred/pixelated.'
+                        finish_reason: stop
+                    usage:
+                      completion_tokens: 49
+                      prompt_tokens: 704
+                      total_tokens: 753
+                functions-response:
+                  summary: Function Calling Response
+                  description: Model returns a function call request.
+                  value:
+                    id: chatcmpl-ZjQIwmTgiAmyXrAeTCcoNXvvqiprq
+                    created: 1773197541
+                    model: MiniMax-M2.5
+                    object: chat.completion
+                    choices:
+                      - index: 0
+                        message:
+                          role: assistant
+                          content: 'I can''t directly access or read files on your system. If you''d like to share the content of report.txt, you can copy and paste it here, and I''ll help you analyze or work with it.'
+                        finish_reason: stop
+                    usage:
+                      completion_tokens: 74
+                      prompt_tokens: 13
+                      total_tokens: 87
+            text/event-stream:
+              schema:
+                type: string
+                description: 'Streaming responses are returned in Server-Sent Events format, each event is a JSON data block starting with ''data: '' and ending with ''data: [DONE]''.'
+              examples:
+                streaming-response:
+                  summary: Streaming Response Example
+                  description: Shows events sent sequentially during streaming chat process.
+                  value: |
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+                    data: [DONE]
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/completions:
+    post:
+      tags:
+        - completions_dashscope
+      summary: Create Text Completion
+      description: Generate one or more completions based on provided prompts. Compatible with OpenAI's Completions API.
+      operationId: createCompletion_dashscope
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompletionRequest'
+            examples:
+              default:
+                summary: Basic
+                description: A simple text completion example.
+                value:
+                  model: MiniMax-M2.5
+                  prompt: Once upon a time
+                  max_tokens: 50
+                  temperature: 0.7
+                  'n': 1
+                  stream: false
+              streaming:
+                summary: Streaming
+                description: 'Enable streaming response by setting stream: true.'
+                value:
+                  model: MiniMax-M2.5
+                  prompt: The future of AI is
+                  max_tokens: 30
+                  temperature: 0.8
+                  stream: true
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletionResponse'
+              examples:
+                default-response:
+                  summary: Basic Response
+                  description: Response example for basic text completion request.
+                  value:
+                    id: cmpl-123
+                    object: text_completion
+                    created: 1677652288
+                    model: MiniMax-M2.5
+                    choices:
+                      - text: ' in a small village, there lived a young girl named Lily.'
+                        index: 0
+                        finish_reason: length
+                    usage:
+                      prompt_tokens: 4
+                      completion_tokens: 12
+                      total_tokens: 16
+            text/event-stream:
+              schema:
+                type: string
+                description: 'Streaming responses are returned in Server-Sent Events format, each event is a JSON data block starting with ''data: '' and ending with ''data: [DONE]''.'
+              examples:
+                streaming-response:
+                  summary: Streaming Response Example
+                  description: Shows events sent sequentially during streaming text completion process.
+                  value: |
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"MiniMax-M2.5","choices":[{"text":"The","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"MiniMax-M2.5","choices":[{"text":" future","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"MiniMax-M2.5","choices":[{"text":" of","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"MiniMax-M2.5","choices":[{"text":" AI","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"MiniMax-M2.5","choices":[{"text":" is","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"MiniMax-M2.5","choices":[{"text":" bright","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"MiniMax-M2.5","choices":[{"text":".","index":0,"finish_reason":"length"}]}
+                    data: [DONE]
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/messages:
+    post:
+      tags:
+        - messages_dashscope
+      summary: Create Message
+      description: Create a message using Anthropic Messages-compatible payload.
+      operationId: createMessage_dashscope
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - messages
+              properties:
+                model:
+                  type: string
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                      content:
+                        oneOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: object
+                max_tokens:
+                  type: integer
+                stream:
+                  type: boolean
+                  default: false
+            examples:
+              default:
+                summary: Basic
+                value:
+                  model: qwen3.6-flash
+                  messages:
+                    - role: user
+                      content: Hello
+                  max_tokens: 128
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: Basic Response
+                  value:
+                    id: msg_123
+                    type: message
+                    role: assistant
+                    model: qwen3.6-flash
+                    content:
+                      - type: text
+                        text: Hello! How can I help you today?
+                    stop_reason: end_turn
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 9
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/responses:
+    post:
+      tags:
+        - responses_dashscope
+      summary: Create Response
+      description: Create a model response using OpenAI Responses-compatible payload.
+      operationId: createResponse_dashscope
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - input
+              properties:
+                model:
+                  type: string
+                input:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: object
+                stream:
+                  type: boolean
+                  default: false
+            examples:
+              default:
+                summary: Basic
+                value:
+                  model: qwen3.5-flash
+                  input: Hello
+                  stream: false
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: Basic Response
+                  value:
+                    id: resp_123
+                    object: response
+                    model: qwen3.5-flash
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/images/generations:
+    post:
+      tags:
+        - image_generations_dashscope
+      summary: Create Image
+      description: Generate images based on text prompts. Compatible with OpenAI's Images API.
+      operationId: createImageGeneration_dashscope
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateImageGenerationRequest'
+            examples:
+              default:
+                summary: Basic
+                description: Generate a 1024x1024 image.
+                value:
+                  model: qwen-image-2.0
+                  prompt: A cute cat sitting on a windowsill
+                  'n': 1
+                  size: 1024x1024
+              hd-quality:
+                summary: HD Quality
+                description: Generate high-definition quality images.
+                value:
+                  model: qwen-image-2.0
+                  prompt: A futuristic cityscape at sunset
+                  'n': 1
+                  quality: hd
+                  size: 1792x1024
+              b64-json:
+                summary: Base64 Format
+                description: Return base64-encoded image data.
+                value:
+                  model: qwen-image-2.0
+                  prompt: A beautiful landscape
+                  'n': 2
+                  size: 512x512
+                  response_format: b64_json
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+              examples:
+                default-response:
+                  summary: Basic Response
+                  description: Complete response containing image URL and optional fields.
+                  value:
+                    created: 1680000000
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - url: 'https://example.com/images/cat.png'
+                        revised_prompt: 'A cute cat sitting on a windowsill, looking out at a garden'
+                    usage:
+                      total_tokens: 100
+                      input_tokens: 50
+                      output_tokens: 50
+                      input_tokens_details:
+                        text_tokens: 10
+                        image_tokens: 40
+                b64-response:
+                  summary: Base64 Response
+                  description: Response containing base64-encoded image data and optional fields.
+                  value:
+                    created: 1680000001
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
+                        revised_prompt: A beautiful landscape with mountains and a lake
+                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
+                    usage:
+                      total_tokens: 200
+                      input_tokens: 100
+                      output_tokens: 100
+                      input_tokens_details:
+                        text_tokens: 20
+                        image_tokens: 80
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/images/edits:
+    post:
+      tags:
+        - image_edits_dashscope
+      summary: Edit Image
+      description: Create edited images based on original images and text prompts. Compatible with OpenAI's Images API.
+      operationId: createImageEdit_dashscope
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateImageEditRequest'
+            encoding:
+              images:
+                style: form
+                explode: true
+            examples:
+              with-mask:
+                summary: With Mask
+                description: 'Edit using image, mask, and prompt.'
+                value:
+                  model: qwen-image-2.0
+                  images:
+                    - '@person.png'
+                  mask: '@mask.png'
+                  prompt: Add a hat to the person
+                  'n': 1
+                  size: 1024x1024
+              no-mask:
+                summary: Without Mask
+                description: Edit using only image and prompt.
+                value:
+                  model: qwen-image-2.0
+                  images:
+                    - '@body-lotion.png'
+                  prompt: Change the background to a beach
+                  'n': 1
+                  size: 1024x1024
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+              examples:
+                default-response:
+                  summary: Edit Response
+                  description: Return edited image and related metadata.
+                  value:
+                    created: 1680000002
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - url: 'https://example.com/images/edited.png'
+                        revised_prompt: 'A person with a hat, standing in a sunny park'
+                    usage:
+                      total_tokens: 120
+                      input_tokens: 60
+                      output_tokens: 60
+                      input_tokens_details:
+                        text_tokens: 12
+                        image_tokens: 48
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/audio/transcriptions:
+    post:
+      tags:
+        - audio_transcriptions_dashscope
+      summary: Audio Transcription
+      description: Transcribe audio files to text. Compatible with OpenAI's Audio API.
+      operationId: createTranscription_dashscope
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateTranscriptionRequest'
+            examples:
+              default:
+                summary: Basic
+                description: Transcribe audio file to JSON format.
+                value:
+                  model: qwen3-asr-flash
+                  file: (binary)
+                  response_format: json
+              with-timestamps:
+                summary: With Timestamps
+                description: Get detailed transcription with word-level timestamps.
+                value:
+                  model: qwen3-asr-flash
+                  file: (binary)
+                  response_format: verbose_json
+                  timestamp_granularities:
+                    - word
+              srt-format:
+                summary: SRT Subtitles
+                description: Return transcription in SRT subtitle format.
+                value:
+                  model: qwen3-asr-flash
+                  file: (binary)
+                  response_format: srt
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptionResponse'
+              examples:
+                json-response:
+                  summary: JSON Response
+                  description: Default JSON format transcription.
+                  value:
+                    text: 'Hello, this is a test transcription.'
+                verbose-json-response:
+                  summary: Verbose JSON Response
+                  description: Detailed transcription with word-level timestamps.
+                  value:
+                    task: transcribe
+                    language: english
+                    duration: 2.95
+                    text: 'Hello, this is a test transcription.'
+                    words:
+                      - word: Hello
+                        start: 0.1
+                        end: 0.5
+                      - word: this
+                        start: 0.6
+                        end: 0.8
+                      - word: is
+                        start: 0.9
+                        end: 1
+                      - word: a
+                        start: 1.1
+                        end: 1.2
+                      - word: test
+                        start: 1.3
+                        end: 1.8
+                      - word: transcription
+                        start: 1.9
+                        end: 2.8
+            application/x-srt:
+              schema:
+                type: string
+                description: Transcription in SRT subtitle format.
+              examples:
+                srt-response:
+                  summary: SRT Response
+                  value: |
+                    1
+                    00:00:00,100 --> 00:00:00,500
+                    Hello
+
+                    2
+                    00:00:00,600 --> 00:00:00,800
+                    this
+
+                    3
+                    00:00:00,900 --> 00:00:01,000
+                    is
+
+                    4
+                    00:00:01,100 --> 00:00:01,200
+                    a
+
+                    5
+                    00:00:01,300 --> 00:00:01,800
+                    test
+
+                    6
+                    00:00:01,900 --> 00:00:02,800
+                    transcription
+            text/plain:
+              schema:
+                type: string
+                description: Transcription in plain text format.
+              examples:
+                text-response:
+                  summary: Plain Text Response
+                  value: 'Hello, this is a test transcription.'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    CreateChatCompletionRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: The model ID to use
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum:
+                  - system
+                  - user
+                  - assistant
+                  - tool
+              content:
+                oneOf:
+                  - type: string
+                  - type: array
+                    items:
+                      oneOf:
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - text
+                            text:
+                              type: string
+                          required:
+                            - type
+                            - text
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - image_url
+                            image_url:
+                              type: object
+                              properties:
+                                url:
+                                  type: string
+                              required:
+                                - url
+                          required:
+                            - type
+                            - image_url
+            required:
+              - role
+              - content
+        temperature:
+          type: number
+          default: 1
+        max_completion_tokens:
+          type: integer
+        'n':
+          type: integer
+          default: 1
+        stream:
+          type: boolean
+          default: false
+      required:
+        - model
+        - messages
+    ChatCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+        created:
+          type: integer
+        model:
+          type: string
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: integer
+              message:
+                type: object
+                properties:
+                  role:
+                    type: string
+                  content:
+                    type:
+                      - string
+                      - 'null'
+              finish_reason:
+                type:
+                  - string
+                  - 'null'
+        usage:
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+            completion_tokens:
+              type: integer
+            total_tokens:
+              type: integer
+    CreateCompletionRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: The model ID to use
+        prompt:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        temperature:
+          type: number
+          default: 1
+        max_tokens:
+          type: integer
+        'n':
+          type: integer
+          default: 1
+        stream:
+          type: boolean
+          default: false
+      required:
+        - model
+        - prompt
+    CompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+        created:
+          type: integer
+        model:
+          type: string
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+              index:
+                type: integer
+              finish_reason:
+                type:
+                  - string
+                  - 'null'
+        usage:
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+            completion_tokens:
+              type: integer
+            total_tokens:
+              type: integer
+    CreateEmbeddingRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: The model ID to use
+        input:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        encoding_format:
+          type: string
+          enum:
+            - float
+            - base64
+          default: float
+        dimensions:
+          type: integer
+      required:
+        - model
+        - input
+    EmbeddingResponse:
+      type: object
+      properties:
+        object:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              object:
+                type: string
+              embedding:
+                oneOf:
+                  - type: array
+                    items:
+                      type: number
+                  - type: string
+              index:
+                type: integer
+        model:
+          type: string
+        usage:
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+            total_tokens:
+              type: integer
+    CreateImageGenerationRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: The model ID to use
+        prompt:
+          type: string
+          description: Text prompt for image generation
+        'n':
+          type: integer
+          default: 1
+        size:
+          type: string
+          default: 1024x1024
+        quality:
+          type: string
+          enum:
+            - standard
+            - hd
+          default: standard
+        response_format:
+          type: string
+          enum:
+            - url
+            - b64_json
+          default: url
+      required:
+        - model
+        - prompt
+    CreateImageEditRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: The model ID to use
+        'image[]':
+          type: array
+          items:
+            type: string
+            format: binary
+          description: Image file to edit
+        mask:
+          type: string
+          format: binary
+          description: Optional mask file
+        prompt:
+          type: string
+          description: Text prompt for image editing
+        'n':
+          type: integer
+          default: 1
+        size:
+          type: string
+          default: 1024x1024
+        response_format:
+          type: string
+          enum:
+            - url
+            - b64_json
+          default: url
+      required:
+        - model
+        - 'image[]'
+        - prompt
+    ImageResponse:
+      type: object
+      properties:
+        created:
+          type: integer
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              b64_json:
+                type: string
+              revised_prompt:
+                type: string
+        background:
+          type: string
+        output_format:
+          type: string
+        quality:
+          type: string
+        size:
+          type: string
+        usage:
+          type: object
+          properties:
+            total_tokens:
+              type: integer
+            input_tokens:
+              type: integer
+            output_tokens:
+              type: integer
+    CreateTranscriptionRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: The model ID to use
+        file:
+          type: string
+          format: binary
+          description: Audio file to transcribe
+        language:
+          type: string
+          description: Language code for the audio (optional)
+        prompt:
+          type: string
+          description: Optional prompt to guide the model's style or content
+        response_format:
+          type: string
+          enum:
+            - json
+            - text
+            - srt
+            - verbose_json
+            - vtt
+          default: json
+        temperature:
+          type: number
+          default: 0
+      required:
+        - model
+        - file
+    TranscriptionResponse:
+      type: object
+      properties:
+        text:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+            param:
+              type:
+                - string
+                - 'null'
+            code:
+              type:
+                - string
+                - 'null'
+  securitySchemes:
+    APIKeyHeader:
+      type: http
+      scheme: bearer
+      description: 'Authenticate using Bearer token format: ''Bearer YOUR_SECRET_TOKEN'''
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

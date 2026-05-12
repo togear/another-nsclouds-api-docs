@@ -4,3 +4,6 @@
 
 如需申请开通权限或获取技术支持，请联系 NewStream 客户支持团队：[dev@ngaa.com.cn](mailto:dev@ngaa.com.cn).
 
+## 维护说明
+
+文档生成、厂家维护、OpenAPI 模板更新流程见 [scripts/README.md](scripts/README.md)。

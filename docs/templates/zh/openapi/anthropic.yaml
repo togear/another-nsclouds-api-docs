@@ -313,6 +313,87 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorResponse'
 
+  /v1/messages:
+    post:
+      tags:
+        - chat_completions_anthropic
+      summary: 创建 Messages 消息
+      description: 使用 Anthropic Messages 兼容格式创建消息响应。
+      operationId: createMessage_anthropic
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - messages
+              properties:
+                model:
+                  type: string
+                messages:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                      content:
+                        oneOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: object
+                max_tokens:
+                  type: integer
+                stream:
+                  type: boolean
+                  default: false
+            examples:
+              default:
+                summary: 基础
+                value:
+                  model: claude-opus-4.6
+                  messages:
+                    - role: user
+                      content: Hello
+                  max_tokens: 128
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    id: msg_123
+                    type: message
+                    role: assistant
+                    model: claude-opus-4.6
+                    content:
+                      - type: text
+                        text: Hello! How can I help you today?
+                    stop_reason: end_turn
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 9
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
   # ========== 向量嵌入 ==========
   /v1/embeddings:
     post:

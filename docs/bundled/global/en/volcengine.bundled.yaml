@@ -31,27 +31,22 @@ tags:
     x-parent: chat_completions
     x-page-title: Volcengine
     x-page-icon: brain
-    description: Volcengine's chat completion API
-  - name: embeddings_volcengine
-    x-parent: embeddings
+    description: Volcengine's chat completions API
+  - name: completions_volcengine
+    x-parent: chat_completions
     x-page-title: Volcengine
     x-page-icon: brain
-    description: Volcengine's vector embedding API
+    description: Volcengine's text completions API
+  - name: responses_volcengine
+    x-parent: chat_completions
+    x-page-title: Volcengine
+    x-page-icon: brain
+    description: Volcengine's Responses API
   - name: image_generations_volcengine
     x-parent: image_generations
     x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's image generation API
-  - name: image_edits_volcengine
-    x-parent: image_edits
-    x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's image editing API
-  - name: audio_transcriptions_volcengine
-    x-parent: audio_transcriptions
-    x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's audio transcription API
+    x-page-icon: image
+    description: Volcengine's image generations API
 paths:
   /v1/chat/completions:
     post:
@@ -73,7 +68,7 @@ paths:
                 summary: Basic
                 description: A simple chat completion example.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
                     - role: user
                       content: Hello!
@@ -85,7 +80,7 @@ paths:
                 summary: Streaming
                 description: 'Enable streaming response by setting stream: true.'
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
                     - role: user
                       content: Hello!
@@ -94,7 +89,7 @@ paths:
                 summary: Image Input (Multimodal)
                 description: Use vision-enabled model to analyze images.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
                     - role: user
                       content:
@@ -108,7 +103,7 @@ paths:
                 summary: Function Calling
                 description: Define tools (functions) and let the model decide whether to call them.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
                     - role: user
                       content: What is the weather in Boston?
@@ -147,7 +142,7 @@ paths:
                     id: 021772864435690b7e0a86771f3aae54bdc5a127ef95baa9c2b48
                     object: chat.completion
                     created: 1772864438
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
                       - index: 0
                         message:
@@ -167,7 +162,7 @@ paths:
                     id: 021772864507442454c0d8025bd4547674d07aeb10e65a37260a1
                     object: chat.completion
                     created: 1772864518
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
                       - index: 0
                         message:
@@ -187,7 +182,7 @@ paths:
                     id: 02177286456308318cc8b35e794a1d5ce66758b690d3ae1fd30df
                     object: chat.completion
                     created: 1772864571
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
                       - index: 0
                         message:
@@ -215,10 +210,10 @@ paths:
                   summary: Streaming Response Example
                   description: Shows events sent continuously during streaming chat process.
                   value: |
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
                     data: [DONE]
         '400':
           $ref: '#/components/responses/ErrorResponse'
@@ -229,7 +224,7 @@ paths:
   /v1/completions:
     post:
       tags:
-        - chat_completions_volcengine
+        - completions_volcengine
       summary: Create text completion
       description: Generate one or more completions based on the provided prompt. Compatible with OpenAI's Completions API.
       operationId: createCompletion_volcengine
@@ -246,7 +241,7 @@ paths:
                 summary: Basic
                 description: A simple text completion example.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   prompt: Say this is a test
                   max_tokens: 7
                   temperature: 0
@@ -256,7 +251,7 @@ paths:
                 summary: Streaming
                 description: 'Enable streaming response by setting stream: true.'
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   prompt: The future of AI is
                   max_tokens: 30
                   temperature: 0.8
@@ -276,7 +271,7 @@ paths:
                     id: 0217728646073678cf12c1a4b092384500fba0fc49677b04d2fb3
                     object: text_completion
                     created: 1772864610
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
                       - text: This is a test
                         index: 0
@@ -294,13 +289,13 @@ paths:
                   summary: Streaming Response Example
                   description: Shows events sent continuously during streaming text completion process.
                   value: |
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":"The","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" future","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" of","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" AI","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" is","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" bright","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":".","index":0,"finish_reason":"length"}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":"The","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" future","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" of","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" AI","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" is","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" bright","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":".","index":0,"finish_reason":"length"}]}
                     data: [DONE]
         '400':
           $ref: '#/components/responses/ErrorResponse'
@@ -308,13 +303,13 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
-  /v1/embeddings:
+  /v1/responses:
     post:
       tags:
-        - embeddings_volcengine
-      summary: Create embedding vectors
-      description: Get vector representation of given input. Compatible with OpenAI's Embeddings API.
-      operationId: createEmbedding_volcengine
+        - responses_volcengine
+      summary: Create Response
+      description: Create a model response using OpenAI Responses-compatible payload.
+      operationId: createResponse_volcengine
       security:
         - APIKeyHeader: []
       requestBody:
@@ -322,49 +317,44 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateEmbeddingRequest'
+              type: object
+              required:
+                - model
+                - input
+              properties:
+                model:
+                  type: string
+                input:
+                  oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: object
+                stream:
+                  type: boolean
+                  default: false
             examples:
               default:
                 summary: Basic
-                description: A simple embedding vector example.
                 value:
-                  model: volcengine/doubao-embedding-vision-250615
-                  input: The food was delicious and the waiter was very friendly.
-                  encoding_format: float
-              batch:
-                summary: Batch Embedding
-                description: Batch processing multiple input embedding vector examples.
-                value:
-                  model: volcengine/doubao-embedding-vision-250615
-                  input:
-                    - The food was delicious
-                    - The waiter was very friendly
-                  encoding_format: float
+                  model: doubao-seed-2-0-lite-260215
+                  input: Hello
+                  stream: false
       responses:
         '200':
-          description: Successful response
+          description: Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmbeddingResponse'
+                type: object
+                additionalProperties: true
               examples:
-                default-response:
+                default:
                   summary: Basic Response
-                  description: Response example corresponding to basic embedding vector request.
                   value:
-                    object: list
-                    data:
-                      - object: embedding
-                        embedding:
-                          - 0.0023064255
-                          - -0.009327292
-                          - 0.015797372
-                          - ...
-                        index: 0
-                    model: volcengine/doubao-embedding-vision-250615
-                    usage:
-                      prompt_tokens: 8
-                      total_tokens: 8
+                    id: resp_123
+                    object: response
+                    model: doubao-seed-2-0-lite-260215
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -391,7 +381,7 @@ paths:
                 summary: Basic
                 description: A simple image generation example.
                 value:
-                  model: doubao-image-1.0
+                  model: doubao-seedream-4-5-251128
                   prompt: A cat wearing a hat
                   'n': 1
                   size: 1024x1024
@@ -410,86 +400,6 @@ paths:
                     created: 1677825464
                     data:
                       - url: 'https://example.com/cat-hat.png'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-  /v1/images/edits:
-    post:
-      tags:
-        - image_edits_volcengine
-      summary: Edit image
-      description: Edit and extend images. Compatible with OpenAI's Images API.
-      operationId: createImageEdit_volcengine
-      security:
-        - APIKeyHeader: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateImageEditRequest'
-            examples:
-              default:
-                summary: Basic Image Editing
-                description: Basic example of image editing.
-                value:
-                  model: volcengine/doubao-seedream-4-5-251128
-                  'image[]':
-                    - '@/path/to/image.png'
-                  prompt: Add a hat to the cat
-                  size: 1024x1024
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ImageResponse'
-              examples:
-                default-response:
-                  summary: Basic Response
-                  description: Response example corresponding to basic image editing request.
-                  value:
-                    created: 1677825464
-                    data:
-                      - url: 'https://example.com/edited-image.png'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-  /v1/audio/transcriptions:
-    post:
-      tags:
-        - audio_transcriptions_volcengine
-      summary: Transcribe audio
-      description: Transcribe audio to text. Compatible with OpenAI's Audio API.
-      operationId: createTranscription_volcengine
-      security:
-        - APIKeyHeader: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateTranscriptionRequest'
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TranscriptionResponse'
-              examples:
-                default-response:
-                  summary: Basic Response
-                  description: Response example corresponding to basic audio transcription request.
-                  value:
-                    text: 'Hello, this is a test recording.'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':

@@ -20,15 +20,6 @@ This API is compatible with OpenAI interface format.
 * `deepseek-v3.1`
 * `deepseek-v3.2`
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | ---------------- |
-| Basic Request | ✅ Verified | All models supported |
-| Streaming Response | ✅ Verified | All models supported |
-| Image Input | ✅ Verified | deepseek-v3.1 supported |
-| Function Call | ✅ Verified | deepseek-v3.1 supported |
-
 ### 2. API Details
 
 {% openapi-operation spec="deepseek-en-{{ENV}}" path="/v1/chat/completions" method="post" %}

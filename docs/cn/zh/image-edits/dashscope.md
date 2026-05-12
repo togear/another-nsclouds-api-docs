@@ -1,0 +1,21 @@
+# DashScope - 图像编辑
+
+### 1. 概述
+
+DashScope 的图像编辑能力。
+
+{% hint style="success" %}
+本 API 与 OpenAI Images 接口格式兼容。
+{% endhint %}
+
+**模型列表：**
+
+* `qwen-image-2.0`
+* `qwen-image-2.0-pro`
+
+
+### 2. 接口详情
+
+{% openapi-operation spec="dashscope-zh-cn" path="/v1/images/edits" method="post" %}
+[OpenAPI DashScope](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/cn/zh/dashscope.bundled.yaml)
+{% endopenapi-operation %}

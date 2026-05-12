@@ -1,136 +1,115 @@
+---
 openapi: 3.1.0
 info:
-  $ref: ./_common.yaml#/info
+  "$ref": "./_common.yaml#/info"
 servers:
-  $ref: ./_common.yaml#/servers
-
+  "$ref": "./_common.yaml#/servers"
 tags:
-  # Reference top-level feature tags from common file (to maintain navigation hierarchy)
-  - $ref: ./_common.yaml#/tags/0   # chat_completions
-  - $ref: ./_common.yaml#/tags/1   # embeddings
-  - $ref: ./_common.yaml#/tags/2   # image_generations
-  - $ref: ./_common.yaml#/tags/3   # image_edits
-  - $ref: ./_common.yaml#/tags/4   # audio_transcriptions
-
-  # ========== Volcengine vendor tags ==========
-  - name: chat_completions_volcengine
-    x-parent: chat_completions
-    x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's chat completion API
-  - name: embeddings_volcengine
-    x-parent: embeddings
-    x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's vector embedding API
-  - name: image_generations_volcengine
-    x-parent: image_generations
-    x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's image generation API
-  - name: image_edits_volcengine
-    x-parent: image_edits
-    x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's image editing API
-  - name: audio_transcriptions_volcengine
-    x-parent: audio_transcriptions
-    x-page-title: Volcengine
-    x-page-icon: brain
-    description: Volcengine's audio transcription API
-
-  # ========== Volcengine protocol tags (taking OpenAI protocol as example) ==========
-  # - name: chat_completions_volcengine_openai
-  #   x-parent: chat_completions_volcengine
-  #   x-page-title: OpenAI Protocol
-  #   x-page-icon: check-circle
-  #   description: Volcengine's chat completion API supporting OpenAI protocol
-  # - name: embeddings_volcengine_openai
-  #   x-parent: embeddings_volcengine
-  #   x-page-title: OpenAI Protocol
-  #   x-page-icon: check-circle
-  #   description: Volcengine's vector embedding API supporting OpenAI protocol
-
+- "$ref": "./_common.yaml#/tags/0"
+- "$ref": "./_common.yaml#/tags/1"
+- "$ref": "./_common.yaml#/tags/2"
+- "$ref": "./_common.yaml#/tags/3"
+- "$ref": "./_common.yaml#/tags/4"
+- name: chat_completions_volcengine
+  x-parent: chat_completions
+  x-page-title: Volcengine
+  x-page-icon: brain
+  description: Volcengine's chat completions API
+- name: completions_volcengine
+  x-parent: chat_completions
+  x-page-title: Volcengine
+  x-page-icon: brain
+  description: Volcengine's text completions API
+- name: responses_volcengine
+  x-parent: chat_completions
+  x-page-title: Volcengine
+  x-page-icon: brain
+  description: Volcengine's Responses API
+- name: image_generations_volcengine
+  x-parent: image_generations
+  x-page-title: Volcengine
+  x-page-icon: image
+  description: Volcengine's image generations API
 paths:
-  # ========== Chat Completions ==========
-  /v1/chat/completions:
+  "/v1/chat/completions":
     post:
       tags:
-        - chat_completions_volcengine
-        # - chat_completions_volcengine_openai
+      - chat_completions_volcengine
       summary: Create chat completion
-      description: Generate chat completion based on provided message history. Compatible with OpenAI's Chat Completions API.
+      description: Generate chat completion based on provided message history. Compatible
+        with OpenAI's Chat Completions API.
       operationId: createChatCompletion_volcengine
       security:
-        - APIKeyHeader: []
+      - APIKeyHeader: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateChatCompletionRequest'
+              "$ref": "#/components/schemas/CreateChatCompletionRequest"
             examples:
               default:
                 summary: Basic
                 description: A simple chat completion example.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
-                    - role: user
-                      content: Hello!
+                  - role: user
+                    content: Hello!
                   max_completion_tokens: 50
                   temperature: 0.7
-                  'n': 1
+                  n: 1
                   stream: false
               streaming:
                 summary: Streaming
-                description: "Enable streaming response by setting stream: true."
+                description: 'Enable streaming response by setting stream: true.'
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
-                    - role: user
-                      content: Hello!
+                  - role: user
+                    content: Hello!
                   stream: true
               image_input:
                 summary: Image Input (Multimodal)
                 description: Use vision-enabled model to analyze images.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
-                    - role: user
-                      content:
-                        - type: text
-                          text: What is in this image?
-                        - type: image_url
-                          image_url:
-                            url: https://ark-project.tos-cn-beijing.volces.com/doc_image/seedream4_5_imageToimage.png
+                  - role: user
+                    content:
+                    - type: text
+                      text: What is in this image?
+                    - type: image_url
+                      image_url:
+                        url: https://ark-project.tos-cn-beijing.volces.com/doc_image/seedream4_5_imageToimage.png
                   max_completion_tokens: 300
               functions:
                 summary: Function Calling
-                description: Define tools (functions) and let the model decide whether to call them.
+                description: Define tools (functions) and let the model decide whether
+                  to call them.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   messages:
-                    - role: user
-                      content: What is the weather in Boston?
+                  - role: user
+                    content: What is the weather in Boston?
                   tools:
-                    - type: function
-                      function:
-                        name: get_current_weather
-                        description: Get the current weather in a given location
-                        parameters:
-                          type: object
-                          properties:
-                            location:
-                              type: string
-                              description: The city and state, e.g. San Francisco, CA
-                            unit:
-                              type: string
-                              enum:
-                                - celsius
-                                - fahrenheit
-                          required:
-                            - location
+                  - type: function
+                    function:
+                      name: get_current_weather
+                      description: Get the current weather in a given location
+                      parameters:
+                        type: object
+                        properties:
+                          location:
+                            type: string
+                            description: The city and state, e.g. San Francisco, CA
+                          unit:
+                            type: string
+                            enum:
+                            - celsius
+                            - fahrenheit
+                        required:
+                        - location
                   tool_choice: auto
                   max_completion_tokens: 150
       responses:
@@ -139,23 +118,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChatCompletionResponse'
+                "$ref": "#/components/schemas/ChatCompletionResponse"
               examples:
                 default-response:
                   summary: Basic Response
-                  description: Response example corresponding to basic chat completion request.
+                  description: Response example corresponding to basic chat completion
+                    request.
                   value:
-                    id: 021772864435690b7e0a86771f3aae54bdc5a127ef95baa9c2b48
+                    id: '021772864435690b7e0a86771f3aae54bdc5a127ef95baa9c2b48'
                     object: chat.completion
                     created: 1772864438
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
-                      - index: 0
-                        message:
-                          role: assistant
-                          content: Hello there! 😊 How can I assist you today?
-                          reasoning_content: The user said "Hello!", so I need to respond with a friendly greeting. First, keep it natural and warm, like "Hello there! 😊 How can I assist you today?" This both responds to the greeting and expresses willingness to help, which fits the AI's role. Let me check - the language is concise and friendly, with an emoji to make it more lively. That should work.
-                        finish_reason: stop
+                    - index: 0
+                      message:
+                        role: assistant
+                        content: "Hello there! \U0001F60A How can I assist you today?"
+                        reasoning_content: "The user said \"Hello!\", so I need to
+                          respond with a friendly greeting. First, keep it natural
+                          and warm, like \"Hello there! \U0001F60A How can I assist
+                          you today?\" This both responds to the greeting and expresses
+                          willingness to help, which fits the AI's role. Let me check
+                          - the language is concise and friendly, with an emoji to
+                          make it more lively. That should work."
+                      finish_reason: stop
                     usage:
                       prompt_tokens: 50
                       completion_tokens: 83
@@ -165,17 +151,50 @@ paths:
                   summary: Image Input Response
                   description: Model's description generated based on image content.
                   value:
-                    id: 021772864507442454c0d8025bd4547674d07aeb10e65a37260a1
+                    id: '021772864507442454c0d8025bd4547674d07aeb10e65a37260a1'
                     object: chat.completion
                     created: 1772864518
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
-                      - index: 0
-                        message:
-                          role: assistant
-                          content: "This is a futuristic, surreal, cyberpunk-style digital or 3D-rendered artwork: 1. The central subject is a humanoid figure, appearing feminine, posed dynamically with their head tilted back, arms outstretched, in front of a simple studio white backdrop on black support rigs. 2. The figure is covered in a **glossy, reflective liquid chrome/silver metallic substance** that forms an organic, fragmented \"garment\" with sharp, tendril-like, drippy edges, and also coats their head, forming spiky, wet-look \"hair\", arms, and hands. The material looks like it's in a state of transformation, as if melting or solidifying onto the body. 3. The bright studio lighting emphasizes the highly reflective, polished surface of the metallic coating, creating strong highlights and deep shadows that give the material a viscous, molten appearance. 4. The overall aesthetic is sci-fi, futuristic high-fashion, with a biomechanical, otherworldly, almost \"liquid metal being\" vibe, recalling cyborg or synthetic entity concepts."
-                          reasoning_content: "Got it, let's break down this image. First, it's a futuristic, cyberpunk-style 3D (or AI-generated) art piece of a figure (appears to be a woman) in a studio setting, in front of a white backdrop stand. The figure is covered in a **liquid-like, reflective metallic (silver/chrome) substance** that forms a fragmented, organic \"dress\" with sharp, tendril-like, drippy edges, and also covers her head (spiky, wet-looking chrome hair/coating) and parts of her arms. Her pose is dramatic: head tilted back, arms outstretched, looking upward, giving a sense of transformation or a futuristic, otherworldly vibe. The lighting is bright, studio-style, highlighting the reflective, glossy surface of the chrome material, creating strong highlights and shadows that emphasize the liquid, sculpted texture. The overall aesthetic is sci-fi, futuristic fashion, with a surreal, biomechanical/liquid metal feel, like a being made of or covered in a shifting, molten chrome substance."
-                        finish_reason: stop
+                    - index: 0
+                      message:
+                        role: assistant
+                        content: 'This is a futuristic, surreal, cyberpunk-style digital
+                          or 3D-rendered artwork: 1. The central subject is a humanoid
+                          figure, appearing feminine, posed dynamically with their
+                          head tilted back, arms outstretched, in front of a simple
+                          studio white backdrop on black support rigs. 2. The figure
+                          is covered in a **glossy, reflective liquid chrome/silver
+                          metallic substance** that forms an organic, fragmented "garment"
+                          with sharp, tendril-like, drippy edges, and also coats their
+                          head, forming spiky, wet-look "hair", arms, and hands. The
+                          material looks like it''s in a state of transformation,
+                          as if melting or solidifying onto the body. 3. The bright
+                          studio lighting emphasizes the highly reflective, polished
+                          surface of the metallic coating, creating strong highlights
+                          and deep shadows that give the material a viscous, molten
+                          appearance. 4. The overall aesthetic is sci-fi, futuristic
+                          high-fashion, with a biomechanical, otherworldly, almost
+                          "liquid metal being" vibe, recalling cyborg or synthetic
+                          entity concepts.'
+                        reasoning_content: 'Got it, let''s break down this image.
+                          First, it''s a futuristic, cyberpunk-style 3D (or AI-generated)
+                          art piece of a figure (appears to be a woman) in a studio
+                          setting, in front of a white backdrop stand. The figure
+                          is covered in a **liquid-like, reflective metallic (silver/chrome)
+                          substance** that forms a fragmented, organic "dress" with
+                          sharp, tendril-like, drippy edges, and also covers her head
+                          (spiky, wet-looking chrome hair/coating) and parts of her
+                          arms. Her pose is dramatic: head tilted back, arms outstretched,
+                          looking upward, giving a sense of transformation or a futuristic,
+                          otherworldly vibe. The lighting is bright, studio-style,
+                          highlighting the reflective, glossy surface of the chrome
+                          material, creating strong highlights and shadows that emphasize
+                          the liquid, sculpted texture. The overall aesthetic is sci-fi,
+                          futuristic fashion, with a surreal, biomechanical/liquid
+                          metal feel, like a being made of or covered in a shifting,
+                          molten chrome substance.'
+                      finish_reason: stop
                     usage:
                       prompt_tokens: 540
                       completion_tokens: 452
@@ -185,23 +204,42 @@ paths:
                   summary: Function Call Response
                   description: Model returns a function call request.
                   value:
-                    id: 02177286456308318cc8b35e794a1d5ce66758b690d3ae1fd30df
+                    id: '02177286456308318cc8b35e794a1d5ce66758b690d3ae1fd30df'
                     object: chat.completion
                     created: 1772864571
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
-                      - index: 0
-                        message:
-                          role: assistant
-                          content: ""
-                          tool_calls:
-                            - id: call_xlu24zqz1ptz3git9mwjmn9x
-                              type: function
-                              function:
-                                name: get_current_weather
-                                arguments: ' {"location": "Boston, MA"}'
-                          reasoning_content: "Got it, let's see. The user is asking about the weather in Boston. The function available is get_current_weather, which requires location and optionally unit. The location here is Boston, so I need to specify that. Wait, do I need to include state? The example uses \"San Francisco, CA\", but Boston is in Massachusetts, so maybe \"Boston, MA\" is better, but maybe just \"Boston\" works too? Wait, the function's location parameter says city and state, but maybe if I just put Boston, it might still get it, but to be precise, I should include MA. Also, the unit isn't specified by the user, so I can either leave it out (since it's not required) or ask? Wait no, the required parameter is location, so unit is optional. So I can call the function with location \"Boston, MA\" and maybe not include unit, or let it default? Wait the function parameters say unit is optional, so I can omit it, but maybe the user would prefer a specific unit? But since they didn't ask, I just call with location first. Let me structure the function call correctly. So the function name is get_current_weather, parameters location is \"Boston, MA\". Let me write that in the required format."
-                        finish_reason: tool_calls
+                    - index: 0
+                      message:
+                        role: assistant
+                        content: ''
+                        tool_calls:
+                        - id: call_xlu24zqz1ptz3git9mwjmn9x
+                          type: function
+                          function:
+                            name: get_current_weather
+                            arguments: ' {"location": "Boston, MA"}'
+                        reasoning_content: Got it, let's see. The user is asking about
+                          the weather in Boston. The function available is get_current_weather,
+                          which requires location and optionally unit. The location
+                          here is Boston, so I need to specify that. Wait, do I need
+                          to include state? The example uses "San Francisco, CA",
+                          but Boston is in Massachusetts, so maybe "Boston, MA" is
+                          better, but maybe just "Boston" works too? Wait, the function's
+                          location parameter says city and state, but maybe if I just
+                          put Boston, it might still get it, but to be precise, I
+                          should include MA. Also, the unit isn't specified by the
+                          user, so I can either leave it out (since it's not required)
+                          or ask? Wait no, the required parameter is location, so
+                          unit is optional. So I can call the function with location
+                          "Boston, MA" and maybe not include unit, or let it default?
+                          Wait the function parameters say unit is optional, so I
+                          can omit it, but maybe the user would prefer a specific
+                          unit? But since they didn't ask, I just call with location
+                          first. Let me structure the function call correctly. So
+                          the function name is get_current_weather, parameters location
+                          is "Boston, MA". Let me write that in the required format.
+                      finish_reason: tool_calls
                     usage:
                       prompt_tokens: 459
                       completion_tokens: 301
@@ -210,305 +248,217 @@ paths:
             text/event-stream:
               schema:
                 type: string
-                description: "Streaming response is returned in Server-Sent Events format, each event is a line of JSON data block starting with 'data: ', ending with 'data: [DONE]'."
+                description: 'Streaming response is returned in Server-Sent Events
+                  format, each event is a line of JSON data block starting with ''data:
+                  '', ending with ''data: [DONE]''.'
               examples:
                 streaming-response:
                   summary: Streaming Response Example
-                  description: Shows events sent continuously during streaming chat process.
+                  description: Shows events sent continuously during streaming chat
+                    process.
                   value: |
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"doubao-seed-2-0-lite-260215","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
                     data: [DONE]
         '400':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '429':
-          $ref: '#/components/responses/ErrorResponse'
-
-  /v1/completions:
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/completions":
     post:
       tags:
-        - chat_completions_volcengine
-        # - chat_completions_volcengine_openai
+      - completions_volcengine
       summary: Create text completion
-      description: Generate one or more completions based on the provided prompt. Compatible with OpenAI's Completions API.
+      description: Generate one or more completions based on the provided prompt.
+        Compatible with OpenAI's Completions API.
       operationId: createCompletion_volcengine
       security:
-        - APIKeyHeader: []
+      - APIKeyHeader: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCompletionRequest'
+              "$ref": "#/components/schemas/CreateCompletionRequest"
             examples:
               default:
                 summary: Basic
                 description: A simple text completion example.
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   prompt: Say this is a test
                   max_tokens: 7
                   temperature: 0
-                  'n': 1
+                  n: 1
                   stream: false
               streaming:
                 summary: Streaming
-                description: "Enable streaming response by setting stream: true."
+                description: 'Enable streaming response by setting stream: true.'
                 value:
-                  model: volcengine/doubao-seed-1-8-251228
+                  model: doubao-seed-2-0-lite-260215
                   prompt: The future of AI is
                   max_tokens: 30
                   temperature: 0.8
                   stream: true
-
       responses:
         '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CompletionResponse'
+                "$ref": "#/components/schemas/CompletionResponse"
               examples:
                 default-response:
                   summary: Basic Response
-                  description: Response example corresponding to basic text completion request.
+                  description: Response example corresponding to basic text completion
+                    request.
                   value:
-                    id: 0217728646073678cf12c1a4b092384500fba0fc49677b04d2fb3
+                    id: '0217728646073678cf12c1a4b092384500fba0fc49677b04d2fb3'
                     object: text_completion
                     created: 1772864610
-                    model: volcengine/doubao-seed-1-8-251228
+                    model: doubao-seed-2-0-lite-260215
                     choices:
-                      - text: This is a test
-                        index: 0
-                        finish_reason: stop
+                    - text: This is a test
+                      index: 0
+                      finish_reason: stop
                     usage:
                       prompt_tokens: 53
                       completion_tokens: 119
                       total_tokens: 172
-
             text/event-stream:
               schema:
                 type: string
-                description: "Streaming response is returned in Server-Sent Events format, each event is a line of JSON data block starting with 'data: ', ending with 'data: [DONE]'."
+                description: 'Streaming response is returned in Server-Sent Events
+                  format, each event is a line of JSON data block starting with ''data:
+                  '', ending with ''data: [DONE]''.'
               examples:
                 streaming-response:
                   summary: Streaming Response Example
-                  description: Shows events sent continuously during streaming text completion process.
+                  description: Shows events sent continuously during streaming text
+                    completion process.
                   value: |
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":"The","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" future","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" of","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" AI","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" is","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":" bright","index":0,"finish_reason":null}]}
-                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"volcengine/doubao-seed-1-8-251228","choices":[{"text":".","index":0,"finish_reason":"length"}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":"The","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" future","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" of","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" AI","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" is","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":" bright","index":0,"finish_reason":null}]}
+                    data: {"id":"cmpl-789","object":"text_completion","created":1677652300,"model":"doubao-seed-2-0-lite-260215","choices":[{"text":".","index":0,"finish_reason":"length"}]}
                     data: [DONE]
         '400':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '429':
-          $ref: '#/components/responses/ErrorResponse'
-
-  # ========== Embeddings ==========
-  /v1/embeddings:
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/responses":
     post:
       tags:
-        - embeddings_volcengine
-        # - embeddings_volcengine_openai
-      summary: Create embedding vectors
-      description: Get vector representation of given input. Compatible with OpenAI's Embeddings API.
-      operationId: createEmbedding_volcengine
+      - responses_volcengine
+      summary: Create Response
+      description: Create a model response using OpenAI Responses-compatible payload.
+      operationId: createResponse_volcengine
       security:
-        - APIKeyHeader: []
+      - APIKeyHeader: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateEmbeddingRequest'
+              type: object
+              required:
+              - model
+              - input
+              properties:
+                model:
+                  type: string
+                input:
+                  oneOf:
+                  - type: string
+                  - type: array
+                    items:
+                      type: object
+                stream:
+                  type: boolean
+                  default: false
             examples:
               default:
                 summary: Basic
-                description: A simple embedding vector example.
                 value:
-                  model: volcengine/doubao-embedding-vision-250615
-                  input: "The food was delicious and the waiter was very friendly."
-                  encoding_format: float
-              batch:
-                summary: Batch Embedding
-                description: Batch processing multiple input embedding vector examples.
-                value:
-                  model: volcengine/doubao-embedding-vision-250615
-                  input:
-                    - "The food was delicious"
-                    - "The waiter was very friendly"
-                  encoding_format: float
-
+                  model: doubao-seed-2-0-lite-260215
+                  input: Hello
+                  stream: false
       responses:
         '200':
-          description: Successful response
+          description: Success Response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmbeddingResponse'
+                type: object
+                additionalProperties: true
               examples:
-                default-response:
+                default:
                   summary: Basic Response
-                  description: Response example corresponding to basic embedding vector request.
                   value:
-                    object: list
-                    data:
-                      - object: embedding
-                        embedding: [0.0023064255, -0.009327292, 0.015797372, ...]
-                        index: 0
-                    model: volcengine/doubao-embedding-vision-250615
-                    usage:
-                      prompt_tokens: 8
-                      total_tokens: 8
+                    id: resp_123
+                    object: response
+                    model: doubao-seed-2-0-lite-260215
         '400':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '429':
-          $ref: '#/components/responses/ErrorResponse'
-
-  # ========== Image Generation ==========
-  /v1/images/generations:
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/images/generations":
     post:
       tags:
-        - image_generations_volcengine
+      - image_generations_volcengine
       summary: Generate image
-      description: Generate image based on text prompt. Compatible with OpenAI's Images API.
+      description: Generate image based on text prompt. Compatible with OpenAI's Images
+        API.
       operationId: createImage_volcengine
       security:
-        - APIKeyHeader: []
+      - APIKeyHeader: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateImageGenerationRequest'
+              "$ref": "#/components/schemas/CreateImageGenerationRequest"
             examples:
               default:
                 summary: Basic
                 description: A simple image generation example.
                 value:
-                  model: doubao-image-1.0
+                  model: doubao-seedream-4-5-251128
                   prompt: A cat wearing a hat
                   n: 1
                   size: 1024x1024
-
       responses:
         '200':
           description: Successful response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
+                "$ref": "#/components/schemas/ImageResponse"
               examples:
                 default-response:
                   summary: Basic Response
-                  description: Response example corresponding to basic image generation request.
+                  description: Response example corresponding to basic image generation
+                    request.
                   value:
                     created: 1677825464
                     data:
-                      - url: "https://example.com/cat-hat.png"
+                    - url: https://example.com/cat-hat.png
         '400':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '401':
-          $ref: '#/components/responses/ErrorResponse'
+          "$ref": "#/components/responses/ErrorResponse"
         '429':
-          $ref: '#/components/responses/ErrorResponse'
-
-  # ========== Image Editing ==========
-  /v1/images/edits:
-    post:
-      tags:
-        - image_edits_volcengine
-      summary: Edit image
-      description: Edit and extend images. Compatible with OpenAI's Images API.
-      operationId: createImageEdit_volcengine
-      security:
-        - APIKeyHeader: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateImageEditRequest'
-            examples:
-              default:
-                summary: Basic Image Editing
-                description: Basic example of image editing.
-                value:
-                  model: volcengine/doubao-seedream-4-5-251128
-                  image[]: ["@/path/to/image.png"]
-                  prompt: "Add a hat to the cat"
-                  size: "1024x1024"
-
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ImageResponse'
-              examples:
-                default-response:
-                  summary: Basic Response
-                  description: Response example corresponding to basic image editing request.
-                  value:
-                    created: 1677825464
-                    data:
-                      - url: "https://example.com/edited-image.png"
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-
-  # ========== Audio Transcription ==========
-  /v1/audio/transcriptions:
-    post:
-      tags:
-        - audio_transcriptions_volcengine
-      summary: Transcribe audio
-      description: Transcribe audio to text. Compatible with OpenAI's Audio API.
-      operationId: createTranscription_volcengine
-      security:
-        - APIKeyHeader: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CreateTranscriptionRequest'
-
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TranscriptionResponse'
-              examples:
-                default-response:
-                  summary: Basic Response
-                  description: Response example corresponding to basic audio transcription request.
-                  value:
-                    text: "Hello, this is a test recording."
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-
+          "$ref": "#/components/responses/ErrorResponse"
 components:
-  $ref: ./_common.yaml#/components
+  "$ref": "./_common.yaml#/components"

@@ -19,12 +19,6 @@ This API is compatible with OpenAI interface format.
 
 (None)
 
-### Feature Verification
-
-| Feature | Status | Description |
-| ---- | ----- | -- |
-| Basic Request | ❌ Unavailable | No OpenAI audio_transcription mode models in model_info |
-
 ### 2. API Details
 
 {% openapi-operation spec="openai-en-{{ENV}}" path="/v1/audio/transcriptions" method="post" %}
