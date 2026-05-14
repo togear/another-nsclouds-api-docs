@@ -19,7 +19,6 @@
     * [Responses](conversation/volcengine-responses.md)
   * [DashScope](conversation/dashscope.md)
     * [Chat Completions](conversation/dashscope-chat.md)
-    * [Messages](conversation/dashscope-messages.md)
     * [Responses](conversation/dashscope-responses.md)
   * [Z.AI](conversation/zai.md)
     * [Chat Completions](conversation/zai-chat.md)

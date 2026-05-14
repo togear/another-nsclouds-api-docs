@@ -4,7 +4,6 @@
 * [Conversation APIs](conversation.md)
   * [DashScope](conversation/dashscope.md)
     * [Chat Completions](conversation/dashscope-chat.md)
-    * [Messages](conversation/dashscope-messages.md)
     * [Responses](conversation/dashscope-responses.md)
   * [DeepSeek](conversation/deepseek.md)
     * [Chat Completions](conversation/deepseek-chat.md)

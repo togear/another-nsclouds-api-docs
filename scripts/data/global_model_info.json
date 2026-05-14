@@ -4988,8 +4988,7 @@
         "source": "https://bailian.console.aliyun.com/cn-beijing/?spm=5176.12818093_47.overview_recent.2.1cc716d0ANckFh&tab=model#/model-market/detail/qwen3.5-plus",
         "supported_endpoints": [
           "/v1/chat/completions",
-          "/v1/responses",
-          "/v1/messages"
+          "/v1/responses"
         ]
       }
     },
@@ -5276,8 +5275,7 @@
         "source": "https://bailian.console.aliyun.com/cn-beijing/?spm=5176.12818093_47.overview_recent.2.1cc716d0ANckFh&tab=model#/model-market/detail/qwen3.5-flash",
         "supported_endpoints": [
           "/v1/chat/completions",
-          "/v1/responses",
-          "/v1/messages"
+          "/v1/responses"
         ]
       }
     },
@@ -5561,8 +5559,7 @@
         ],
         "source": "https://bailian.console.alibabacloud.com/?spm=a2c63.p38356.0.0.4a615d7bjSUCb4&tab=doc#/doc/?type=model&url=https%3A%2F%2Fwww.alibabacloud.com%2Fhelp%2Fen%2Fdoc-detail%2F2840914.html",
         "supported_endpoints": [
-          "/v1/chat/completions",
-          "/v1/messages"
+          "/v1/chat/completions"
         ]
       }
     },
