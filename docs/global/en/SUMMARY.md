@@ -1,7 +1,7 @@
 # Table of contents
 
 * [Introduction](README.md)
-* [Conversation APIs](conversation.md)
+* [Conversation APIs](conversation/readme.md)
   * [Anthropic](conversation/anthropic.md)
     * [Chat Completions](conversation/anthropic-chat.md)
     * [Messages](conversation/anthropic-messages.md)
