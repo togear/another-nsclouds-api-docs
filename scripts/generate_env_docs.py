@@ -422,24 +422,23 @@ def build_capability_page(env: str, lang: str, vendor: str, capability: str, mod
     )
 
 
-def chat_vendor_filename(vendor: str) -> str:
-    return f"{vendor}.md"
+def chat_vendor_summary_filename() -> str:
+    return "SUMMARY.md"
 
 
-def chat_capability_filename(vendor: str, capability: str) -> str:
-    slug = {
+def chat_capability_filename(capability: str) -> str:
+    return {
         "chat": "chat",
         "messages": "messages",
         "responses": "responses",
         "gemini": "gemini-native",
-    }[capability]
-    return f"{vendor}-{slug}.md"
+    }[capability] + ".md"
 
 
 def build_vendor_landing(lang: str, vendor: str, capabilities: list[str]) -> str:
     title = f"# {vendor_name(vendor)}"
     capability_lines = "\n".join(
-        f"- [{capability_title(capability, lang)}]({chat_capability_filename(vendor, capability)})"
+        f"- [{capability_title(capability, lang)}]({chat_capability_filename(capability)})"
         for capability in capabilities
     )
     return f"{title}\n\n{capability_lines}\n"
@@ -447,7 +446,7 @@ def build_vendor_landing(lang: str, vendor: str, capabilities: list[str]) -> str
 
 def category_vendor_target(category_key: str, vendor: str) -> str:
     if category_key == "chat":
-        return f"conversation/{chat_vendor_filename(vendor)}"
+        return f"conversation/{vendor}/{chat_vendor_summary_filename()}"
     if category_key == "completions":
         return f"completions/{vendor}.md"
     if category_key == "image_generations":
@@ -546,18 +545,18 @@ def render_env(env: str) -> None:
 
         summary_lines.append(f"* [{cfg['chat_root']}]({category_landing_filename('chat')})")
         for vendor in env_index["chat_vendors"]:
-            summary_lines.append(f"  * [{vendor_name(vendor)}](conversation/{chat_vendor_filename(vendor)})")
+            summary_lines.append(f"  * [{vendor_name(vendor)}](conversation/{vendor}/{chat_vendor_summary_filename()})")
             write_text(
-                base / "conversation" / chat_vendor_filename(vendor),
+                base / "conversation" / vendor / chat_vendor_summary_filename(),
                 build_vendor_landing(lang, vendor, env_index["chat_capabilities"][vendor]),
             )
             for capability in env_index["chat_capabilities"][vendor]:
-                filename = chat_capability_filename(vendor, capability)
+                filename = chat_capability_filename(capability)
                 summary_lines.append(
-                    f"    * [{capability_title(capability, lang)}](conversation/{filename})"
+                    f"    * [{capability_title(capability, lang)}](conversation/{vendor}/{filename})"
                 )
                 write_text(
-                    base / "conversation" / filename,
+                    base / "conversation" / vendor / filename,
                     build_capability_page(env, lang, vendor, capability, models_for_capability(env_index, vendor, capability)),
                 )
 

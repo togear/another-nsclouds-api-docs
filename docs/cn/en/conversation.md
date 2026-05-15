@@ -1,8 +1,8 @@
 # Conversation APIs
 
-- [DashScope](conversation/dashscope.md)
-- [DeepSeek](conversation/deepseek.md)
-- [Volcengine](conversation/volcengine.md)
-- [Z.AI](conversation/zai.md)
-- [Xiaomi](conversation/xiaomi.md)
-- [Moonshot AI](conversation/moonshotai.md)
+- [DashScope](conversation/dashscope/SUMMARY.md)
+- [DeepSeek](conversation/deepseek/SUMMARY.md)
+- [Volcengine](conversation/volcengine/SUMMARY.md)
+- [Z.AI](conversation/zai/SUMMARY.md)
+- [Xiaomi](conversation/xiaomi/SUMMARY.md)
+- [Moonshot AI](conversation/moonshotai/SUMMARY.md)
