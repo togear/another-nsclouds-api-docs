@@ -486,6 +486,12 @@ def build_category_landing(lang: str, category_key: str, vendors: list[str]) -> 
     return f"# {title_map[category_key]}\n\n{vendor_lines}\n"
 
 
+def build_chat_directory_summary(lang: str, vendors: list[str]) -> str:
+    cfg = LANG_CONFIG[lang]
+    vendor_lines = "\n".join(f"- [{vendor_name(vendor)}]({chat_vendor_filename(vendor)})" for vendor in vendors) if vendors else cfg["none"]
+    return f"# {cfg['chat_root']}\n\n{vendor_lines}\n"
+
+
 def render_env(env: str) -> None:
     env_index = build_env_index(env)
     for lang in LANGS:
@@ -525,6 +531,7 @@ def render_env(env: str) -> None:
                 stale_landing.unlink()
 
         write_text(base / category_landing_filename("chat"), build_category_landing(lang, "chat", env_index["chat_vendors"]))
+        write_text(base / "conversation" / "SUMMARY.md", build_chat_directory_summary(lang, env_index["chat_vendors"]))
         write_text(
             base / category_landing_filename("completions"),
             build_category_landing(lang, "completions", env_index["completion_vendors"]),
