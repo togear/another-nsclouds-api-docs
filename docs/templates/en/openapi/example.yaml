@@ -523,7 +523,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateImageEditRequest'
             encoding:
-              images:
+              image:
                 style: form
                 explode: true
             examples:
@@ -532,7 +532,7 @@ paths:
                 description: Edit using image, mask, and prompt.
                 value:
                   model: dall-e-2
-                  images:
+                  image:
                     - '@person.png'
                   mask: '@mask.png'
                   prompt: Add a hat to the person
@@ -543,7 +543,7 @@ paths:
                 description: Edit using only image and prompt.
                 value:
                   model: dall-e-2
-                  images:
+                  image:
                     - '@body-lotion.png'
                   prompt: Change the background to a beach
                   'n': 1

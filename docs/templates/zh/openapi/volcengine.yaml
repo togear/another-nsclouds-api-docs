@@ -447,7 +447,8 @@ paths:
                 description: 编辑图像的基础示例。
                 value:
                   model: volcengine/doubao-seedream-4-5-251128
-                  image[]: ["@/path/to/image.png"]
+                  image:
+                    - '@/path/to/image.png'
                   prompt: "Add a hat to the cat"
                   size: "1024x1024"
 

@@ -309,34 +309,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-              - model
-              - messages
-              properties:
-                model:
-                  type: string
-                messages:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                    - role
-                    - content
-                    properties:
-                      role:
-                        type: string
-                      content:
-                        oneOf:
-                        - type: string
-                        - type: array
-                          items:
-                            type: object
-                max_tokens:
-                  type: integer
-                stream:
-                  type: boolean
-                  default: false
+              "$ref": "#/components/schemas/CreateMessagesRequest"
             examples:
               default:
                 summary: 基础
@@ -352,8 +325,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                "$ref": "#/components/schemas/MessageResponse"
               examples:
                 default:
                   summary: 基础响应
@@ -389,22 +361,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-              - model
-              - input
-              properties:
-                model:
-                  type: string
-                input:
-                  oneOf:
-                  - type: string
-                  - type: array
-                    items:
-                      type: object
-                stream:
-                  type: boolean
-                  default: false
+              "$ref": "#/components/schemas/CreateResponseRequest"
             examples:
               default:
                 summary: 基础
@@ -418,8 +375,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                "$ref": "#/components/schemas/ResponseObject"
               examples:
                 default:
                   summary: 基础响应
@@ -427,6 +383,18 @@ paths:
                     id: resp_123
                     object: response
                     model: deepseek-v3.2
+                    output:
+                    - id: msg_123
+                      type: message
+                      role: assistant
+                      status: completed
+                      content:
+                      - type: output_text
+                        text: Hello! How can I help you today?
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 9
+                      total_tokens: 21
         '400':
           "$ref": "#/components/responses/ErrorResponse"
         '401':

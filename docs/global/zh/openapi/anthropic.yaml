@@ -311,34 +311,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-              - model
-              - messages
-              properties:
-                model:
-                  type: string
-                messages:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                    - role
-                    - content
-                    properties:
-                      role:
-                        type: string
-                      content:
-                        oneOf:
-                        - type: string
-                        - type: array
-                          items:
-                            type: object
-                max_tokens:
-                  type: integer
-                stream:
-                  type: boolean
-                  default: false
+              "$ref": "#/components/schemas/CreateMessagesRequest"
             examples:
               default:
                 summary: 基础
@@ -354,8 +327,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                "$ref": "#/components/schemas/MessageResponse"
               examples:
                 default:
                   summary: 基础响应

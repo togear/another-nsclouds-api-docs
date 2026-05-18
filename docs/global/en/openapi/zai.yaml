@@ -314,22 +314,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-              - model
-              - input
-              properties:
-                model:
-                  type: string
-                input:
-                  oneOf:
-                  - type: string
-                  - type: array
-                    items:
-                      type: object
-                stream:
-                  type: boolean
-                  default: false
+              "$ref": "#/components/schemas/CreateResponseRequest"
             examples:
               default:
                 summary: Basic
@@ -343,8 +328,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                "$ref": "#/components/schemas/ResponseObject"
               examples:
                 default:
                   summary: Basic Response
@@ -352,6 +336,18 @@ paths:
                     id: resp_123
                     object: response
                     model: glm-4.7
+                    output:
+                    - id: msg_123
+                      type: message
+                      role: assistant
+                      status: completed
+                      content:
+                      - type: output_text
+                        text: Hello! How can I help you today?
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 9
+                      total_tokens: 21
         '400':
           "$ref": "#/components/responses/ErrorResponse"
         '401':

@@ -657,7 +657,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateImageEditRequest'
             encoding:
-              images:
+              image:
                 style: form
                 explode: true
             examples:
@@ -666,7 +666,7 @@ paths:
                 description: 使用图像、蒙版和提示进行编辑。
                 value:
                   model: deepseek-image
-                  images:
+                  image:
                     - '@person.png'
                   mask: '@mask.png'
                   prompt: Add a hat to the person
@@ -677,7 +677,7 @@ paths:
                 description: 仅使用图像和提示进行编辑。
                 value:
                   model: deepseek-image
-                  images:
+                  image:
                     - '@body-lotion.png'
                   prompt: Change the background to a beach
                   'n': 1
