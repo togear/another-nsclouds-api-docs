@@ -378,8 +378,8 @@ paths:
                           image_url: https://ark-project.tos-cn-beijing.volces.com/doc_image/seedream4_5_imageToimage.png
                           detail: high
                   stream: false
-              file_input:
-                summary: File Input
+              file_url_input:
+                summary: File Input (file_url)
                 description: Analyze a publicly accessible file with an input_file part and file_url.
                 value:
                   model: gpt-5.4
@@ -389,6 +389,19 @@ paths:
                       content:
                         - type: input_file
                           file_url: https://arxiv.org/pdf/1706.03762v7
+                        - type: input_text
+                          text: Summarize this paper's core idea.
+              file_data_input:
+                summary: File Input (file_data)
+                description: Analyze an inline uploaded file with filename and a base64 data URL in file_data.
+                value:
+                  model: gpt-5.4
+                  input:
+                    - role: user
+                      content:
+                        - type: input_file
+                          filename: 1706.03762v7.pdf
+                          file_data: data:application/pdf;base64,JVBERi0x...
                         - type: input_text
                           text: Summarize this paper's core idea.
       responses:

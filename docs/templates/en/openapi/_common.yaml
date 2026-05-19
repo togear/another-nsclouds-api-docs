@@ -432,6 +432,12 @@ components:
         file_url:
           type: string
           description: Referenced file URL used by file input parts, when supported.
+        filename:
+          type: string
+          description: File name used together with file_data for inline file uploads.
+        file_data:
+          type: string
+          description: Data URL containing base64-encoded file content, such as data:application/pdf;base64,...
         detail:
           type: string
           description: Detail level for image understanding, when supported.
