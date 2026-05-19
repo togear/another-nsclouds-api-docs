@@ -87,7 +87,7 @@ paths:
                   max_completion_tokens: 100
                   stream: true
               image_input:
-                summary: Image Input (Multimodal)
+                summary: Image Input (URL)
                 description: Analyze one or more images by URL using image_url parts.
                 value:
                   model: gpt-5
@@ -110,7 +110,7 @@ paths:
                       content:
                         - type: image_url
                           image_url:
-                            url: 'data:image/png;base64,iVBORw0KGgo...'
+                            url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
                         - type: text
                           text: What's in this image?
                   max_completion_tokens: 300
@@ -326,7 +326,7 @@ paths:
                   input: Hello
                   stream: false
               image_input:
-                summary: Image Input (Multimodal)
+                summary: Image Input (URL)
                 description: Analyze one or more image URLs using input_image parts.
                 value:
                   model: gpt-5
@@ -348,7 +348,7 @@ paths:
                     - role: user
                       content:
                         - type: input_image
-                          image_url: 'data:image/png;base64,iVBORw0KGgo...'
+                          image_url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
                         - type: input_text
                           text: What's in this image?
                   stream: false
