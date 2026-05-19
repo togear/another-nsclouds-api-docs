@@ -4,8 +4,8 @@ info:
   description: 'Self-hosted LiteLLM gateway API documentation, fully compatible with OpenAI format.'
   version: 1.11.0
 servers:
-  - url: '${SERVER_URL}'
-    description: '${SERVER_DESCRIPTION}'
+  - url: 'https://aillm.nscloud.ai'
+    description: Global Server
 tags:
   - name: chat_completions
     x-page-title: Chat Completions
