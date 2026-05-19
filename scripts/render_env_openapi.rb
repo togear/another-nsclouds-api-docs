@@ -89,6 +89,8 @@ CAPABILITY_CONFIG = {
 }.freeze
 
 GEMINI_NATIVE_ENDPOINTS = CAPABILITY_CONFIG.fetch("gemini").fetch(:paths).freeze
+
+
 def deep_copy(value)
   Marshal.load(Marshal.dump(value))
 end
