@@ -409,22 +409,56 @@ components:
           $ref: '#/components/schemas/Usage'
       additionalProperties: true
 
-    ResponseContentPart:
+    ResponseInputTextPart:
       type: object
-      description: Flexible content part used inside Responses input and output items.
+      description: Text input content part for the Responses protocol.
       properties:
         type:
           type: string
-          description: Part type, such as input_text, input_image, output_text, or tool_result.
+          description: Input part type.
+          enum:
+            - input_text
         text:
           type: string
-          description: Text value carried by the part.
+          description: Text input value.
+      required:
+        - type
+        - text
+      additionalProperties: true
+
+    ResponseInputImagePart:
+      type: object
+      description: Image input content part for the Responses protocol.
+      properties:
+        type:
+          type: string
+          description: Input part type.
+          enum:
+            - input_image
         image_url:
           type: string
-          description: Publicly accessible image URL or data URL used by image input parts.
-        file_id:
+          description: Publicly accessible image URL or data URL, such as data:image/png;base64,...
+        detail:
           type: string
-          description: Referenced file identifier.
+          description: Detail level for image understanding, when supported.
+          enum:
+            - auto
+            - low
+            - high
+      required:
+        - type
+        - image_url
+      additionalProperties: true
+
+    ResponseInputFilePart:
+      type: object
+      description: File input content part for the Responses protocol.
+      properties:
+        type:
+          type: string
+          description: Input part type.
+          enum:
+            - input_file
         file_url:
           type: string
           description: Referenced file URL used by file input parts, when supported.
@@ -434,9 +468,33 @@ components:
         file_data:
           type: string
           description: Data URL containing base64-encoded file content, such as data:application/pdf;base64,...
-        detail:
+      required:
+        - type
+      anyOf:
+        - required:
+            - file_url
+        - required:
+            - filename
+            - file_data
+      additionalProperties: true
+
+    ResponseInputContentPart:
+      description: Responses input content part. Supported input types are input_text, input_image, and input_file.
+      oneOf:
+        - $ref: '#/components/schemas/ResponseInputTextPart'
+        - $ref: '#/components/schemas/ResponseInputImagePart'
+        - $ref: '#/components/schemas/ResponseInputFilePart'
+
+    ResponseContentPart:
+      type: object
+      description: Flexible output content part used inside Responses output items.
+      properties:
+        type:
           type: string
-          description: Detail level for image understanding, when supported.
+          description: Output part type, such as output_text or tool_result.
+        text:
+          type: string
+          description: Text value carried by the part.
         annotations:
           type: array
           description: Optional annotations attached to the content part.
@@ -463,7 +521,7 @@ components:
             - type: array
               description: Structured content part array.
               items:
-                $ref: '#/components/schemas/ResponseContentPart'
+                $ref: '#/components/schemas/ResponseInputContentPart'
       additionalProperties: true
 
     CreateResponseRequest:

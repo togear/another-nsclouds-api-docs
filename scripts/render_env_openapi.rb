@@ -314,7 +314,7 @@ def rewrite_operation(operation, capability, vendor, example_model)
   apply_example_model!(new_operation, example_model)
   if capability == "responses" && vendor != "openai"
     request_examples = new_operation.dig("requestBody", "content", "application/json", "examples")
-    %w[image_input file_input file_url_input file_data_input].each { |key| request_examples&.delete(key) }
+    %w[image_input image_data_url_input file_input file_url_input file_data_input].each { |key| request_examples&.delete(key) }
     new_operation.dig("responses", "200", "content", "application/json", "examples")&.delete("image-input-response")
     new_operation.dig("responses", "200", "content", "application/json", "examples")&.delete("file-input-response")
   end

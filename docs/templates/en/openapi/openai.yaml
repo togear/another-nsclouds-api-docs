@@ -366,17 +366,30 @@ paths:
                   stream: false
               image_input:
                 summary: Image Input (Multimodal)
-                description: Analyze an image using an input_image part.
+                description: Analyze an image URL using an input_image part.
                 value:
                   model: gpt-5.4
                   input:
                     - role: user
                       content:
-                        - type: input_text
-                          text: Describe the image and list any visible text.
                         - type: input_image
                           image_url: https://ark-project.tos-cn-beijing.volces.com/doc_image/seedream4_5_imageToimage.png
                           detail: high
+                        - type: input_text
+                          text: Describe the image and list any visible text.
+                  stream: false
+              image_data_url_input:
+                summary: Image Input (base64)
+                description: Analyze an inline image data URL using an input_image part.
+                value:
+                  model: gpt-5.4
+                  input:
+                    - role: user
+                      content:
+                        - type: input_image
+                          image_url: data:image/png;base64,iVBORw0KGgo...
+                        - type: input_text
+                          text: What's in this image?
                   stream: false
               file_url_input:
                 summary: File Input (file_url)
