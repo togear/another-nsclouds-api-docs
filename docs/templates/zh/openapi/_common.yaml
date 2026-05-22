@@ -11,7 +11,7 @@ tags:
   - name: chat_completions
     x-page-title: 对话生成
     x-page-icon: message
-    description: 对话生成相关的 API，包括聊天补全和文本补全
+    description: 对话生成相关的 API。
   - name: embeddings
     x-page-title: 向量嵌入
     x-page-icon: database

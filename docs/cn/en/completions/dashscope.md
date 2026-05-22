@@ -1,3 +1,7 @@
+---
+hidden: true
+---
+
 # DashScope - Text Completions
 
 ### 1. Overview
@@ -15,6 +19,7 @@ This API is compatible with the OpenAI Completions interface.
 * `qwen3.6-flash`
 * `qwen3.6-max-preview`
 * `qwen3.6-plus`
+* `qwen3.7-max`
 
 
 ### 2. API Details

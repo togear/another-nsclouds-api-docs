@@ -330,6 +330,10 @@ def success_hint(text: str) -> str:
     return f'{{% hint style="success" %}}\n{text}\n{{% endhint %}}\n'
 
 
+def hidden_frontmatter(content: str) -> str:
+    return f"---\nhidden: true\n---\n\n{content}"
+
+
 def capability_title(capability: str, lang: str) -> str:
     cfg = LANG_CONFIG[lang]
     return {
@@ -559,7 +563,8 @@ def render_env(env: str) -> None:
                 stale_landing.unlink()
 
         write_text(base / "conversation" / "SUMMARY.md", build_chat_directory_summary(lang, env_index["chat_vendors"]))
-        write_text(base / "completions" / "SUMMARY.md", build_category_directory_summary(lang, "completions", env_index["completion_vendors"]))
+        if SHOW_TEXT_COMPLETIONS:
+            write_text(base / "completions" / "SUMMARY.md", build_category_directory_summary(lang, "completions", env_index["completion_vendors"]))
         write_text(
             base / "image-generations" / "SUMMARY.md",
             build_category_directory_summary(lang, "image_generations", env_index["image_gen_vendors"]),
@@ -595,12 +600,12 @@ def render_env(env: str) -> None:
         if SHOW_TEXT_COMPLETIONS:
             summary_lines.append(f"* [{cfg['completions_root']}]({category_summary_target('completions')})")
         for vendor in env_index["completion_vendors"]:
+            page = build_capability_page(env, lang, vendor, "completions", models_for_capability(env_index, vendor, "completions"))
             if SHOW_TEXT_COMPLETIONS:
                 summary_lines.append(f"  * [{vendor_name(vendor)}](completions/{vendor}.md)")
-            write_text(
-                base / "completions" / f"{vendor}.md",
-                build_capability_page(env, lang, vendor, "completions", models_for_capability(env_index, vendor, "completions")),
-            )
+            else:
+                page = hidden_frontmatter(page)
+            write_text(base / "completions" / f"{vendor}.md", page)
 
         summary_lines.append(f"* [{cfg['image_gen_root']}]({category_summary_target('image_generations')})")
         for vendor in env_index["image_gen_vendors"]:

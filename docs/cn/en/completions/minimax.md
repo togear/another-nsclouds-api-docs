@@ -1,3 +1,7 @@
+---
+hidden: true
+---
+
 # MiniMax - Text Completions
 
 ### 1. Overview
