@@ -54,6 +54,11 @@ BRAND_NAMES = {
     "xiaomi": "Xiaomi",
     "zai": "Z.AI",
 }
+
+# Keep Text Completions pages generated but hidden from top-level navigation.
+# Flip this to true if the legacy /v1/completions docs need to be exposed again.
+SHOW_TEXT_COMPLETIONS = False
+
 @dataclass(frozen=True)
 class ModelRecord:
     vendor: str
@@ -585,9 +590,11 @@ def render_env(env: str) -> None:
                     build_capability_page(env, lang, vendor, capability, models_for_capability(env_index, vendor, capability)),
                 )
 
-        summary_lines.append(f"* [{cfg['completions_root']}]({category_summary_target('completions')})")
+        if SHOW_TEXT_COMPLETIONS:
+            summary_lines.append(f"* [{cfg['completions_root']}]({category_summary_target('completions')})")
         for vendor in env_index["completion_vendors"]:
-            summary_lines.append(f"  * [{vendor_name(vendor)}](completions/{vendor}.md)")
+            if SHOW_TEXT_COMPLETIONS:
+                summary_lines.append(f"  * [{vendor_name(vendor)}](completions/{vendor}.md)")
             write_text(
                 base / "completions" / f"{vendor}.md",
                 build_capability_page(env, lang, vendor, "completions", models_for_capability(env_index, vendor, "completions")),
