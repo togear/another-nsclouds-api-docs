@@ -79,7 +79,6 @@ CAPABILITY_CONFIG = {
   "gemini" => {
     default_source: "google",
     paths: [
-      "/v1/models/{model}:generateContent",
       "/v1beta/models/{model}:generateContent",
       "/v1beta/models/{model}:streamGenerateContent",
     ],

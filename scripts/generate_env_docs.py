@@ -160,7 +160,6 @@ LANG_CONFIG["en"]["navigation_label"] = "Available pages"
 
 CHAT_LEAF_ORDER = ("chat", "messages", "responses", "gemini")
 GEMINI_NATIVE_DOC_PATHS = (
-    "/v1/models/{model}:generateContent",
     "/v1beta/models/{model}:generateContent",
     "/v1beta/models/{model}:streamGenerateContent",
 )

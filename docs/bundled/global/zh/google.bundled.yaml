@@ -211,61 +211,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
-  '/v1/models/{model}:generateContent':
-    post:
-      tags:
-        - gemini_native_google
-      summary: Gemini 生成内容 (v1)
-      description: 提供与 Google Gemini 原生协议兼容的接口。
-      operationId: generateContentV1_google
-      security:
-        - APIKeyHeader: []
-      parameters:
-        - name: model
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-            examples:
-              default:
-                summary: 基础
-                value:
-                  contents:
-                    - role: user
-                      parts:
-                        - text: Hello
-      responses:
-        '200':
-          description: 成功响应
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-              examples:
-                default:
-                  summary: 基础响应
-                  value:
-                    candidates:
-                      - content:
-                          role: model
-                          parts:
-                            - text: Hello! How can I help you today?
-                        finishReason: STOP
-                    modelVersion: gemini-3-flash-preview
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
   '/v1beta/models/{model}:generateContent':
     post:
       tags:

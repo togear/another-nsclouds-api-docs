@@ -1228,7 +1228,6 @@
         "supports_prefix_continuation": null,
         "supported_endpoints": [
           "/v1/chat/completions",
-          "/v1/models/{model}:generateContent",
           "/v1beta/models/{model}:generateContent",
           "/v1beta/models/{model}:streamGenerateContent"
         ],
@@ -1397,7 +1396,6 @@
         "supports_prefix_continuation": null,
         "supported_endpoints": [
           "/v1/chat/completions",
-          "/v1/models/{model}:generateContent",
           "/v1beta/models/{model}:generateContent",
           "/v1beta/models/{model}:streamGenerateContent"
         ],
@@ -1563,7 +1561,6 @@
         "supports_prefix_continuation": null,
         "supported_endpoints": [
           "/v1/chat/completions",
-          "/v1/models/{model}:generateContent",
           "/v1beta/models/{model}:generateContent",
           "/v1beta/models/{model}:streamGenerateContent"
         ],
@@ -1732,7 +1729,6 @@
         "supports_prefix_continuation": null,
         "supported_endpoints": [
           "/v1/chat/completions",
-          "/v1/models/{model}:generateContent",
           "/v1beta/models/{model}:generateContent",
           "/v1beta/models/{model}:streamGenerateContent"
         ],
@@ -8915,7 +8911,6 @@
         "supports_prefix_continuation": null,
         "supported_endpoints": [
           "/v1/chat/completions",
-          "/v1/models/{model}:generateContent",
           "/v1beta/models/{model}:generateContent",
           "/v1beta/models/{model}:streamGenerateContent"
         ],
