@@ -109,21 +109,7 @@ paths:
                     - type: file
                       file:
                         filename: report.pdf
-                        file_data: data:application/pdf;base64,JVBERi0xLjQKJcfs...
-                  max_completion_tokens: 300
-              file_id_input:
-                summary: 文件输入（File ID）
-                description: OpenAI 兼容字段。file_id 来源于 Files API 上传后返回的文件 ID；当前平台该能力适配中，实际可用性取决于文件托管和模型侧支持。
-                value:
-                  model: gpt-5
-                  messages:
-                  - role: user
-                    content:
-                    - type: text
-                      text: Summarize the attached document in five bullet points.
-                    - type: file
-                      file:
-                        file_id: file_abc123report
+                        file_data: data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAyMDAgMjAwXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCA+PiA+PgplbmRvYmoKNCAwIG9iago8PCAvTGVuZ3RoIDQ0ID4+CnN0cmVhbQpCVAovRjEgMTIgVGYKNzIgNzIwIFRkCihIZWxsbyB3b3JsZCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp0cmFpbGVyCjw8IC9TaXplIDUgL1Jvb3QgMSAwIFIgPj4KJSVFT0YK
                   max_completion_tokens: 300
               audio_input:
                 summary: 音频输入
@@ -347,20 +333,6 @@ paths:
                     - type: input_image
                       image_url: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=
                   stream: false
-              image_file_input:
-                summary: 图像输入（File ID，兼容字段）
-                description: OpenAI 兼容字段。通过已上传图片的 file_id 分析图片内容；当前平台该能力适配中，实际可用性取决于文件托管和模型侧支持。当前推荐优先使用
-                  image_url 或图片 data URL。
-                value:
-                  model: gpt-5.4
-                  input:
-                  - role: user
-                    content:
-                    - type: input_text
-                      text: What's in this image?
-                    - type: input_image
-                      file_id: file_abc123image
-                  stream: false
               file_url_input:
                 summary: 文件输入（URL）
                 description: 通过 input_file 引用外部 PDF 或文档 URL。
@@ -374,19 +346,6 @@ paths:
                     - type: input_file
                       file_url: https://www.berkshirehathaway.com/letters/2024ltr.pdf
                   stream: false
-              file_id_input:
-                summary: 文件输入（File ID）
-                description: OpenAI 兼容字段。引用通过 Files API 预先上传的文件；当前平台该能力适配中，实际可用性取决于文件托管和模型侧支持。
-                value:
-                  model: gpt-5
-                  input:
-                  - role: user
-                    content:
-                    - type: input_file
-                      file_id: file_abc123pdf
-                    - type: input_text
-                      text: What is the first major topic discussed in this file?
-                  stream: false
               file_base64_input:
                 summary: 文件输入（Base64）
                 description: 通过 filename 加 base64 data URL 直接内联传递文件内容。
@@ -397,7 +356,7 @@ paths:
                     content:
                     - type: input_file
                       filename: report.pdf
-                      file_data: data:application/pdf;base64,JVBERi0xLjQKJcfs...
+                      file_data: data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAyMDAgMjAwXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCA+PiA+PgplbmRvYmoKNCAwIG9iago8PCAvTGVuZ3RoIDQ0ID4+CnN0cmVhbQpCVAovRjEgMTIgVGYKNzIgNzIwIFRkCihIZWxsbyB3b3JsZCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp0cmFpbGVyCjw8IC9TaXplIDUgL1Jvb3QgMSAwIFIgPj4KJSVFT0YK
                     - type: input_text
                       text: Extract the action items from this file.
                   stream: false

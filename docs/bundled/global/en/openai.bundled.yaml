@@ -125,21 +125,7 @@ paths:
                         - type: file
                           file:
                             filename: report.pdf
-                            file_data: 'data:application/pdf;base64,JVBERi0xLjQKJcfs...'
-                  max_completion_tokens: 300
-              file_id_input:
-                summary: File Input (File ID)
-                description: 'OpenAI-compatible field. file_id comes from a Files API upload; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
-                value:
-                  model: gpt-5
-                  messages:
-                    - role: user
-                      content:
-                        - type: text
-                          text: Summarize the attached document in five bullet points.
-                        - type: file
-                          file:
-                            file_id: file_abc123report
+                            file_data: 'data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAyMDAgMjAwXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCA+PiA+PgplbmRvYmoKNCAwIG9iago8PCAvTGVuZ3RoIDQ0ID4+CnN0cmVhbQpCVAovRjEgMTIgVGYKNzIgNzIwIFRkCihIZWxsbyB3b3JsZCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp0cmFpbGVyCjw8IC9TaXplIDUgL1Jvb3QgMSAwIFIgPj4KJSVFT0YK'
                   max_completion_tokens: 300
               audio_input:
                 summary: Audio Input
@@ -356,19 +342,6 @@ paths:
                         - type: input_image
                           image_url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
                   stream: false
-              image_file_input:
-                summary: 'Image Input (File ID, Compatible Field)'
-                description: 'OpenAI-compatible field. Analyze an uploaded image by passing its file ID; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support. Prefer image_url or an image data URL today.'
-                value:
-                  model: gpt-5.4
-                  input:
-                    - role: user
-                      content:
-                        - type: input_text
-                          text: What's in this image?
-                        - type: input_image
-                          file_id: file_abc123image
-                  stream: false
               file_url_input:
                 summary: File Input (URL)
                 description: Reference an external PDF or document URL as input_file.
@@ -382,19 +355,6 @@ paths:
                         - type: input_text
                           text: Analyze the document and summarize the key points.
                   stream: false
-              file_id_input:
-                summary: File Input (File ID)
-                description: 'OpenAI-compatible field. Reference a previously uploaded file from the Files API; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
-                value:
-                  model: gpt-5
-                  input:
-                    - role: user
-                      content:
-                        - type: input_file
-                          file_id: file_abc123pdf
-                        - type: input_text
-                          text: What is the first major topic discussed in this file?
-                  stream: false
               file_base64_input:
                 summary: File Input (Base64)
                 description: Send inline file data using filename plus a base64 data URL.
@@ -405,7 +365,7 @@ paths:
                       content:
                         - type: input_file
                           filename: report.pdf
-                          file_data: 'data:application/pdf;base64,JVBERi0xLjQKJcfs...'
+                          file_data: 'data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAyMDAgMjAwXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCA+PiA+PgplbmRvYmoKNCAwIG9iago8PCAvTGVuZ3RoIDQ0ID4+CnN0cmVhbQpCVAovRjEgMTIgVGYKNzIgNzIwIFRkCihIZWxsbyB3b3JsZCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp0cmFpbGVyCjw8IC9TaXplIDUgL1Jvb3QgMSAwIFIgPj4KJSVFT0YK'
                         - type: input_text
                           text: Extract the action items from this file.
                   stream: false
@@ -537,7 +497,7 @@ components:
       properties:
         file_id:
           type: string
-          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
+          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is under construction/adaptation, and actual availability depends on file hosting and model-side support.'
         file_data:
           type: string
           description: 'Inline base64-encoded file content, recommended today.'
@@ -1340,7 +1300,7 @@ components:
           description: 'Publicly accessible image URL or image data URL. Common image formats are supported; for example, data:image/png;base64,...'
         file_id:
           type: string
-          description: 'OpenAI-compatible field. Previously uploaded image file ID from the Files API; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
+          description: 'OpenAI-compatible field. Previously uploaded image file ID from the Files API; this platform capability is under construction/adaptation, and actual availability depends on file hosting and model-side support.'
         detail:
           type: string
           description: 'Detail level for image understanding, when supported.'
@@ -1368,7 +1328,7 @@ components:
             - input_file
         file_id:
           type: string
-          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
+          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is under construction/adaptation, and actual availability depends on file hosting and model-side support.'
         file_url:
           type: string
           description: 'Publicly accessible file URL used by file input parts, recommended today. Common document and text formats are supported.'

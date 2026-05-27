@@ -415,7 +415,7 @@ components:
       properties:
         file_id:
           type: string
-          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
+          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is under construction/adaptation, and actual availability depends on file hosting and model-side support.'
         file_data:
           type: string
           description: 'Inline base64-encoded file content, recommended today.'
@@ -1218,7 +1218,7 @@ components:
           description: 'Publicly accessible image URL or image data URL. Common image formats are supported; for example, data:image/png;base64,...'
         file_id:
           type: string
-          description: 'OpenAI-compatible field. Previously uploaded image file ID from the Files API; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
+          description: 'OpenAI-compatible field. Previously uploaded image file ID from the Files API; this platform capability is under construction/adaptation, and actual availability depends on file hosting and model-side support.'
         detail:
           type: string
           description: 'Detail level for image understanding, when supported.'
@@ -1246,7 +1246,7 @@ components:
             - input_file
         file_id:
           type: string
-          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is still being adapted, and actual availability depends on file hosting and model-side support.'
+          description: 'OpenAI-compatible field. Previously uploaded file ID from the Files API; this platform capability is under construction/adaptation, and actual availability depends on file hosting and model-side support.'
         file_url:
           type: string
           description: 'Publicly accessible file URL used by file input parts, recommended today. Common document and text formats are supported.'

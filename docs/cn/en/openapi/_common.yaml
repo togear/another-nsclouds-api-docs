@@ -119,8 +119,8 @@ components:
         file_id:
           type: string
           description: OpenAI-compatible field. Previously uploaded file ID from the
-            Files API; this platform capability is still being adapted, and actual
-            availability depends on file hosting and model-side support.
+            Files API; this platform capability is under construction/adaptation,
+            and actual availability depends on file hosting and model-side support.
         file_data:
           type: string
           description: Inline base64-encoded file content, recommended today.
@@ -938,8 +938,8 @@ components:
         file_id:
           type: string
           description: OpenAI-compatible field. Previously uploaded image file ID
-            from the Files API; this platform capability is still being adapted, and
-            actual availability depends on file hosting and model-side support.
+            from the Files API; this platform capability is under construction/adaptation,
+            and actual availability depends on file hosting and model-side support.
         detail:
           type: string
           description: Detail level for image understanding, when supported.
@@ -970,8 +970,8 @@ components:
         file_id:
           type: string
           description: OpenAI-compatible field. Previously uploaded file ID from the
-            Files API; this platform capability is still being adapted, and actual
-            availability depends on file hosting and model-side support.
+            Files API; this platform capability is under construction/adaptation,
+            and actual availability depends on file hosting and model-side support.
         file_url:
           type: string
           description: Publicly accessible file URL used by file input parts, recommended

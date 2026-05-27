@@ -484,7 +484,7 @@ components:
       properties:
         file_id:
           type: string
-          description: OpenAI 兼容字段。预先上传后的文件 ID，来源于 Files API；当前平台该能力适配中，实际可用性取决于文件托管和模型侧支持。
+          description: OpenAI 兼容字段。预先上传后的文件 ID，来源于 Files API；当前平台该能力建设中/适配中，实际可用性取决于文件托管和模型侧支持。
         file_data:
           type: string
           description: 内联传递的 base64 文件内容，当前推荐优先使用。
@@ -1287,7 +1287,7 @@ components:
           description: '可公开访问的图片 URL 或图片 data URL。支持常见图片格式，例如 data:image/png;base64,...。'
         file_id:
           type: string
-          description: OpenAI 兼容字段。预先上传的图片文件 ID，来源于 Files API；当前平台该能力适配中，实际可用性取决于文件托管和模型侧支持。
+          description: OpenAI 兼容字段。预先上传的图片文件 ID，来源于 Files API；当前平台该能力建设中/适配中，实际可用性取决于文件托管和模型侧支持。
         detail:
           type: string
           description: 支持时用于控制图片理解的细节等级。
@@ -1315,7 +1315,7 @@ components:
             - input_file
         file_id:
           type: string
-          description: OpenAI 兼容字段。预先上传的文件 ID，来源于 Files API；当前平台该能力适配中，实际可用性取决于文件托管和模型侧支持。
+          description: OpenAI 兼容字段。预先上传的文件 ID，来源于 Files API；当前平台该能力建设中/适配中，实际可用性取决于文件托管和模型侧支持。
         file_url:
           type: string
           description: 用于文件输入的可公开访问文件 URL，当前推荐优先使用。支持常见文档和文本格式。
