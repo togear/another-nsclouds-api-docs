@@ -32,6 +32,11 @@ tags:
     x-page-title: OpenAI
     x-page-icon: brain
     description: OpenAI 的对话生成 API
+  - name: messages_openai
+    x-parent: chat_completions
+    x-page-title: OpenAI
+    x-page-icon: brain
+    description: OpenAI 的 Messages 协议 API
   - name: responses_openai
     x-parent: chat_completions
     x-page-title: OpenAI
@@ -275,6 +280,58 @@ paths:
                     data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gpt-5.2","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
                     data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gpt-5.2","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
                     data: [DONE]
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/messages:
+    post:
+      tags:
+        - messages_openai
+      summary: 创建 Messages 消息
+      description: 使用 Messages 兼容格式创建消息响应。
+      operationId: createMessage_openai
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMessagesRequest'
+            examples:
+              default:
+                summary: 基础
+                value:
+                  model: gpt-5.4
+                  messages:
+                    - role: user
+                      content: Hello
+                  max_tokens: 128
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              examples:
+                default:
+                  summary: 基础响应
+                  value:
+                    id: msg_123
+                    type: message
+                    role: assistant
+                    model: gpt-5.4
+                    content:
+                      - type: text
+                        text: Hello! How can I help you today?
+                    stop_reason: end_turn
+                    usage:
+                      input_tokens: 12
+                      output_tokens: 9
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':

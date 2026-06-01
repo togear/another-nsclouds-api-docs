@@ -10,7 +10,7 @@ This endpoint provides an OpenAI-compatible Chat Completions path. Actual parame
 
 **Supported models：**
 
-* `deepseek-r1`
+* `deepseek/deepseek-v3.2`
 * `deepseek/deepseek-v4-flash`
 * `deepseek/deepseek-v4-pro`
 

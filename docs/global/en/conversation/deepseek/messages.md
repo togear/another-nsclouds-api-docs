@@ -10,6 +10,7 @@ This endpoint provides an Anthropic Messages-compatible path. Actual behavior de
 
 **Supported models：**
 
+* `deepseek/deepseek-v3.2`
 * `deepseek/deepseek-v4-flash`
 * `deepseek/deepseek-v4-pro`
 

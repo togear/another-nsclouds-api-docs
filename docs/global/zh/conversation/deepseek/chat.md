@@ -10,7 +10,7 @@ DeepSeek 在当前环境中提供的对话生成能力。
 
 **模型列表：**
 
-* `deepseek-r1`
+* `deepseek/deepseek-v3.2`
 * `deepseek/deepseek-v4-flash`
 * `deepseek/deepseek-v4-pro`
 

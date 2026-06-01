@@ -10,6 +10,7 @@ DeepSeek 在当前环境中提供的 Messages 协议能力。
 
 **模型列表：**
 
+* `deepseek/deepseek-v3.2`
 * `deepseek/deepseek-v4-flash`
 * `deepseek/deepseek-v4-pro`
 

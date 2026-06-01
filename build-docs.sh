@@ -16,6 +16,17 @@ run_swagger_cli() {
   fi
 }
 
+sed_in_place() {
+  local expression=$1
+  local file=$2
+
+  if sed --version >/dev/null 2>&1; then
+    sed -i "$expression" "$file"
+  else
+    sed -i '' "$expression" "$file"
+  fi
+}
+
 generate_bundled() {
   local env=$1
   local output_prefix=$2
@@ -28,15 +39,15 @@ generate_bundled() {
   
   # 根据环境替换占位符
   if [ "$env" == "cn" ]; then
-    sed -i '' 's/${SERVER_URL}/https:\/\/aillm.nsclouds.com/g' $temp_dir/zh/openapi/_common.yaml
-    sed -i '' 's/${SERVER_DESCRIPTION}/国内服务器/g' $temp_dir/zh/openapi/_common.yaml
-    sed -i '' 's/${SERVER_URL}/https:\/\/aillm.nsclouds.com/g' $temp_dir/en/openapi/_common.yaml
-    sed -i '' 's/${SERVER_DESCRIPTION}/China Server/g' $temp_dir/en/openapi/_common.yaml
+    sed_in_place 's/${SERVER_URL}/https:\/\/aillm.nsclouds.com/g' "$temp_dir/zh/openapi/_common.yaml"
+    sed_in_place 's/${SERVER_DESCRIPTION}/国内服务器/g' "$temp_dir/zh/openapi/_common.yaml"
+    sed_in_place 's/${SERVER_URL}/https:\/\/aillm.nsclouds.com/g' "$temp_dir/en/openapi/_common.yaml"
+    sed_in_place 's/${SERVER_DESCRIPTION}/China Server/g' "$temp_dir/en/openapi/_common.yaml"
   else
-    sed -i '' 's/${SERVER_URL}/https:\/\/aillm.nscloud.ai/g' $temp_dir/zh/openapi/_common.yaml
-    sed -i '' 's/${SERVER_DESCRIPTION}/国际服务器/g' $temp_dir/zh/openapi/_common.yaml
-    sed -i '' 's/${SERVER_URL}/https:\/\/aillm.nscloud.ai/g' $temp_dir/en/openapi/_common.yaml
-    sed -i '' 's/${SERVER_DESCRIPTION}/Global Server/g' $temp_dir/en/openapi/_common.yaml
+    sed_in_place 's/${SERVER_URL}/https:\/\/aillm.nscloud.ai/g' "$temp_dir/zh/openapi/_common.yaml"
+    sed_in_place 's/${SERVER_DESCRIPTION}/国际服务器/g' "$temp_dir/zh/openapi/_common.yaml"
+    sed_in_place 's/${SERVER_URL}/https:\/\/aillm.nscloud.ai/g' "$temp_dir/en/openapi/_common.yaml"
+    sed_in_place 's/${SERVER_DESCRIPTION}/Global Server/g' "$temp_dir/en/openapi/_common.yaml"
   fi
   
   # 创建输出目录
@@ -96,7 +107,9 @@ generate_docs() {
   fi
   
   # 替换占位符
-  find docs/${env} -name "*.md" -exec sed -i '' "s/{{ENV}}/${env}/g" {} \;
+  while IFS= read -r -d '' file; do
+    sed_in_place "s/{{ENV}}/${env}/g" "$file"
+  done < <(find "docs/${env}" -name "*.md" -print0)
 
   python3 scripts/generate_env_docs.py render-env "${env}"
   ruby scripts/render_env_openapi.rb "${env}" "docs/${env}"

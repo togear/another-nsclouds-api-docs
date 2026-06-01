@@ -15,11 +15,6 @@ tags:
   x-page-title: Google
   x-page-icon: brain
   description: Google's chat completions API
-- name: gemini_native_google
-  x-parent: chat_completions
-  x-page-title: Google
-  x-page-icon: brain
-  description: Google's Gemini native API
 paths:
   "/v1/chat/completions":
     post:
@@ -51,7 +46,7 @@ paths:
                     content: Hello!
                   temperature: 1
                   max_completion_tokens: 50
-                  n: 1
+                  "n": 1
                   stream: false
               streaming:
                 summary: Streaming
@@ -168,7 +163,7 @@ paths:
                     - index: 0
                       message:
                         role: assistant
-                        content: 
+                        content:
                         tool_calls:
                         - id: call_123
                           type: function
@@ -197,125 +192,6 @@ paths:
                     data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-3-flash-preview","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
                     data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"gemini-3-flash-preview","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
                     data: [DONE]
-        '400':
-          "$ref": "#/components/responses/ErrorResponse"
-        '401':
-          "$ref": "#/components/responses/ErrorResponse"
-        '429':
-          "$ref": "#/components/responses/ErrorResponse"
-  "/v1beta/models/{model}:generateContent":
-    post:
-      tags:
-      - gemini_native_google
-      summary: Gemini Generate Content (v1beta)
-      description: Provides a Google Gemini native-compatible endpoint.
-      operationId: generateContentV1beta_google
-      security:
-      - APIKeyHeader: []
-      parameters:
-      - name: model
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-            examples:
-              default:
-                summary: Basic
-                value:
-                  contents:
-                  - role: user
-                    parts:
-                    - text: Hello
-      responses:
-        '200':
-          description: Success Response
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-              examples:
-                default:
-                  summary: Basic Response
-                  value:
-                    candidates:
-                    - content:
-                        role: model
-                        parts:
-                        - text: Hello! How can I help you today?
-                      finishReason: STOP
-                    modelVersion: gemini-3-flash-preview
-        '400':
-          "$ref": "#/components/responses/ErrorResponse"
-        '401':
-          "$ref": "#/components/responses/ErrorResponse"
-        '429':
-          "$ref": "#/components/responses/ErrorResponse"
-  "/v1beta/models/{model}:streamGenerateContent":
-    post:
-      tags:
-      - gemini_native_google
-      summary: Gemini Stream Generate Content (v1beta)
-      description: Provides a Google Gemini native-compatible endpoint.
-      operationId: streamGenerateContentV1beta_google
-      security:
-      - APIKeyHeader: []
-      parameters:
-      - name: model
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-            examples:
-              default:
-                summary: Streaming
-                value:
-                  contents:
-                  - role: user
-                    parts:
-                    - text: Tell me a short greeting
-      responses:
-        '200':
-          description: Success Response
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-              examples:
-                default:
-                  summary: Basic Response
-                  value:
-                    candidates:
-                    - content:
-                        role: model
-                        parts:
-                        - text: Hello there!
-                      finishReason: STOP
-            text/event-stream:
-              schema:
-                type: string
-                description: Server-Sent Events stream.
-              examples:
-                default:
-                  summary: Streaming Response
-                  value: |
-                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":"Hello"}]}}]}
-                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":" there!"}]},"finishReason":"STOP"}]}
         '400':
           "$ref": "#/components/responses/ErrorResponse"
         '401':

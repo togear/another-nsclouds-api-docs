@@ -58,7 +58,7 @@ paths:
                 description: A simple conversation example with system prompt and
                   user message.
                 value:
-                  model: qwen3.6-flash
+                  model: MiniMax-M2.5
                   messages:
                   - role: system
                     content: You are a helpful assistant.
@@ -66,13 +66,13 @@ paths:
                     content: Hello!
                   temperature: 1
                   max_completion_tokens: 50
-                  n: 1
+                  "n": 1
                   stream: false
               streaming:
                 summary: Streaming
                 description: 'Enable streaming response by setting stream: true.'
                 value:
-                  model: qwen3.6-flash
+                  model: MiniMax-M2.5
                   messages:
                   - role: system
                     content: You are a helpful assistant.
@@ -96,7 +96,7 @@ paths:
                     id: chatcmpl-123
                     object: chat.completion
                     created: 1677652288
-                    model: qwen3.6-flash
+                    model: MiniMax-M2.5
                     choices:
                     - index: 0
                       message:
@@ -119,10 +119,10 @@ paths:
                   description: Shows events sent continuously during streaming chat
                     process.
                   value: |
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"qwen3.6-flash","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"qwen3.6-flash","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"qwen3.6-flash","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
-                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"qwen3.6-flash","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{"content":" there!"},"finish_reason":null}]}
+                    data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"MiniMax-M2.5","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
                     data: [DONE]
         '400':
           "$ref": "#/components/responses/ErrorResponse"
@@ -236,7 +236,7 @@ paths:
                 value:
                   model: qwen-image-2.0
                   prompt: A cute cat sitting on a windowsill
-                  n: 1
+                  "n": 1
                   size: 1024x1024
               hd-quality:
                 summary: HD Quality
@@ -244,7 +244,7 @@ paths:
                 value:
                   model: qwen-image-2.0
                   prompt: A futuristic cityscape at sunset
-                  n: 1
+                  "n": 1
                   quality: hd
                   size: 1792x1024
               b64-json:
@@ -253,7 +253,7 @@ paths:
                 value:
                   model: qwen-image-2.0
                   prompt: A beautiful landscape
-                  n: 2
+                  "n": 2
                   size: 512x512
                   response_format: b64_json
       responses:
@@ -342,7 +342,7 @@ paths:
                   - "@person.png"
                   mask: "@mask.png"
                   prompt: Add a hat to the person
-                  n: 1
+                  "n": 1
                   size: 1024x1024
               no-mask:
                 summary: Without Mask
@@ -352,7 +352,7 @@ paths:
                   image:
                   - "@body-lotion.png"
                   prompt: Change the background to a beach
-                  n: 1
+                  "n": 1
                   size: 1024x1024
       responses:
         '200':

@@ -32,11 +32,6 @@ tags:
     x-page-title: Google
     x-page-icon: brain
     description: Google 的对话生成 API
-  - name: gemini_native_google
-    x-parent: chat_completions
-    x-page-title: Google
-    x-page-icon: brain
-    description: Google 的 Gemini 原生协议 API
 paths:
   /v1/chat/completions:
     post:
@@ -205,125 +200,6 @@ paths:
                     data: {"id":"chatcmpl-cjo4zIwpUamQ17CrksTp2uSheKXFL","created":1773220521,"model":"gemini-3-flash-preview","object":"chat.completion.chunk","choices":[{"index":0,"delta":{"content":"Hello! How can I help you today?","role":"assistant"}}]}
                     data: {"id":"chatcmpl-cjo4zIwpUamQ17CrksTp2uSheKXFL","created":1773220521,"model":"gemini-3-flash-preview","object":"chat.completion.chunk","choices":[{"finish_reason":"stop","index":0,"delta":{}}]}
                     data: [DONE]
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-  '/v1beta/models/{model}:generateContent':
-    post:
-      tags:
-        - gemini_native_google
-      summary: Gemini 生成内容 (v1beta)
-      description: 提供与 Google Gemini 原生协议兼容的接口。
-      operationId: generateContentV1beta_google
-      security:
-        - APIKeyHeader: []
-      parameters:
-        - name: model
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-            examples:
-              default:
-                summary: 基础
-                value:
-                  contents:
-                    - role: user
-                      parts:
-                        - text: Hello
-      responses:
-        '200':
-          description: 成功响应
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-              examples:
-                default:
-                  summary: 基础响应
-                  value:
-                    candidates:
-                      - content:
-                          role: model
-                          parts:
-                            - text: Hello! How can I help you today?
-                        finishReason: STOP
-                    modelVersion: gemini-3-flash-preview
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-  '/v1beta/models/{model}:streamGenerateContent':
-    post:
-      tags:
-        - gemini_native_google
-      summary: Gemini 流式生成内容 (v1beta)
-      description: 提供与 Google Gemini 原生协议兼容的接口。
-      operationId: streamGenerateContentV1beta_google
-      security:
-        - APIKeyHeader: []
-      parameters:
-        - name: model
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-            examples:
-              default:
-                summary: 流式
-                value:
-                  contents:
-                    - role: user
-                      parts:
-                        - text: Tell me a short greeting
-      responses:
-        '200':
-          description: 成功响应
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-              examples:
-                default:
-                  summary: 基础响应
-                  value:
-                    candidates:
-                      - content:
-                          role: model
-                          parts:
-                            - text: Hello there!
-                        finishReason: STOP
-            text/event-stream:
-              schema:
-                type: string
-                description: Server-Sent Events 流。
-              examples:
-                default:
-                  summary: 流式响应
-                  value: |
-                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":"Hello"}]}}]}
-                    data: {"candidates":[{"content":{"role":"model","parts":[{"text":" there!"}]},"finishReason":"STOP"}]}
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':

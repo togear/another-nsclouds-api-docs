@@ -15,6 +15,7 @@ This endpoint provides an Anthropic Messages-compatible path. Actual behavior de
 * `claude-opus-4.5`
 * `claude-opus-4.6`
 * `claude-opus-4.7`
+* `claude-opus-4.8`
 * `claude-sonnet-4.5`
 * `claude-sonnet-4.6`
 
