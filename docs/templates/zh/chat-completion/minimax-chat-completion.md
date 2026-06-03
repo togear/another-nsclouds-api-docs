@@ -15,5 +15,5 @@ MiniMax 的对话生成 API，与 OpenAI 接口格式兼容。
 ### 2. 接口详情
 
 {% openapi-operation spec="minimax-zh-{{ENV}}" path="/v1/chat/completions" method="post" %}
-[OpenAPI MiniMax](https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/minimax.bundled.yaml)
+[OpenAPI MiniMax](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/minimax.bundled.yaml)
 {% endopenapi-operation %}

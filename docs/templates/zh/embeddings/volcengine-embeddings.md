@@ -15,5 +15,5 @@
 ### 2. 接口详情
 
 {% openapi-operation spec="volcengine-zh-{{ENV}}" path="/v1/embeddings" method="post" %}
-[OpenAPI volcengine](https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/volcengine.bundled.yaml)
+[OpenAPI volcengine](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/volcengine.bundled.yaml)
 {% endopenapi-operation %}

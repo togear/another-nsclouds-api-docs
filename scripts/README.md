@@ -4,7 +4,7 @@
 
 ## 过渡期仓库与 GitBook 协作
 
-当前公司 GitHub 已作为文档内容源，GitBook space 暂时继续使用已共享出来的个人 GitBook。过渡期的 remote、发布、同步规划见：
+当前个人 GitHub 继续作为文档内容源，GitBook space 暂时继续使用已共享出来的个人 GitBook。过渡期的 remote、发布、同步规划见：
 
 - `scripts/REPOSITORY_AND_GITBOOK_TRANSITION.md`
 
@@ -65,7 +65,7 @@
 
 - `GITBOOK_RAW_BASE`
   - 默认值：
-    - `https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled`
+    - `https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled`
   - 如果后续仓库地址或分支变了，可以覆盖这个值
 
 ### 常用命令
@@ -76,19 +76,13 @@
 bash build-docs.sh
 ```
 
-提交本地更新，并先推送到公司 GitHub。GitBook OpenAPI 会从公司 GitHub raw URL 拉取文件，因此同步前远端必须已有最新 `docs/bundled`：
-
-```bash
-git push company main
-```
-
-如果团队已把 `origin` 固定为公司仓库，则使用：
+提交本地更新，并先推送到个人 GitHub。GitBook OpenAPI 会从个人 GitHub raw URL 拉取文件，因此同步前远端必须已有最新 `docs/bundled`：
 
 ```bash
 git push origin main
 ```
 
-公司 GitHub 推送完成后，先做 dry-run 看将要同步哪些 spec：
+个人 GitHub 推送完成后，先做 dry-run 看将要同步哪些 spec：
 
 ```bash
 export GITBOOK_TOKEN=...
@@ -116,9 +110,9 @@ python3 scripts/sync_gitbook_openapi.py --env global --lang en --vendor dashscop
 
 1. 更新 `scripts/data/*.json`
 2. 运行 `bash build-docs.sh`
-3. 提交本地更新，并推送到公司 GitHub
+3. 提交本地更新，并推送到个人 GitHub
 4. 运行 `python3 scripts/sync_gitbook_openapi.py --dry-run`
-5. 确认 dry-run URL 指向 `ngaa-dev/nsclouds-api-docs` 后，运行 `python3 scripts/sync_gitbook_openapi.py --wait`
+5. 确认 dry-run URL 指向 `liujia-hbu/nsclouds-api-docs` 后，运行 `python3 scripts/sync_gitbook_openapi.py --wait`
 
 这样就不需要再去 GitBook 页面里逐个导入 `dashscope-en-global`、`openai-zh-global` 之类的 spec。
 

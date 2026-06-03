@@ -19,5 +19,5 @@ Anthropic 的文本补全 API，与 OpenAI 接口格式兼容。
 ### 2. 接口详情
 
 {% openapi-operation spec="anthropic-zh-{{ENV}}" path="/v1/completions" method="post" %}
-[OpenAPI Anthropic](https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/anthropic.bundled.yaml)
+[OpenAPI Anthropic](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/anthropic.bundled.yaml)
 {% endopenapi-operation %}
