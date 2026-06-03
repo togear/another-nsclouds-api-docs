@@ -16,5 +16,5 @@ Moonshot AI 的对话生成 API，与 OpenAI 接口格式兼容。
 ### 2. 接口详情
 
 {% openapi-operation spec="moonshotai-zh-{{ENV}}" path="/v1/chat/completions" method="post" %}
-[OpenAPI Moonshot AI](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/moonshotai.bundled.yaml)
+[OpenAPI Moonshot AI](https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/moonshotai.bundled.yaml)
 {% endopenapi-operation %}

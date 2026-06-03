@@ -20,5 +20,5 @@ Google 的图像生成 API，与 OpenAI 接口格式兼容。
 ### 2. 接口详情
 
 {% openapi-operation spec="google-zh-{{ENV}}" path="/v1/images/generations" method="post" %}
-[OpenAPI Google](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/google.bundled.yaml)
+[OpenAPI Google](https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/google.bundled.yaml)
 {% endopenapi-operation %}

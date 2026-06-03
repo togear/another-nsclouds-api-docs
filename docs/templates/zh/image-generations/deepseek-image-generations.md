@@ -15,5 +15,5 @@
 ### 2. 接口详情
 
 {% openapi-operation spec="deepseek-zh-{{ENV}}" path="/v1/images/generations" method="post" %}
-[OpenAPI deepseek](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/deepseek.bundled.yaml)
+[OpenAPI deepseek](https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/deepseek.bundled.yaml)
 {% endopenapi-operation %}

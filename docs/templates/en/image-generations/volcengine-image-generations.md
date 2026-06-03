@@ -23,5 +23,5 @@ This API is compatible with OpenAI interface format.
 ### 2. API Details
 
 {% openapi-operation spec="volcengine-en-{{ENV}}" path="/v1/images/generations" method="post" %}
-[OpenAPI volcengine](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/volcengine.bundled.yaml)
+[OpenAPI volcengine](https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/volcengine.bundled.yaml)
 {% endopenapi-operation %}
