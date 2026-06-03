@@ -22,5 +22,5 @@ This API is compatible with OpenAI interface format.
 ### 2. API Details
 
 {% openapi-operation spec="openai-en-{{ENV}}" path="/v1/embeddings" method="post" %}
-[OpenAPI openai](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/openai.bundled.yaml)
+[OpenAPI openai](https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/openai.bundled.yaml)
 {% endopenapi-operation %}

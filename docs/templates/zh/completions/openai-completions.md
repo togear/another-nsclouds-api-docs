@@ -18,5 +18,5 @@ OpenAI 的文本补全 API，与 OpenAI 接口格式兼容。
 ### 2. 接口详情
 
 {% openapi-operation spec="openai-zh-{{ENV}}" path="/v1/completions" method="post" %}
-[OpenAPI openai](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/openai.bundled.yaml)
+[OpenAPI openai](https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/openai.bundled.yaml)
 {% endopenapi-operation %}

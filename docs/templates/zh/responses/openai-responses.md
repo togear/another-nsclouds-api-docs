@@ -24,5 +24,5 @@ OpenAI Responses API，用于统一文本、多模态与工具调用响应。
 ### 3. 接口详情
 
 {% openapi-operation spec="openai-zh-{{ENV}}" path="/v1/responses" method="post" %}
-[OpenAPI openai](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/openai.bundled.yaml)
+[OpenAPI openai](https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/openai.bundled.yaml)
 {% endopenapi-operation %}

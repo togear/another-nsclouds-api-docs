@@ -19,5 +19,5 @@ Anthropic 的对话生成 API，与 OpenAI 接口格式兼容。
 ### 2. 接口详情
 
 {% openapi-operation spec="anthropic-zh-{{ENV}}" path="/v1/chat/completions" method="post" %}
-[OpenAPI Anthropic](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/anthropic.bundled.yaml)
+[OpenAPI Anthropic](https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/anthropic.bundled.yaml)
 {% endopenapi-operation %}

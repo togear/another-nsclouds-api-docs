@@ -11,5 +11,5 @@ This API is compatible with Anthropic Messages format.
 ### 2. API Details
 
 {% openapi-operation spec="anthropic-en-{{ENV}}" path="/v1/messages" method="post" %}
-[OpenAPI anthropic](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/anthropic.bundled.yaml)
+[OpenAPI anthropic](https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/anthropic.bundled.yaml)
 {% endopenapi-operation %}

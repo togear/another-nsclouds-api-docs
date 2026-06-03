@@ -65,7 +65,7 @@
 
 - `GITBOOK_RAW_BASE`
   - 默认值：
-    - `https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled`
+    - `https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled`
   - 如果后续仓库地址或分支变了，可以覆盖这个值
 
 ### 常用命令

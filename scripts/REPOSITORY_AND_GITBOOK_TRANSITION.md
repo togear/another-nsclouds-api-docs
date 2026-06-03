@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-- 个人 GitHub 仓库：`git@github.com:liujia-hbu/nsclouds-api-docs.git`
+- 个人 GitHub 仓库：`git@github.com:togear/another-nsclouds-api-docs.git`
 - 公司 GitHub 仓库：`git@github.com:ngaa-dev/nsclouds-api-docs.git`
 - 当前 GitBook：仍使用个人 GitBook 项目。
 - 公司 GitBook：尚未准备好。
@@ -26,7 +26,7 @@
 
 | 环境 | GitHub | GitBook | 用途 |
 | --- | --- | --- | --- |
-| 预览/调试 | `liujia-hbu/nsclouds-api-docs` | 个人 GitBook | 修改、构建、预览、验证 |
+| 预览/调试 | `togear/another-nsclouds-api-docs` | 个人 GitBook | 修改、构建、预览、验证 |
 | 正式/线上 | `ngaa-dev/nsclouds-api-docs` | 公司 GitBook | 对外正式展示 |
 
 正式迁移完成后，线上 GitBook 应只从公司 GitHub raw URL 拉取 OpenAPI：
@@ -38,7 +38,7 @@ https://raw.githubusercontent.com/ngaa-dev/nsclouds-api-docs/main/docs/bundled
 个人 GitBook 继续从个人 GitHub raw URL 拉取 OpenAPI：
 
 ```text
-https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled
+https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled
 ```
 
 ## 推荐 remote 配置
@@ -59,7 +59,7 @@ git remote -v
 如果本地已经把 `origin` 改成公司仓库，也可以保留这个约定：
 
 ```bash
-git remote add preview git@github.com:liujia-hbu/nsclouds-api-docs.git
+git remote add preview git@github.com:togear/another-nsclouds-api-docs.git
 git remote rename origin company
 ```
 
@@ -117,7 +117,7 @@ python3 scripts/sync_gitbook_openapi.py --wait
 当前脚本默认 raw base 是个人 GitHub：
 
 ```text
-https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled
+https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled
 ```
 
 ### 4. 验证通过后推送公司 GitHub

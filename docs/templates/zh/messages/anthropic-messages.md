@@ -11,5 +11,5 @@ Anthropic Messages API，用于 Claude 协议消息生成。
 ### 2. 接口详情
 
 {% openapi-operation spec="anthropic-zh-{{ENV}}" path="/v1/messages" method="post" %}
-[OpenAPI anthropic](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/anthropic.bundled.yaml)
+[OpenAPI anthropic](https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled/{{ENV}}/zh/anthropic.bundled.yaml)
 {% endopenapi-operation %}

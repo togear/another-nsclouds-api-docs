@@ -25,5 +25,5 @@ This API is compatible with OpenAI interface format.
 ### 2. API Details
 
 {% openapi-operation spec="moonshotai-en-{{ENV}}" path="/v1/chat/completions" method="post" %}
-[OpenAPI Moonshot AI](https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/moonshotai.bundled.yaml)
+[OpenAPI Moonshot AI](https://raw.githubusercontent.com/togear/another-nsclouds-api-docs/main/docs/bundled/{{ENV}}/en/moonshotai.bundled.yaml)
 {% endopenapi-operation %}
