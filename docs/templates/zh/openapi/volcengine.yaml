@@ -11,6 +11,7 @@ tags:
   - $ref: ./_common.yaml#/tags/2   # image_generations
   - $ref: ./_common.yaml#/tags/3   # image_edits
   - $ref: ./_common.yaml#/tags/4   # audio_transcriptions
+  - $ref: ./_common.yaml#/tags/5   # video_generations
 
   # ========== 字节豆包厂家标签 ==========
   - name: chat_completions_volcengine
@@ -38,6 +39,11 @@ tags:
     x-page-title: 字节豆包
     x-page-icon: brain
     description: 字节豆包（volcengine）的音频转录 API
+  - name: video_generations_volcengine
+    x-parent: video_generations
+    x-page-title: 字节豆包
+    x-page-icon: video
+    description: 字节豆包（volcengine）的视频生成 API
 
   # ========== 字节豆包协议标签（以 OpenAI 协议为例） ==========
   # - name: chat_completions_volcengine_openai
@@ -504,6 +510,574 @@ paths:
                   description: 对应基础音频转录请求的响应示例。
                   value:
                     text: "Hello, this is a test recording."
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  # ========== 视频生成 ==========
+  /v1/videos:
+    post:
+      tags:
+        - video_generations_volcengine
+      summary: 创建视频任务
+      description: 通过 OpenAI 兼容 Videos 接口创建 Volcengine Seedance 视频生成任务。Seedance 任务是异步任务；创建后可按任务 ID 查询状态，完成后再下载视频内容。
+      operationId: createVideo_volcengine
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoRequest'
+            examples:
+              text_to_video:
+                summary: 文生视频
+                description: acceptance 已验证的纯文本 Seedance 请求。
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 写实风格，晴朗的蓝天之下，一大片白色的雏菊花田，镜头逐渐拉近，最终定格在一朵雏菊花的特写上，花瓣上有几颗晶莹的露珠
+                  duration: 5
+                  ratio: "16:9"
+                  resolution: 720p
+                  generate_audio: false
+                  watermark: true
+              first_frame_image_to_video:
+                summary: 首帧图生视频
+                description: 使用首帧图片引用，并生成视频音频。
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 女孩抱着狐狸，女孩睁开眼，温柔地看向镜头，狐狸友善地抱着，镜头缓缓拉出，女孩的头发被风吹动，可以听到风声
+                  duration: 5
+                  ratio: adaptive
+                  resolution: 720p
+                  generate_audio: true
+                  watermark: false
+                  image:
+                    url: https://ark-project.tos-cn-beijing.volces.com/doc_image/i2v_foxrgirl.png
+                    role: first_frame
+              first_last_frame_image_to_video:
+                summary: 首尾帧图生视频
+                description: 分别提供首帧和尾帧图片。
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 360度环绕运镜
+                  duration: 5
+                  ratio: adaptive
+                  resolution: 720p
+                  generate_audio: false
+                  watermark: true
+                  image:
+                    - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic1.jpg
+                      role: first_frame
+                    - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic2.jpg
+                      role: last_frame
+              multimodal_reference:
+                summary: 图片、视频和音频参考
+                description: 组合参考图、参考视频和参考音频。
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告，seedance牌「苹苹安安」苹果果茶限定款；首帧为图片1，尾帧定格为图片2。背景声音统一为女生音色。
+                  duration: 11
+                  ratio: "16:9"
+                  resolution: 720p
+                  generate_audio: true
+                  watermark: true
+                  image:
+                    - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic1.jpg
+                      role: reference_image
+                    - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic2.jpg
+                      role: reference_image
+                  video:
+                    url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_tea_video1.mp4
+                    role: reference_video
+                  audio:
+                    url: https://ark-project.tos-cn-beijing.volces.com/doc_audio/r2v_tea_audio1.mp3
+                    role: reference_audio
+              native_content_multimodal:
+                summary: 原生 Seedance content
+                description: 通过 extra_body 透传原生 content，acceptance 已覆盖。
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: This prompt is ignored because native Seedance content is supplied.
+                  generate_audio: true
+                  watermark: true
+                  duration: 11
+                  ratio: "16:9"
+                  resolution: 720p
+                  extra_body:
+                    content:
+                      - type: text
+                        text: 全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告，首帧为图片1，尾帧定格为图片2。
+                      - type: image_url
+                        image_url:
+                          url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic1.jpg
+                        role: reference_image
+                      - type: image_url
+                        image_url:
+                          url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic2.jpg
+                        role: reference_image
+                      - type: video_url
+                        video_url:
+                          url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_tea_video1.mp4
+                        role: reference_video
+                      - type: audio_url
+                        audio_url:
+                          url: https://ark-project.tos-cn-beijing.volces.com/doc_audio/r2v_tea_audio1.mp3
+                        role: reference_audio
+                    duration: 11
+                    ratio: "16:9"
+                    resolution: 720p
+                    generate_audio: true
+                    watermark: true
+              passthrough_parameters:
+                summary: 厂家透传参数
+                description: 通过 extra_body 透传厂家特有字段。
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 写实风格，镜头平稳推进到一片白色雏菊花田。
+                  duration: 5
+                  ratio: "16:9"
+                  resolution: 720p
+                  generate_audio: false
+                  watermark: false
+                  extra_body:
+                    service_tier: flex
+                    camera_fixed: false
+                    seed: 20260603
+                    priority: 1
+                    callback_url: https://example.com/aillm-release/seedance/callback
+                    execution_expires_after: 3600
+              seconds_size_mapping:
+                summary: seconds 和 size 兼容字段
+                description: 使用 OpenAI 兼容的 seconds 和 size 字段；网关会映射为 Seedance 的 duration、ratio 和 resolution。
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 宽银幕镜头，一只纸船缓慢漂过晨雾中的湖面。
+                  seconds: "4"
+                  size: 2560x1080
+                  generate_audio: false
+                  watermark: false
+      responses:
+        '200':
+          description: 视频任务已创建
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoTask'
+              examples:
+                queued:
+                  summary: 排队中的任务
+                  value:
+                    id: video_seedance_123
+                    object: video
+                    created_at: 1770000000
+                    status: queued
+                    model: doubao-seedance-2-0-260128
+                    usage:
+                      duration_seconds: 5
+                      video_resolution: 720p
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+    get:
+      tags:
+        - video_generations_volcengine
+      summary: 列出视频任务
+      description: 列出视频任务，并按厂家状态或模型过滤。acceptance 覆盖了状态过滤、模型过滤、页码分页和 page token 分页。
+      operationId: listVideos_volcengine
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: custom_llm_provider
+          in: query
+          description: 厂家过滤。Seedance 任务使用 volcengine。
+          schema:
+            type: string
+          example: volcengine
+        - name: limit
+          in: query
+          description: 最多返回的任务数量。
+          schema:
+            type: integer
+          example: 20
+        - name: after
+          in: query
+          description: OpenAI 兼容分页游标。
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: 后端支持时使用的排序方向。
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 厂家状态过滤。acceptance 已验证 succeeded 会映射为 completed 任务。
+          schema:
+            type: string
+          example: succeeded
+        - name: filter.status
+          in: query
+          description: 厂家状态过滤，例如 succeeded。
+          schema:
+            type: string
+          example: succeeded
+        - name: filter.model
+          in: query
+          description: 用于过滤任务的公开模型名。
+          schema:
+            type: string
+          example: doubao-seedance-2-0-260128
+        - name: page_size
+          in: query
+          description: 厂家风格分页的每页数量。
+          schema:
+            type: integer
+          example: 1
+        - name: page_num
+          in: query
+          description: 厂家风格分页的页码。
+          schema:
+            type: integer
+          example: 2
+        - name: page_token
+          in: query
+          description: 厂家风格分页的 page token。
+          schema:
+            type: string
+          example: video_seedance_123
+      responses:
+        '200':
+          description: 视频任务列表
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoListResponse'
+              examples:
+                filtered:
+                  summary: 过滤后的列表
+                  value:
+                    object: list
+                    has_more: true
+                    data:
+                      - id: video_seedance_124
+                        object: video
+                        status: completed
+                        model: doubao-seedance-2-0-260128
+                        seconds: "5"
+                        size: 1280x720
+                        usage:
+                          duration_seconds: 5
+                          video_resolution: 720p
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/videos/{video_id}:
+    get:
+      tags:
+        - video_generations_volcengine
+      summary: 查询视频任务
+      description: 按 ID 查询 Seedance 视频任务。轮询直到状态达到 completed、failed、cancelled 或 expired。
+      operationId: retrieveVideo_volcengine
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: video_id
+          in: path
+          required: true
+          description: 创建视频任务返回的任务 ID。
+          schema:
+            type: string
+          example: video_seedance_123
+      responses:
+        '200':
+          description: 视频任务
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoTask'
+              examples:
+                completed:
+                  summary: 已完成任务
+                  value:
+                    id: video_seedance_123
+                    object: video
+                    created_at: 1770000000
+                    completed_at: 1770000012
+                    status: completed
+                    model: doubao-seedance-2-0-260128
+                    seconds: "5"
+                    size: 1280x720
+                    usage:
+                      duration_seconds: 5
+                      video_resolution: 720p
+                failed:
+                  summary: 失败任务
+                  value:
+                    id: video_seedance_125
+                    object: video
+                    status: failed
+                    model: doubao-seedance-2-0-260128
+                    seconds: "5"
+                    error:
+                      code: ProviderVideoGenerationFailed
+                      message: Video generation failed.
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+    delete:
+      tags:
+        - video_generations_volcengine
+      summary: 取消或删除视频任务
+      description: 在可取消时取消活跃任务。删除已完成任务时返回该 completed 任务对象，acceptance 已覆盖该行为。
+      operationId: deleteVideo_volcengine
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: video_id
+          in: path
+          required: true
+          description: 视频任务 ID。
+          schema:
+            type: string
+          example: video_seedance_123
+      responses:
+        '200':
+          description: 删除或取消后的任务对象
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoTask'
+              examples:
+                active_cancelled:
+                  summary: 活跃任务已取消
+                  value:
+                    id: video_seedance_123
+                    object: video
+                    status: cancelled
+                    model: doubao-seedance-2-0-260128
+                completed_retained:
+                  summary: 已完成任务保持完成状态
+                  value:
+                    id: video_seedance_124
+                    object: video
+                    status: completed
+                    model: doubao-seedance-2-0-260128
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/videos/{video_id}/content:
+    get:
+      tags:
+        - video_generations_volcengine
+      summary: 下载视频内容
+      description: 下载已完成任务的视频内容。acceptance 已验证返回可播放的 MP4。
+      operationId: retrieveVideoContent_volcengine
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: video_id
+          in: path
+          required: true
+          description: 已完成的视频任务 ID。
+          schema:
+            type: string
+          example: video_seedance_123
+      responses:
+        '200':
+          description: MP4 视频内容
+          content:
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/videos/{video_id}/remix:
+    post:
+      tags:
+        - video_generations_volcengine
+      summary: 重混视频任务
+      description: 基于已有视频任务创建新的视频重混任务。
+      operationId: remixVideo_volcengine
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - name: video_id
+          in: path
+          required: true
+          description: 源视频任务 ID。
+          schema:
+            type: string
+          example: video_seedance_123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoRemixRequest'
+            examples:
+              warm_cinema_tone:
+                summary: 暖色电影色调
+                value:
+                  prompt: 重混这个视频，调整为更温暖的电影色调，保持主体和运动节奏。
+                  extra_body:
+                    duration: 5
+                    ratio: "16:9"
+                    generate_audio: false
+                    watermark: false
+      responses:
+        '200':
+          description: 重混任务已创建
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoTask'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/videos/edits:
+    post:
+      tags:
+        - video_generations_volcengine
+      summary: 编辑视频任务
+      description: 基于已有网关视频 ID 创建视频编辑任务。acceptance 也覆盖了通过 extra_body 显式传入 source_video_url。
+      operationId: editVideo_volcengine
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoEditRequest'
+            examples:
+              source_task_reference:
+                summary: 基于源任务编辑
+                value:
+                  prompt: 将视频中的礼盒替换成图片中的面霜，保持原有运镜。
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    image:
+                      url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_edit_pic1.jpg
+                      role: reference_image
+                    duration: 5
+                    ratio: "16:9"
+                    generate_audio: true
+                    watermark: true
+              explicit_source_url:
+                summary: 显式传入源视频 URL
+                value:
+                  prompt: 将视频中的礼盒替换成图片中的面霜，保持原有运镜。
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    source_video_url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_edit_video1.mp4
+                    image:
+                      url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_edit_pic1.jpg
+                      role: reference_image
+                    duration: 5
+                    ratio: "16:9"
+                    generate_audio: true
+                    watermark: true
+      responses:
+        '200':
+          description: 编辑任务已创建
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoTask'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/videos/extensions:
+    post:
+      tags:
+        - video_generations_volcengine
+      summary: 扩展视频任务
+      description: 基于已有网关视频 ID 创建视频扩展任务。acceptance 也覆盖了通过 extra_body 显式传入 source_video_url。
+      operationId: extendVideo_volcengine
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoExtensionRequest'
+            examples:
+              source_task_reference:
+                summary: 基于源任务扩展
+                value:
+                  prompt: 延长视频中的镜头运动，继续进入美术馆室内空间。
+                  seconds: "8"
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    ratio: "16:9"
+                    generate_audio: true
+                    watermark: true
+              explicit_source_url:
+                summary: 显式传入源视频 URL
+                value:
+                  prompt: 延长视频中的镜头运动，继续进入美术馆室内空间。
+                  seconds: "8"
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    source_video_url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video1.mp4
+                    ratio: "16:9"
+                    generate_audio: true
+                    watermark: true
+      responses:
+        '200':
+          description: 扩展任务已创建
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoTask'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':

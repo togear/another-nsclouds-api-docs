@@ -10,6 +10,7 @@ tags:
 - "$ref": "./_common.yaml#/tags/2"
 - "$ref": "./_common.yaml#/tags/3"
 - "$ref": "./_common.yaml#/tags/4"
+- "$ref": "./_common.yaml#/tags/5"
 - name: chat_completions_dashscope
   x-parent: chat_completions
   x-page-title: DashScope
@@ -71,7 +72,7 @@ paths:
                     content: Hello!
                   temperature: 1
                   max_completion_tokens: 50
-                  "n": 1
+                  n: 1
                   stream: false
               streaming:
                 summary: Streaming
@@ -293,7 +294,7 @@ paths:
                 value:
                   model: qwen-image-2.0
                   prompt: A cute cat sitting on a windowsill
-                  "n": 1
+                  n: 1
                   size: 1024x1024
               hd-quality:
                 summary: HD Quality
@@ -301,7 +302,7 @@ paths:
                 value:
                   model: qwen-image-2.0
                   prompt: A futuristic cityscape at sunset
-                  "n": 1
+                  n: 1
                   quality: hd
                   size: 1792x1024
               b64-json:
@@ -310,7 +311,7 @@ paths:
                 value:
                   model: qwen-image-2.0
                   prompt: A beautiful landscape
-                  "n": 2
+                  n: 2
                   size: 512x512
                   response_format: b64_json
       responses:
@@ -399,7 +400,7 @@ paths:
                   - "@person.png"
                   mask: "@mask.png"
                   prompt: Add a hat to the person
-                  "n": 1
+                  n: 1
                   size: 1024x1024
               no-mask:
                 summary: Without Mask
@@ -409,7 +410,7 @@ paths:
                   image:
                   - "@body-lotion.png"
                   prompt: Change the background to a beach
-                  "n": 1
+                  n: 1
                   size: 1024x1024
       responses:
         '200':

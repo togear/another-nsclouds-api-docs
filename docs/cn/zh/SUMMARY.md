@@ -31,6 +31,8 @@
 * [图像编辑](image-edits/readme.md)
   * [DashScope](image-edits/dashscope.md)
   * [Volcengine](image-edits/volcengine.md)
+* [视频生成](video-generations/readme.md)
+  * [Volcengine](video-generations/volcengine.md)
 * [音频转录](audio-transcriptions/readme.md)
   * [DashScope](audio-transcriptions/dashscope.md)
   * [Z.AI](audio-transcriptions/zai.md)

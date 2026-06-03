@@ -10,6 +10,7 @@ tags:
 - "$ref": "./_common.yaml#/tags/2"
 - "$ref": "./_common.yaml#/tags/3"
 - "$ref": "./_common.yaml#/tags/4"
+- "$ref": "./_common.yaml#/tags/5"
 - name: chat_completions_volcengine
   x-parent: chat_completions
   x-page-title: Volcengine
@@ -30,6 +31,11 @@ tags:
   x-page-title: Volcengine
   x-page-icon: image
   description: Volcengine's image edits API
+- name: video_generations_volcengine
+  x-parent: video_generations
+  x-page-title: Volcengine
+  x-page-icon: video
+  description: Volcengine's video generations API
 paths:
   "/v1/chat/completions":
     post:
@@ -58,7 +64,7 @@ paths:
                     content: Hello!
                   max_completion_tokens: 50
                   temperature: 0.7
-                  "n": 1
+                  n: 1
                   stream: false
               streaming:
                 summary: Streaming
@@ -374,7 +380,7 @@ paths:
                 value:
                   model: doubao-seedream-4-5-251128
                   prompt: A cat wearing a hat
-                  "n": 1
+                  n: 1
                   size: 1024x1024
       responses:
         '200':
@@ -440,6 +446,578 @@ paths:
                     created: 1677825464
                     data:
                     - url: https://example.com/edited-image.png
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/videos":
+    post:
+      tags:
+      - video_generations_volcengine
+      summary: Create video task
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: createVideo_volcengine
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateVideoRequest"
+            examples:
+              text_to_video:
+                summary: Text to video
+                description: Text-only Seedance request verified by acceptance.
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 写实风格，晴朗的蓝天之下，一大片白色的雏菊花田，镜头逐渐拉近，最终定格在一朵雏菊花的特写上，花瓣上有几颗晶莹的露珠
+                  duration: 5
+                  ratio: '16:9'
+                  resolution: 720p
+                  generate_audio: false
+                  watermark: true
+              first_frame_image_to_video:
+                summary: First-frame image to video
+                description: Use a first-frame image reference and generate audio.
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 女孩抱着狐狸，女孩睁开眼，温柔地看向镜头，狐狸友善地抱着，镜头缓缓拉出，女孩的头发被风吹动，可以听到风声
+                  duration: 5
+                  ratio: adaptive
+                  resolution: 720p
+                  generate_audio: true
+                  watermark: false
+                  image:
+                    url: https://ark-project.tos-cn-beijing.volces.com/doc_image/i2v_foxrgirl.png
+                    role: first_frame
+              first_last_frame_image_to_video:
+                summary: First and last frame
+                description: Provide separate first-frame and last-frame images.
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 360度环绕运镜
+                  duration: 5
+                  ratio: adaptive
+                  resolution: 720p
+                  generate_audio: false
+                  watermark: true
+                  image:
+                  - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic1.jpg
+                    role: first_frame
+                  - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic2.jpg
+                    role: last_frame
+              multimodal_reference:
+                summary: Image, video, and audio references
+                description: Combine reference images, a reference video, and reference
+                  audio.
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告，seedance牌「苹苹安安」苹果果茶限定款；首帧为图片1，尾帧定格为图片2。背景声音统一为女生音色。
+                  duration: 11
+                  ratio: '16:9'
+                  resolution: 720p
+                  generate_audio: true
+                  watermark: true
+                  image:
+                  - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic1.jpg
+                    role: reference_image
+                  - url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic2.jpg
+                    role: reference_image
+                  video:
+                    url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_tea_video1.mp4
+                    role: reference_video
+                  audio:
+                    url: https://ark-project.tos-cn-beijing.volces.com/doc_audio/r2v_tea_audio1.mp3
+                    role: reference_audio
+              native_content_multimodal:
+                summary: Native Seedance content
+                description: Pass native content through extra_body, as covered by
+                  acceptance.
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: This prompt is ignored because native Seedance content is
+                    supplied.
+                  generate_audio: true
+                  watermark: true
+                  duration: 11
+                  ratio: '16:9'
+                  resolution: 720p
+                  extra_body:
+                    content:
+                    - type: text
+                      text: 全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告，首帧为图片1，尾帧定格为图片2。
+                    - type: image_url
+                      image_url:
+                        url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic1.jpg
+                      role: reference_image
+                    - type: image_url
+                      image_url:
+                        url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic2.jpg
+                      role: reference_image
+                    - type: video_url
+                      video_url:
+                        url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_tea_video1.mp4
+                      role: reference_video
+                    - type: audio_url
+                      audio_url:
+                        url: https://ark-project.tos-cn-beijing.volces.com/doc_audio/r2v_tea_audio1.mp3
+                      role: reference_audio
+                    duration: 11
+                    ratio: '16:9'
+                    resolution: 720p
+                    generate_audio: true
+                    watermark: true
+              passthrough_parameters:
+                summary: Provider passthrough parameters
+                description: Forward provider-specific fields through extra_body.
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 写实风格，镜头平稳推进到一片白色雏菊花田。
+                  duration: 5
+                  ratio: '16:9'
+                  resolution: 720p
+                  generate_audio: false
+                  watermark: false
+                  extra_body:
+                    service_tier: flex
+                    camera_fixed: false
+                    seed: 20260603
+                    priority: 1
+                    callback_url: https://example.com/aillm-release/seedance/callback
+                    execution_expires_after: 3600
+              seconds_size_mapping:
+                summary: seconds and size aliases
+                description: Use OpenAI-compatible seconds and size fields; the gateway
+                  maps them to Seedance duration, ratio, and resolution.
+                value:
+                  model: doubao-seedance-2-0-260128
+                  prompt: 宽银幕镜头，一只纸船缓慢漂过晨雾中的湖面。
+                  seconds: '4'
+                  size: 2560x1080
+                  generate_audio: false
+                  watermark: false
+      responses:
+        '200':
+          description: Video task created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VideoTask"
+              examples:
+                queued:
+                  summary: Queued task
+                  value:
+                    id: video_seedance_123
+                    object: video
+                    created_at: 1770000000
+                    status: queued
+                    model: doubao-seedance-2-0-260128
+                    usage:
+                      duration_seconds: 5
+                      video_resolution: 720p
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+    get:
+      tags:
+      - video_generations_volcengine
+      summary: List video tasks
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: listVideos_volcengine
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: custom_llm_provider
+        in: query
+        description: Provider filter. Use volcengine for Seedance tasks.
+        schema:
+          type: string
+        example: volcengine
+      - name: limit
+        in: query
+        description: Maximum number of tasks to return.
+        schema:
+          type: integer
+        example: 20
+      - name: after
+        in: query
+        description: Cursor for OpenAI-compatible pagination.
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: Sort order when supported by the backend.
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Provider status filter. Acceptance verifies succeeded mapping
+          to completed tasks.
+        schema:
+          type: string
+        example: succeeded
+      - name: filter.status
+        in: query
+        description: Provider status filter, such as succeeded.
+        schema:
+          type: string
+        example: succeeded
+      - name: filter.model
+        in: query
+        description: Public model name to filter tasks.
+        schema:
+          type: string
+        example: doubao-seedance-2-0-260128
+      - name: page_size
+        in: query
+        description: Page size for provider-style pagination.
+        schema:
+          type: integer
+        example: 1
+      - name: page_num
+        in: query
+        description: Page number for provider-style pagination.
+        schema:
+          type: integer
+        example: 2
+      - name: page_token
+        in: query
+        description: Page token for provider-style pagination.
+        schema:
+          type: string
+        example: video_seedance_123
+      responses:
+        '200':
+          description: Video task list
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VideoListResponse"
+              examples:
+                filtered:
+                  summary: Filtered list
+                  value:
+                    object: list
+                    has_more: true
+                    data:
+                    - id: video_seedance_124
+                      object: video
+                      status: completed
+                      model: doubao-seedance-2-0-260128
+                      seconds: '5'
+                      size: 1280x720
+                      usage:
+                        duration_seconds: 5
+                        video_resolution: 720p
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/videos/{video_id}":
+    get:
+      tags:
+      - video_generations_volcengine
+      summary: Retrieve video task
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: retrieveVideo_volcengine
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        description: Video task ID returned by create video.
+        schema:
+          type: string
+        example: video_seedance_123
+      responses:
+        '200':
+          description: Video task
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VideoTask"
+              examples:
+                completed:
+                  summary: Completed task
+                  value:
+                    id: video_seedance_123
+                    object: video
+                    created_at: 1770000000
+                    completed_at: 1770000012
+                    status: completed
+                    model: doubao-seedance-2-0-260128
+                    seconds: '5'
+                    size: 1280x720
+                    usage:
+                      duration_seconds: 5
+                      video_resolution: 720p
+                failed:
+                  summary: Failed task
+                  value:
+                    id: video_seedance_125
+                    object: video
+                    status: failed
+                    model: doubao-seedance-2-0-260128
+                    seconds: '5'
+                    error:
+                      code: ProviderVideoGenerationFailed
+                      message: Video generation failed.
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '404':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+    delete:
+      tags:
+      - video_generations_volcengine
+      summary: Cancel or delete video task
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: deleteVideo_volcengine
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        description: Video task ID.
+        schema:
+          type: string
+        example: video_seedance_123
+      responses:
+        '200':
+          description: Video task after delete or cancel request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VideoTask"
+              examples:
+                active_cancelled:
+                  summary: Active task cancelled
+                  value:
+                    id: video_seedance_123
+                    object: video
+                    status: cancelled
+                    model: doubao-seedance-2-0-260128
+                completed_retained:
+                  summary: Completed task retained
+                  value:
+                    id: video_seedance_124
+                    object: video
+                    status: completed
+                    model: doubao-seedance-2-0-260128
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '404':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/videos/{video_id}/content":
+    get:
+      tags:
+      - video_generations_volcengine
+      summary: Download video content
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: retrieveVideoContent_volcengine
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        description: Completed video task ID.
+        schema:
+          type: string
+        example: video_seedance_123
+      responses:
+        '200':
+          description: MP4 video content
+          content:
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '404':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/videos/{video_id}/remix":
+    post:
+      tags:
+      - video_generations_volcengine
+      summary: Remix video task
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: remixVideo_volcengine
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        description: Source video task ID.
+        schema:
+          type: string
+        example: video_seedance_123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateVideoRemixRequest"
+            examples:
+              warm_cinema_tone:
+                summary: Warm cinema tone
+                value:
+                  prompt: 重混这个视频，调整为更温暖的电影色调，保持主体和运动节奏。
+                  extra_body:
+                    duration: 5
+                    ratio: '16:9'
+                    generate_audio: false
+                    watermark: false
+      responses:
+        '200':
+          description: Remix task created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VideoTask"
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '404':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/videos/edits":
+    post:
+      tags:
+      - video_generations_volcengine
+      summary: Edit video task
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: editVideo_volcengine
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateVideoEditRequest"
+            examples:
+              source_task_reference:
+                summary: Edit from source task
+                value:
+                  prompt: 将视频中的礼盒替换成图片中的面霜，保持原有运镜。
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    image:
+                      url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_edit_pic1.jpg
+                      role: reference_image
+                    duration: 5
+                    ratio: '16:9'
+                    generate_audio: true
+                    watermark: true
+              explicit_source_url:
+                summary: Edit with explicit source URL
+                value:
+                  prompt: 将视频中的礼盒替换成图片中的面霜，保持原有运镜。
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    source_video_url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_edit_video1.mp4
+                    image:
+                      url: https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_edit_pic1.jpg
+                      role: reference_image
+                    duration: 5
+                    ratio: '16:9'
+                    generate_audio: true
+                    watermark: true
+      responses:
+        '200':
+          description: Edit task created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VideoTask"
+        '400':
+          "$ref": "#/components/responses/ErrorResponse"
+        '401':
+          "$ref": "#/components/responses/ErrorResponse"
+        '429':
+          "$ref": "#/components/responses/ErrorResponse"
+  "/v1/videos/extensions":
+    post:
+      tags:
+      - video_generations_volcengine
+      summary: Extend video task
+      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities
+        may vary by model.
+      operationId: extendVideo_volcengine
+      security:
+      - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateVideoExtensionRequest"
+            examples:
+              source_task_reference:
+                summary: Extend from source task
+                value:
+                  prompt: 延长视频中的镜头运动，继续进入美术馆室内空间。
+                  seconds: '8'
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    ratio: '16:9'
+                    generate_audio: true
+                    watermark: true
+              explicit_source_url:
+                summary: Extend with explicit source URL
+                value:
+                  prompt: 延长视频中的镜头运动，继续进入美术馆室内空间。
+                  seconds: '8'
+                  video:
+                    id: video_seedance_123
+                  extra_body:
+                    source_video_url: https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video1.mp4
+                    ratio: '16:9'
+                    generate_audio: true
+                    watermark: true
+      responses:
+        '200':
+          description: Extension task created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VideoTask"
         '400':
           "$ref": "#/components/responses/ErrorResponse"
         '401':

@@ -76,6 +76,7 @@ LANG_CONFIG = {
         "completions_root": "文本补全",
         "image_gen_root": "图像生成",
         "image_edit_root": "图像编辑",
+        "video_gen_root": "视频生成",
         "audio_root": "音频转录",
         "chat_leaf": "Chat Completions",
         "messages_leaf": "Messages",
@@ -90,6 +91,7 @@ LANG_CONFIG = {
         "readme_completions": "文本补全能力按公开支持聊天模型的厂家展示，便于按厂家查找兼容接口。",
         "readme_image_generations": "图像生成能力仅展示当前环境对外公开可用的厂家。",
         "readme_image_edits": "图像编辑能力仅展示当前环境对外公开可用的厂家。",
+        "readme_video_generations": "视频生成能力仅展示当前环境对外公开可用的厂家。",
         "readme_audio": "音频转录能力仅展示当前环境对外公开可用的厂家。",
         "vendor_overview": "{vendor} 在当前环境下提供以下公开能力。",
         "hint_chat": "本接口提供与 OpenAI Chat Completions 兼容的请求路径。不同厂家和模型的实际参数支持范围可能不同。",
@@ -98,6 +100,7 @@ LANG_CONFIG = {
         "hint_responses": "本接口提供与 OpenAI Responses 兼容的请求路径。不同厂家和模型的实际参数支持范围可能不同。",
         "hint_gemini": "本接口提供与 Google Gemini 原生协议兼容的请求路径。",
         "hint_images": "本接口提供与 OpenAI Images 兼容的请求路径。不同厂家和模型的实际能力可能不同。",
+        "hint_videos": "本接口提供与 OpenAI Videos 兼容的请求路径。不同厂家和模型的实际能力可能不同。",
         "hint_audio": "本接口提供与 OpenAI Audio Transcriptions 兼容的请求路径。不同厂家和模型的实际能力可能不同。",
         "overview_chat": "{vendor} 在当前环境中提供的对话生成能力。",
         "overview_completions": "{vendor} 在当前环境中提供的文本补全能力。",
@@ -106,6 +109,7 @@ LANG_CONFIG = {
         "overview_gemini": "{vendor} 在当前环境中提供的 Gemini 原生协议能力。",
         "overview_image_generations": "{vendor} 在当前环境中提供的图像生成能力。",
         "overview_image_edits": "{vendor} 在当前环境中提供的图像编辑能力。",
+        "overview_video_generations": "{vendor} 在当前环境中提供的视频生成能力。",
         "overview_audio_transcriptions": "{vendor} 在当前环境中提供的音频转写能力。",
         "openapi_section": "### 2. 接口详情",
         "openapi_section_after_extra": "### 3. 接口详情",
@@ -117,6 +121,7 @@ LANG_CONFIG = {
         "completions_root": "Text Completions",
         "image_gen_root": "Image Generations",
         "image_edit_root": "Image Edits",
+        "video_gen_root": "Video Generations",
         "audio_root": "Audio Transcriptions",
         "chat_leaf": "Chat Completions",
         "messages_leaf": "Messages",
@@ -132,6 +137,7 @@ LANG_CONFIG = {
         "readme_completions": "Text completions are listed for every vendor that publicly exposes chat models in this environment.",
         "readme_image_generations": "Image generation only lists vendors that are publicly available in this environment.",
         "readme_image_edits": "Image edits only list vendors that are publicly available in this environment.",
+        "readme_video_generations": "Video generation only lists vendors that are publicly available in this environment.",
         "readme_audio": "Audio transcriptions only list vendors that are publicly available in this environment.",
         "vendor_overview": "{vendor} exposes the following public capabilities in this environment.",
         "hint_chat": "This endpoint provides an OpenAI-compatible Chat Completions path. Actual parameter support may vary by vendor and model.",
@@ -140,6 +146,7 @@ LANG_CONFIG = {
         "hint_responses": "This endpoint provides an OpenAI-compatible Responses path. Actual parameter support may vary by vendor and model.",
         "hint_gemini": "This endpoint provides a Google Gemini native-compatible path.",
         "hint_images": "This endpoint provides an OpenAI-compatible Images path. Actual capabilities may vary by vendor and model.",
+        "hint_videos": "This endpoint provides an OpenAI-compatible Videos path. Actual capabilities may vary by vendor and model.",
         "hint_audio": "This endpoint provides an OpenAI-compatible Audio Transcriptions path. Actual capabilities may vary by vendor and model.",
         "overview_chat": "{vendor} exposes conversation capabilities in this environment.",
         "overview_completions": "{vendor} exposes text completion capabilities in this environment.",
@@ -148,6 +155,7 @@ LANG_CONFIG = {
         "overview_gemini": "{vendor} exposes Gemini native protocol capabilities in this environment.",
         "overview_image_generations": "{vendor} exposes image generation capabilities in this environment.",
         "overview_image_edits": "{vendor} exposes image edit capabilities in this environment.",
+        "overview_video_generations": "{vendor} exposes video generation capabilities in this environment.",
         "overview_audio_transcriptions": "{vendor} exposes audio transcription capabilities in this environment.",
         "openapi_section": "### 2. API Details",
         "openapi_section_after_extra": "### 3. API Details",
@@ -260,6 +268,9 @@ def build_env_index(env: str) -> dict:
     audio_vendors = order_vendors(
         env, {vendor for vendor, vendor_records in by_vendor.items() if any(has_endpoint(r, "/v1/audio/transcriptions") for r in vendor_records)}
     )
+    video_gen_vendors = order_vendors(
+        env, {vendor for vendor, vendor_records in by_vendor.items() if any(has_endpoint(r, "/v1/videos") for r in vendor_records)}
+    )
 
     chat_capabilities: dict[str, list[str]] = {}
     for vendor in chat_vendors:
@@ -285,6 +296,7 @@ def build_env_index(env: str) -> dict:
         ),
         "image_gen_vendors": image_gen_vendors,
         "image_edit_vendors": image_edit_vendors,
+        "video_gen_vendors": video_gen_vendors,
         "audio_vendors": audio_vendors,
     }
 
@@ -304,17 +316,20 @@ def models_for_capability(env_index: dict, vendor: str, capability: str) -> list
         "responses": "/v1/responses",
         "image_generations": "/v1/images/generations",
         "image_edits": "/v1/images/edits",
+        "video_generations": "/v1/videos",
         "audio_transcriptions": "/v1/audio/transcriptions",
     }
     endpoint = endpoint_map[capability]
     return unique_model_names(record for record in records if has_endpoint(record, endpoint))
 
 
-def build_openapi_block(spec_vendor: str, env: str, lang: str, path: str, label: str) -> str:
+def build_openapi_block(
+    spec_vendor: str, env: str, lang: str, path: str, label: str, method: str = "post"
+) -> str:
     spec_name = f"{spec_vendor}-{lang}-{env}"
     raw_url = f"https://raw.githubusercontent.com/liujia-hbu/nsclouds-api-docs/main/docs/bundled/{env}/{lang}/{spec_vendor}.bundled.yaml"
     return (
-        f'{{% openapi-operation spec="{spec_name}" path="{path}" method="post" %}}\n'
+        f'{{% openapi-operation spec="{spec_name}" path="{path}" method="{method}" %}}\n'
         f"[OpenAPI {label}]({raw_url})\n"
         "{% endopenapi-operation %}\n"
     )
@@ -346,6 +361,7 @@ def capability_title(capability: str, lang: str) -> str:
         "completions": cfg["completions_root"],
         "image_generations": cfg["image_gen_root"],
         "image_edits": cfg["image_edit_root"],
+        "video_generations": cfg["video_gen_root"],
         "audio_transcriptions": cfg["audio_root"],
     }[capability]
 
@@ -369,6 +385,7 @@ def capability_overview(capability: str, vendor: str, lang: str) -> str:
         "completions": "overview_completions",
         "image_generations": "overview_image_generations",
         "image_edits": "overview_image_edits",
+        "video_generations": "overview_video_generations",
         "audio_transcriptions": "overview_audio_transcriptions",
     }[capability]
     return cfg[key].format(vendor=vendor_name(vendor))
@@ -384,6 +401,7 @@ def capability_hint(capability: str, lang: str) -> str:
         "completions": "hint_completions",
         "image_generations": "hint_images",
         "image_edits": "hint_images",
+        "video_generations": "hint_videos",
         "audio_transcriptions": "hint_audio",
     }[capability]
     return cfg[key]
@@ -459,20 +477,30 @@ def openapi_spec_vendor(vendor: str, capability: str) -> str:
     return vendor
 
 
-def openapi_path(capability: str) -> list[str]:
+def openapi_operations(capability: str) -> list[tuple[str, str]]:
     if capability == "gemini":
-        return list(GEMINI_NATIVE_DOC_PATHS)
-    return [
-        {
-            "chat": "/v1/chat/completions",
-            "messages": "/v1/messages",
-            "responses": "/v1/responses",
-            "completions": "/v1/completions",
-            "image_generations": "/v1/images/generations",
-            "image_edits": "/v1/images/edits",
-            "audio_transcriptions": "/v1/audio/transcriptions",
-        }[capability]
-    ]
+        return [(path, "post") for path in GEMINI_NATIVE_DOC_PATHS]
+    if capability == "video_generations":
+        return [
+            ("/v1/videos", "post"),
+            ("/v1/videos/{video_id}", "get"),
+            ("/v1/videos/{video_id}/content", "get"),
+            ("/v1/videos", "get"),
+            ("/v1/videos/{video_id}", "delete"),
+            ("/v1/videos/{video_id}/remix", "post"),
+            ("/v1/videos/edits", "post"),
+            ("/v1/videos/extensions", "post"),
+        ]
+    endpoint = {
+        "chat": "/v1/chat/completions",
+        "messages": "/v1/messages",
+        "responses": "/v1/responses",
+        "completions": "/v1/completions",
+        "image_generations": "/v1/images/generations",
+        "image_edits": "/v1/images/edits",
+        "audio_transcriptions": "/v1/audio/transcriptions",
+    }[capability]
+    return [(endpoint, "post")]
 
 
 def build_capability_page(env: str, lang: str, vendor: str, capability: str, models: list[str]) -> str:
@@ -482,7 +510,8 @@ def build_capability_page(env: str, lang: str, vendor: str, capability: str, mod
     hint = capability_hint(capability, lang)
     spec_vendor = openapi_spec_vendor(vendor, capability)
     blocks = "\n".join(
-        build_openapi_block(spec_vendor, env, lang, path, vendor_name(vendor)) for path in openapi_path(capability)
+        build_openapi_block(spec_vendor, env, lang, path, vendor_name(vendor), method)
+        for path, method in openapi_operations(capability)
     )
     extra_section = file_input_notes(lang, vendor, capability)
     extra_block = f"{extra_section}\n" if extra_section else ""
@@ -530,6 +559,8 @@ def category_vendor_target(category_key: str, vendor: str) -> str:
         return f"image-generations/{vendor}.md"
     if category_key == "image_edits":
         return f"image-edits/{vendor}.md"
+    if category_key == "video_generations":
+        return f"video-generations/{vendor}.md"
     if category_key == "audio_transcriptions":
         return f"audio-transcriptions/{vendor}.md"
     return f"{vendor}.md"
@@ -541,6 +572,7 @@ def category_landing_filename(category_key: str) -> str:
         "completions": "completions.md",
         "image_generations": "image-generations.md",
         "image_edits": "image-edits.md",
+        "video_generations": "video-generations.md",
         "audio_transcriptions": "audio-transcriptions.md",
     }[category_key]
 
@@ -551,6 +583,7 @@ def category_summary_target(category_key: str) -> str:
         "completions": "completions/readme.md",
         "image_generations": "image-generations/readme.md",
         "image_edits": "image-edits/readme.md",
+        "video_generations": "video-generations/readme.md",
         "audio_transcriptions": "audio-transcriptions/readme.md",
     }[category_key]
 
@@ -562,6 +595,7 @@ def build_category_landing(lang: str, category_key: str, vendors: list[str]) -> 
         "completions": cfg["completions_root"],
         "image_generations": cfg["image_gen_root"],
         "image_edits": cfg["image_edit_root"],
+        "video_generations": cfg["video_gen_root"],
         "audio_transcriptions": cfg["audio_root"],
     }
     vendor_lines = (
@@ -584,6 +618,7 @@ def build_category_directory_summary(lang: str, category_key: str, vendors: list
         "completions": cfg["completions_root"],
         "image_generations": cfg["image_gen_root"],
         "image_edits": cfg["image_edit_root"],
+        "video_generations": cfg["video_gen_root"],
         "audio_transcriptions": cfg["audio_root"],
     }
     vendor_lines = "\n".join(f"- [{vendor_name(vendor)}]({vendor}.md)" for vendor in vendors) if vendors else cfg["none"]
@@ -601,6 +636,7 @@ def render_env(env: str) -> None:
             "completions",
             "image-generations",
             "image-edits",
+            "video-generations",
             "audio-transcriptions",
             "embeddings",
             "messages",
@@ -622,6 +658,7 @@ def render_env(env: str) -> None:
             "completions.md",
             "image-generations.md",
             "image-edits.md",
+            "video-generations.md",
             "audio-transcriptions.md",
         ):
             stale_landing = base / landing_file
@@ -638,6 +675,10 @@ def render_env(env: str) -> None:
         write_text(
             base / "image-edits" / "SUMMARY.md",
             build_category_directory_summary(lang, "image_edits", env_index["image_edit_vendors"]),
+        )
+        write_text(
+            base / "video-generations" / "SUMMARY.md",
+            build_category_directory_summary(lang, "video_generations", env_index["video_gen_vendors"]),
         )
         write_text(
             base / "audio-transcriptions" / "SUMMARY.md",
@@ -696,6 +737,21 @@ def render_env(env: str) -> None:
                         vendor,
                         "image_edits",
                         models_for_capability(env_index, vendor, "image_edits"),
+                    ),
+                )
+
+        if env_index["video_gen_vendors"]:
+            summary_lines.append(f"* [{cfg['video_gen_root']}]({category_summary_target('video_generations')})")
+            for vendor in env_index["video_gen_vendors"]:
+                summary_lines.append(f"  * [{vendor_name(vendor)}](video-generations/{vendor}.md)")
+                write_text(
+                    base / "video-generations" / f"{vendor}.md",
+                    build_capability_page(
+                        env,
+                        lang,
+                        vendor,
+                        "video_generations",
+                        models_for_capability(env_index, vendor, "video_generations"),
                     ),
                 )
 

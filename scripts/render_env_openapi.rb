@@ -69,6 +69,20 @@ CAPABILITY_CONFIG = {
     x_parent: "image_edits",
     icon: "image",
   },
+  "video_generations" => {
+    default_source: "volcengine",
+    paths: [
+      "/v1/videos",
+      "/v1/videos/{video_id}",
+      "/v1/videos/{video_id}/content",
+      "/v1/videos/{video_id}/remix",
+      "/v1/videos/edits",
+      "/v1/videos/extensions",
+    ],
+    tag_name: "video_generations",
+    x_parent: "video_generations",
+    icon: "video",
+  },
   "audio_transcriptions" => {
     default_source: "openai",
     path: "/v1/audio/transcriptions",
@@ -125,7 +139,7 @@ end
 
 
 def top_tags(spec)
-  deep_copy(spec.fetch("tags").first(5))
+  deep_copy(spec.fetch("tags").first(6))
 end
 
 
@@ -154,6 +168,7 @@ def capability_title(capability, lang)
       "responses" => "Responses",
       "image_generations" => "Image Generations",
       "image_edits" => "Image Edits",
+      "video_generations" => "Video Generations",
       "audio_transcriptions" => "Audio Transcriptions",
     },
     "en" => {
@@ -180,6 +195,7 @@ def capability_description(capability, vendor, lang)
       "responses" => "#{brand} 的 Responses 协议 API",
       "image_generations" => "#{brand} 的图像生成 API",
       "image_edits" => "#{brand} 的图像编辑 API",
+      "video_generations" => "#{brand} 的视频生成 API",
       "audio_transcriptions" => "#{brand} 的音频转录 API",
       "gemini" => "#{brand} 的 Gemini 原生协议 API",
     }.fetch(capability)
@@ -191,6 +207,7 @@ def capability_description(capability, vendor, lang)
       "responses" => "#{brand}'s Responses API",
       "image_generations" => "#{brand}'s image generations API",
       "image_edits" => "#{brand}'s image edits API",
+      "video_generations" => "#{brand}'s video generations API",
       "audio_transcriptions" => "#{brand}'s audio transcriptions API",
       "gemini" => "#{brand}'s Gemini native API",
     }.fetch(capability)
@@ -267,6 +284,7 @@ def example_models_for_env(env)
       "responses" => canonical_example_model(entries.select { |entry| entry["endpoints"].include?("/v1/responses") }),
       "image_generations" => canonical_example_model(entries.select { |entry| entry["endpoints"].include?("/v1/images/generations") }),
       "image_edits" => canonical_example_model(entries.select { |entry| entry["endpoints"].include?("/v1/images/edits") }),
+      "video_generations" => canonical_example_model(entries.select { |entry| entry["endpoints"].include?("/v1/videos") }),
       "audio_transcriptions" => canonical_example_model(entries.select { |entry| entry["endpoints"].include?("/v1/audio/transcriptions") }),
       "gemini" => canonical_example_model(entries.select { |entry| (entry["endpoints"] & GEMINI_NATIVE_DETECTION_ENDPOINTS).any? }),
     }
@@ -344,6 +362,7 @@ def operation_description(capability, vendor, lang)
       "responses" => "提供与 OpenAI Responses 兼容的接口。具体支持的参数和行为因模型而异。",
       "image_generations" => "提供与 OpenAI Images 兼容的图像生成接口。具体支持的能力因模型而异。",
       "image_edits" => "提供与 OpenAI Images 兼容的图像编辑接口。具体支持的能力因模型而异。",
+      "video_generations" => "提供与 OpenAI Videos 兼容的视频生成接口。具体支持的能力因模型而异。",
       "audio_transcriptions" => "提供与 OpenAI Audio Transcriptions 兼容的音频转写接口。具体支持的能力因模型而异。",
       "gemini" => "提供与 Google Gemini 原生协议兼容的接口。",
     },
@@ -354,6 +373,7 @@ def operation_description(capability, vendor, lang)
       "responses" => "Provides an OpenAI-compatible Responses endpoint. Supported parameters and behavior may vary by model.",
       "image_generations" => "Provides an OpenAI-compatible Images generation endpoint. Supported capabilities may vary by model.",
       "image_edits" => "Provides an OpenAI-compatible Images editing endpoint. Supported capabilities may vary by model.",
+      "video_generations" => "Provides an OpenAI-compatible Videos endpoint. Supported capabilities may vary by model.",
       "audio_transcriptions" => "Provides an OpenAI-compatible Audio Transcriptions endpoint. Supported capabilities may vary by model.",
       "gemini" => "Provides a Google Gemini native-compatible endpoint.",
     },
@@ -412,6 +432,7 @@ def capabilities_for_env(env)
     caps << "responses" if entries.any? { |entry| entry["endpoints"].include?("/v1/responses") }
     caps << "image_generations" if entries.any? { |entry| entry["endpoints"].include?("/v1/images/generations") }
     caps << "image_edits" if entries.any? { |entry| entry["endpoints"].include?("/v1/images/edits") }
+    caps << "video_generations" if entries.any? { |entry| entry["endpoints"].include?("/v1/videos") }
     caps << "audio_transcriptions" if entries.any? { |entry| entry["endpoints"].include?("/v1/audio/transcriptions") }
     caps << "gemini" if entries.any? { |entry| (entry["endpoints"] & GEMINI_NATIVE_DETECTION_ENDPOINTS).any? }
     public_caps[vendor] = caps.uniq if caps.any?
