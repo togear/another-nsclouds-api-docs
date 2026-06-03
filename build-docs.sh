@@ -82,7 +82,7 @@ trim_trailing_whitespace() {
   local target_dir=$1
 
   if [ -d "$target_dir" ]; then
-    find "$target_dir" -name "*.yaml" -exec ruby -pi -e 'gsub!(/[ \t]+$/, "")' {} +
+    find "$target_dir" -name "*.yaml" -exec ruby -pi -e '$_.gsub!(/[ \t]+$/, "")' {} +
   fi
 }
 
@@ -113,7 +113,7 @@ generate_docs() {
 
   python3 scripts/generate_env_docs.py render-env "${env}"
   ruby scripts/render_env_openapi.rb "${env}" "docs/${env}"
-  trim_trailing_whitespace "docs/${env}/openapi"
+  trim_trailing_whitespace "docs/${env}"
 }
 
 # 生成国内版本

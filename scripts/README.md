@@ -4,7 +4,7 @@
 
 ## 过渡期仓库与 GitBook 协作
 
-当前个人 GitHub/GitBook 仍承担预览与调试用途，公司 GitHub 已存在，但公司 GitBook 尚未准备好。过渡期的 remote、预览发布、正式发布规划见：
+当前个人 GitHub 继续作为文档内容源，GitBook space 暂时继续使用已共享出来的个人 GitBook。过渡期的 remote、发布、同步规划见：
 
 - `scripts/REPOSITORY_AND_GITBOOK_TRANSITION.md`
 
@@ -76,7 +76,13 @@
 bash build-docs.sh
 ```
 
-先做 dry-run 看将要同步哪些 spec：
+提交本地更新，并先推送到个人 GitHub。GitBook OpenAPI 会从个人 GitHub raw URL 拉取文件，因此同步前远端必须已有最新 `docs/bundled`：
+
+```bash
+git push origin main
+```
+
+个人 GitHub 推送完成后，先做 dry-run 看将要同步哪些 spec：
 
 ```bash
 export GITBOOK_TOKEN=...
@@ -104,7 +110,9 @@ python3 scripts/sync_gitbook_openapi.py --env global --lang en --vendor dashscop
 
 1. 更新 `scripts/data/*.json`
 2. 运行 `bash build-docs.sh`
-3. 运行 `python3 scripts/sync_gitbook_openapi.py --wait`
+3. 提交本地更新，并推送到个人 GitHub
+4. 运行 `python3 scripts/sync_gitbook_openapi.py --dry-run`
+5. 确认 dry-run URL 指向 `liujia-hbu/nsclouds-api-docs` 后，运行 `python3 scripts/sync_gitbook_openapi.py --wait`
 
 这样就不需要再去 GitBook 页面里逐个导入 `dashscope-en-global`、`openai-zh-global` 之类的 spec。
 
