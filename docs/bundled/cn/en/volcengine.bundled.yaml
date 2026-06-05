@@ -572,73 +572,73 @@ paths:
       tags:
         - video_generations_volcengine
       summary: List video tasks
-      description: List video tasks recorded in AILLM's persistent task index for the current API key. The gateway does not expose the provider's full VolcEngine task list. Only tasks written to LiteLLM_VideoTaskTable appear in the list. Historical unindexed tasks can still be retrieved by ID or through the content endpoint to get task status and the video URL.
+      description: 'List video tasks under the current API key. You can filter by model and status, and paginate by page number. If you already have a video_id, call the retrieve or content endpoint directly to get task status and the video URL.'
       operationId: listVideos_volcengine
       security:
         - APIKeyHeader: []
       parameters:
         - name: custom_llm_provider
           in: query
-          description: LiteLLM provider selector. Use volcengine when refreshing indexed Seedance task status; the provider is usually inferred from the video_... task ID.
+          description: Provider selector. Use volcengine for Seedance tasks.
           schema:
             type: string
           example: volcengine
         - name: model
           in: query
-          description: Filters by the public model name or model ID recorded in the AILLM task index. Prefer model instead of filter.model.
+          description: Filter by model.
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: limit
           in: query
-          description: Local page size. This is not mapped to VolcEngine page_size; maximum 100.
+          description: 'Page size, up to 100.'
           schema:
             type: integer
           example: 20
         - name: after
           in: query
-          description: OpenAI-style pagination cursor accepted for compatibility. The local task index list does not currently use this cursor; use page_num.
+          description: Compatibility parameter. Prefer page_num.
           schema:
             type: string
         - name: order
           in: query
-          description: OpenAI-style sort parameter accepted for compatibility. The local task index list does not currently use this parameter.
+          description: Compatibility parameter.
           deprecated: true
           schema:
             type: string
         - name: status
           in: query
-          description: 'Filters by local indexed task status. completed and in_progress are recommended; succeeded is normalized to completed, and running is normalized to in_progress.'
+          description: 'Filter by status, such as completed or in_progress.'
           schema:
             type: string
           example: completed
         - name: filter.status
           in: query
-          description: Provider-style status filter accepted for compatibility and applied to the local index. It is not forwarded to a VolcEngine list API; succeeded/running are normalized to completed/in_progress.
+          description: Compatibility alias for status filtering.
           schema:
             type: string
           example: succeeded
         - name: filter.model
           in: query
-          description: Provider-style model filter accepted for compatibility. Prefer the model parameter for local index filtering.
+          description: Compatibility alias for model filtering. Prefer model.
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: page_size
           in: query
-          description: Provider-style alias for local page size. limit is the recommended OpenAI-compatible alias.
+          description: Compatibility alias for page size. Prefer limit.
           schema:
             type: integer
           example: 1
         - name: page_num
           in: query
-          description: 'Local task index page number, starting from 1.'
+          description: 'Page number, starting from 1.'
           schema:
             type: integer
           example: 2
         - name: page_token
           in: query
-          description: OpenAI-style page token accepted for compatibility. The local task index list does not currently use this parameter; use page_num instead.
+          description: Compatibility parameter. Prefer page_num.
           deprecated: true
           schema:
             type: string

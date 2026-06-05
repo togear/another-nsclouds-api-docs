@@ -582,73 +582,73 @@ paths:
       tags:
         - video_generations_volcengine
       summary: 列出视频任务
-      description: 列出当前 API key 在 AILLM 持久任务索引中的视频任务。网关不会暴露 VolcEngine 上游全量任务列表；只有已写入 LiteLLM_VideoTaskTable 的任务会出现在列表中。历史未索引任务仍可通过创建时返回的 video_id 调用查询或内容下载接口获取状态和视频 URL。
+      description: 列出当前 API key 下的视频任务，可按模型、状态和页码过滤。已有 video_id 时，可直接调用查询或内容下载接口获取状态和视频 URL。
       operationId: listVideos_volcengine
       security:
         - APIKeyHeader: []
       parameters:
         - name: custom_llm_provider
           in: query
-          description: LiteLLM 厂家选择参数。刷新索引内任务状态时可指定 volcengine；通常也可以由 video_... 任务 ID 自动解析。
+          description: 供应商选择参数。Seedance 任务可使用 volcengine。
           schema:
             type: string
           example: volcengine
         - name: model
           in: query
-          description: 按 AILLM 任务索引中的公开模型名或模型 ID 过滤。推荐使用 model，而不是 filter.model。
+          description: 按模型过滤。
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: limit
           in: query
-          description: 本地分页大小。不会映射为 VolcEngine page_size；最大 100。
+          description: 每页数量，最大 100。
           schema:
             type: integer
           example: 20
         - name: after
           in: query
-          description: 为兼容 OpenAI-style 分页保留；本地任务索引列表当前不使用该游标。请使用 page_num。
+          description: 兼容参数。建议使用 page_num。
           schema:
             type: string
         - name: order
           in: query
-          description: 为兼容 OpenAI-style 排序保留；本地任务索引列表当前不使用该参数。
+          description: 兼容参数。
           deprecated: true
           schema:
             type: string
         - name: status
           in: query
-          description: 按本地索引状态过滤。completed 和 in_progress 为推荐值；succeeded 会归一化为 completed，running 会归一化为 in_progress。
+          description: 按状态过滤，例如 completed 或 in_progress。
           schema:
             type: string
           example: completed
         - name: filter.status
           in: query
-          description: 兼容厂家风格状态过滤；用于本地索引过滤，不会透传给 VolcEngine 列表接口。succeeded/running 会归一化为 completed/in_progress。
+          description: 状态过滤的兼容写法。
           schema:
             type: string
           example: succeeded
         - name: filter.model
           in: query
-          description: 兼容接收的厂家风格模型过滤参数；本地索引列表推荐使用 model。
+          description: 模型过滤的兼容写法。推荐使用 model。
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: page_size
           in: query
-          description: 本地分页大小的厂家风格别名。推荐使用 OpenAI 兼容别名 limit。
+          description: 每页数量的兼容写法。推荐使用 limit。
           schema:
             type: integer
           example: 1
         - name: page_num
           in: query
-          description: 本地任务索引页码，从 1 开始。
+          description: 页码，从 1 开始。
           schema:
             type: integer
           example: 2
         - name: page_token
           in: query
-          description: 为兼容 OpenAI-style page token 保留；本地任务索引列表当前不使用该参数。请使用 page_num。
+          description: 兼容参数。建议使用 page_num。
           deprecated: true
           schema:
             type: string
