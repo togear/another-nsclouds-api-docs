@@ -855,7 +855,7 @@ paths:
       tags:
         - video_generations_volcengine
       summary: 取消或删除视频任务
-      description: 在可取消时取消活跃任务。删除已完成任务时返回该 completed 任务对象，acceptance 已覆盖该行为。
+      description: 取消排队中的视频生成任务，或删除已结束的视频生成任务记录。VolcEngine 不允许删除进行中的任务；当任务仍为 running / in_progress 时，上游会返回 InvalidAction.RunningTaskDeletion / 409 Conflict，AILLM 会映射为 OpenAI-style 错误文案。
       operationId: deleteVideo_volcengine
       security:
         - APIKeyHeader: []
@@ -895,6 +895,18 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '404':
           $ref: '#/components/responses/ErrorResponse'
+        '409':
+          description: 任务正在运行，不能删除
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  message: Cannot delete a video generation task while it is running. Queued tasks may be canceled, and finished task records may be deleted. Check the task status and retry after it is no longer running.
+                  type: invalid_request_error
+                  code: conflict
+                  request_id: req_123
         '429':
           $ref: '#/components/responses/ErrorResponse'
 

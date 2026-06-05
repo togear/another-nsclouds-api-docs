@@ -4,8 +4,8 @@ info:
   description: OpenAI 兼容接口和厂家兼容接口的 API 文档。
   version: 1.11.0
 servers:
-  - url: 'https://aillm.nsclouds.com'
-    description: 国内服务器
+  - url: '${SERVER_URL}'
+    description: '${SERVER_DESCRIPTION}'
 tags:
   - name: chat_completions
     x-page-title: 对话生成
@@ -744,7 +744,7 @@ paths:
       tags:
         - video_generations_volcengine
       summary: 取消或删除视频任务
-      description: 提供与 OpenAI Videos 兼容的视频生成接口。具体支持的能力因模型而异。
+      description: 取消排队中的视频生成任务，或删除已结束的视频生成任务记录。VolcEngine 不允许删除进行中的任务；当任务仍为 running / in_progress 时，上游会返回 InvalidAction.RunningTaskDeletion / 409 Conflict，AILLM 会映射为 OpenAI-style 错误文案。
       operationId: deleteVideo_volcengine
       security:
         - APIKeyHeader: []
@@ -784,6 +784,18 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '404':
           $ref: '#/components/responses/ErrorResponse'
+        '409':
+          description: 任务正在运行，不能删除
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  message: 'Cannot delete a video generation task while it is running. Queued tasks may be canceled, and finished task records may be deleted. Check the task status and retry after it is no longer running.'
+                  type: invalid_request_error
+                  code: conflict
+                  request_id: req_123
         '429':
           $ref: '#/components/responses/ErrorResponse'
   '/v1/videos/{video_id}/content':

@@ -4,8 +4,8 @@ info:
   description: API documentation for OpenAI-compatible and provider-compatible AI endpoints.
   version: 1.11.0
 servers:
-  - url: 'https://aillm.nsclouds.com'
-    description: China Server
+  - url: '${SERVER_URL}'
+    description: '${SERVER_DESCRIPTION}'
 tags:
   - name: chat_completions
     x-page-title: Chat Completions
@@ -734,7 +734,7 @@ paths:
       tags:
         - video_generations_volcengine
       summary: Cancel or delete video task
-      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities may vary by model.
+      description: 'Cancel a queued video generation task, or delete a finished video generation task record. VolcEngine does not allow deleting a running task; when the task is still running / in_progress, upstream returns InvalidAction.RunningTaskDeletion / 409 Conflict and AILLM maps it to an OpenAI-style error message.'
       operationId: deleteVideo_volcengine
       security:
         - APIKeyHeader: []
@@ -774,6 +774,18 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '404':
           $ref: '#/components/responses/ErrorResponse'
+        '409':
+          description: The task is running and cannot be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  message: 'Cannot delete a video generation task while it is running. Queued tasks may be canceled, and finished task records may be deleted. Check the task status and retry after it is no longer running.'
+                  type: invalid_request_error
+                  code: conflict
+                  request_id: req_123
         '429':
           $ref: '#/components/responses/ErrorResponse'
   '/v1/videos/{video_id}/content':
