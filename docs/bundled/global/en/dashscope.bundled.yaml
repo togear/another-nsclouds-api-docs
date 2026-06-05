@@ -27,6 +27,10 @@ tags:
     x-page-title: Audio Transcriptions
     x-page-icon: microphone
     description: Audio transcription related APIs for transcribing audio files to text
+  - name: video_generations
+    x-page-title: Video Generations
+    x-page-icon: video
+    description: 'Video generation related APIs for creating, polling, downloading, listing, and cancelling video tasks'
   - name: chat_completions_dashscope
     x-parent: chat_completions
     x-page-title: DashScope
@@ -1780,6 +1784,316 @@ components:
           description: Final returned image size.
         usage:
           $ref: '#/components/schemas/ImageUsage'
+    VideoMediaReference:
+      type: object
+      description: 'URL-based media reference used by Seedance video generation. Pass a public URL or an uploaded asset reference such as asset://...; local file objects, BytesIO values, and multipart UploadFile payloads are not uploaded automatically. Roles verified in acceptance include first_frame, last_frame, reference_image, reference_video, and reference_audio.'
+      properties:
+        url:
+          type: string
+          description: 'Publicly accessible media URL or uploaded asset reference such as asset://asset-id.'
+        role:
+          type: string
+          description: Role of this media item in the generation request.
+          enum:
+            - first_frame
+            - last_frame
+            - reference_image
+            - reference_video
+            - reference_audio
+      required:
+        - url
+    VideoContentPart:
+      type: object
+      description: 'Native Seedance content part used when composing text, image, video, or audio references directly.'
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+            - image_url
+            - video_url
+            - audio_url
+        text:
+          type: string
+          description: Text content when type=text.
+        image_url:
+          type: object
+          properties:
+            url:
+              type: string
+              description: 'Publicly accessible image URL or uploaded asset reference such as asset://asset-id.'
+          required:
+            - url
+        video_url:
+          type: object
+          properties:
+            url:
+              type: string
+              description: 'Publicly accessible video URL or uploaded asset reference such as asset://asset-id.'
+          required:
+            - url
+        audio_url:
+          type: object
+          properties:
+            url:
+              type: string
+              description: 'Publicly accessible audio URL or uploaded asset reference such as asset://asset-id.'
+          required:
+            - url
+        role:
+          type: string
+          description: 'Media role, such as first_frame, last_frame, reference_image, reference_video, or reference_audio.'
+      required:
+        - type
+      additionalProperties: true
+    CreateVideoRequest:
+      type: object
+      description: Video generation request body.
+      properties:
+        model:
+          type: string
+          description: Model ID to invoke.
+        prompt:
+          type: string
+          description: Prompt used to generate the video.
+        duration:
+          type: integer
+          description: Requested duration in seconds. Seedance acceptance covers values from 4 to 11 seconds; model metadata currently allows 4 to 15 seconds.
+        seconds:
+          type: string
+          description: OpenAI-compatible duration alias. The gateway maps this to duration.
+        size:
+          type: string
+          description: OpenAI-compatible size alias. The gateway maps known sizes such as 2560x1080 to ratio and resolution.
+        ratio:
+          type: string
+          description: Requested aspect ratio.
+          enum:
+            - '21:9'
+            - '16:9'
+            - '4:3'
+            - '1:1'
+            - '3:4'
+            - '9:16'
+            - adaptive
+        resolution:
+          type: string
+          description: Requested output resolution.
+          enum:
+            - 480p
+            - 720p
+            - 1080p
+        image:
+          description: 'Image reference or references for image-to-video, first/last-frame, and reference-image workflows.'
+          oneOf:
+            - $ref: '#/components/schemas/VideoMediaReference'
+            - type: array
+              items:
+                $ref: '#/components/schemas/VideoMediaReference'
+        input_reference:
+          description: 'OpenAI-compatible image reference alias. Seedance accepts URL or asset references only; upload local files first and pass the resulting URL or asset://... reference.'
+          oneOf:
+            - $ref: '#/components/schemas/VideoMediaReference'
+            - type: string
+              description: 'Publicly accessible image URL or uploaded asset reference such as asset://asset-id.'
+            - type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/VideoMediaReference'
+                  - type: string
+        video:
+          description: 'Video reference or references for video edit, extension, remix, and reference-video workflows.'
+          oneOf:
+            - $ref: '#/components/schemas/VideoMediaReference'
+            - type: array
+              items:
+                $ref: '#/components/schemas/VideoMediaReference'
+        audio:
+          description: Audio reference or references for reference-audio workflows.
+          oneOf:
+            - $ref: '#/components/schemas/VideoMediaReference'
+            - type: array
+              items:
+                $ref: '#/components/schemas/VideoMediaReference'
+        content:
+          type: array
+          description: Native Seedance multimodal content list.
+          items:
+            $ref: '#/components/schemas/VideoContentPart'
+        generate_audio:
+          type: boolean
+          description: Whether to generate audio with the video.
+        watermark:
+          type: boolean
+          description: Whether to include watermarking when supported.
+        return_last_frame:
+          type: boolean
+          description: Whether to include the generated last-frame image in the provider response.
+        tools:
+          type: array
+          description: 'Tool declarations. Seedance acceptance verifies web_search through {"type":"web_search"}.'
+          items:
+            type: object
+            additionalProperties: true
+        service_tier:
+          type: string
+          description: 'Provider service tier, such as flex when supported.'
+        callback_url:
+          type: string
+          description: Optional callback URL forwarded to the provider.
+        execution_expires_after:
+          type: integer
+          description: Task execution expiry in seconds when supported.
+        seed:
+          type: integer
+          description: Best-effort generation seed when supported.
+        camera_fixed:
+          type: boolean
+          description: Whether the camera should remain fixed when supported.
+        priority:
+          type: integer
+          description: Provider task priority when supported.
+        extra_headers:
+          type: object
+          description: Additional gateway request headers.
+          additionalProperties: true
+        extra_body:
+          type: object
+          description: 'Additional provider request body. Acceptance covers content, source_video_url, and provider passthrough fields through extra_body.'
+          additionalProperties: true
+      required:
+        - model
+        - prompt
+    VideoTaskUsage:
+      type: object
+      description: Video task usage summary.
+      properties:
+        duration_seconds:
+          type: number
+          description: Video duration in seconds.
+        video_resolution:
+          type: string
+          description: Effective video resolution.
+        tool_usage:
+          type: object
+          description: 'Optional tool usage counters, such as web_search.'
+          additionalProperties: true
+      additionalProperties: true
+    VideoTask:
+      type: object
+      description: Video task object.
+      properties:
+        id:
+          type: string
+          description: Gateway-managed video task ID.
+        object:
+          type: string
+          enum:
+            - video
+        status:
+          type: string
+          description: Task status.
+          enum:
+            - queued
+            - in_progress
+            - completed
+            - failed
+            - cancelled
+            - expired
+        created_at:
+          type: integer
+          description: Creation timestamp in seconds.
+        completed_at:
+          type: integer
+          description: Completion timestamp in seconds for terminal tasks.
+        model:
+          type: string
+          description: Model ID used by the task.
+        seconds:
+          type: string
+          description: Effective video duration in seconds.
+        size:
+          type: string
+          description: Effective video size when available.
+        usage:
+          $ref: '#/components/schemas/VideoTaskUsage'
+        error:
+          type: object
+          description: Error payload for failed or expired tasks.
+          additionalProperties: true
+      required:
+        - id
+        - object
+        - status
+    VideoListResponse:
+      type: object
+      description: Video task list response.
+      properties:
+        object:
+          type: string
+          enum:
+            - list
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoTask'
+        has_more:
+          type: boolean
+          description: Whether another page is available.
+    CreateVideoRemixRequest:
+      type: object
+      description: Create a new video by remixing an existing task.
+      properties:
+        prompt:
+          type: string
+        extra_body:
+          type: object
+          additionalProperties: true
+      required:
+        - prompt
+    VideoTaskIdReference:
+      type: object
+      description: Existing gateway video task reference.
+      properties:
+        id:
+          type: string
+          description: Existing video task ID.
+      required:
+        - id
+    CreateVideoEditRequest:
+      type: object
+      description: Create an edit task from an existing video.
+      properties:
+        prompt:
+          type: string
+        video:
+          $ref: '#/components/schemas/VideoTaskIdReference'
+        extra_body:
+          type: object
+          description: 'Additional edit inputs, such as image references, source_video_url, duration, ratio, generate_audio, and watermark.'
+          additionalProperties: true
+      required:
+        - prompt
+        - video
+    CreateVideoExtensionRequest:
+      type: object
+      description: Create an extension task from an existing video.
+      properties:
+        prompt:
+          type: string
+        seconds:
+          type: string
+          description: Number of seconds to extend.
+        video:
+          $ref: '#/components/schemas/VideoTaskIdReference'
+        extra_body:
+          type: object
+          description: 'Additional extension inputs, such as source_video_url, ratio, generate_audio, and watermark.'
+          additionalProperties: true
+      required:
+        - prompt
+        - seconds
+        - video
     CreateTranscriptionRequest:
       type: object
       description: Audio transcription request body.

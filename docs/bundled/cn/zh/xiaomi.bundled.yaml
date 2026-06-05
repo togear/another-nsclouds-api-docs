@@ -1394,11 +1394,11 @@ components:
           $ref: '#/components/schemas/ImageUsage'
     VideoMediaReference:
       type: object
-      description: Seedance 视频生成使用的 URL 媒体引用。acceptance 已验证的角色包括 first_frame、last_frame、reference_image、reference_video 和 reference_audio。
+      description: 'Seedance 视频生成使用的 URL 媒体引用。请传入公开可访问的 URL 或 asset://... 已上传资产引用；本地文件对象、BytesIO 和 multipart UploadFile 不会自动上传转存。acceptance 已验证的角色包括 first_frame、last_frame、reference_image、reference_video 和 reference_audio。'
       properties:
         url:
           type: string
-          description: 可公开访问的媒体 URL。
+          description: '可公开访问的媒体 URL 或 asset://asset-id 形式的已上传资产引用。'
         role:
           type: string
           description: 该媒体在生成请求中的角色。
@@ -1429,6 +1429,7 @@ components:
           properties:
             url:
               type: string
+              description: '可公开访问的图片 URL 或 asset://asset-id 形式的已上传资产引用。'
           required:
             - url
         video_url:
@@ -1436,6 +1437,7 @@ components:
           properties:
             url:
               type: string
+              description: '可公开访问的视频 URL 或 asset://asset-id 形式的已上传资产引用。'
           required:
             - url
         audio_url:
@@ -1443,6 +1445,7 @@ components:
           properties:
             url:
               type: string
+              description: '可公开访问的音频 URL 或 asset://asset-id 形式的已上传资产引用。'
           required:
             - url
         role:
@@ -1495,6 +1498,17 @@ components:
             - type: array
               items:
                 $ref: '#/components/schemas/VideoMediaReference'
+        input_reference:
+          description: 'OpenAI 兼容的图片参考别名。Seedance 仅接受 URL 或已上传资产引用；本地文件需先上传，再传入 URL 或 asset://...。'
+          oneOf:
+            - $ref: '#/components/schemas/VideoMediaReference'
+            - type: string
+              description: '可公开访问的图片 URL 或 asset://asset-id 形式的已上传资产引用。'
+            - type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/VideoMediaReference'
+                  - type: string
         video:
           description: 视频引用，可用于视频编辑、扩展、重混和参考视频工作流。
           oneOf:

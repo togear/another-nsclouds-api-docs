@@ -412,7 +412,10 @@ def info_hint(text: str) -> str:
 
 
 def file_input_notes(lang: str, vendor: str, capability: str) -> str:
-    if vendor != "openai" or capability not in {"chat", "responses"}:
+    if not (
+        (vendor == "openai" and capability in {"chat", "responses"})
+        or (vendor == "volcengine" and capability == "video_generations")
+    ):
         return ""
     if lang == "zh" and capability == "chat":
         return (
@@ -467,6 +470,50 @@ def file_input_notes(lang: str, vendor: str, capability: str) -> str:
             "| `file_url` | `input_file` | Supported | Recommended today for publicly accessible file URLs |\n"
             "| `file_data` | `input_file` | Supported | Recommended today for inline base64 file content |\n"
             "| `file_id` | `input_image` / `input_file` | OpenAI-compatible field, in adaptation | Comes from a Files API upload; actual availability depends on file hosting and model-side support |\n"
+        )
+    if vendor == "volcengine" and capability == "video_generations":
+        if lang == "zh":
+            return (
+                "### 2. Seedance 参数说明\n\n"
+                + info_hint(
+                    "`/v1/videos` 对外保留 OpenAI-compatible Videos 路径；发往 VolcEngine 时会映射为 Ark Seedance 任务接口。媒体 convenience 参数只支持 URL 或 `asset://...` 已上传资产引用，不支持本地文件对象、BytesIO 或 multipart UploadFile 自动转存。"
+                )
+                + "\n"
+                "#### 任务列表查询\n\n"
+                "| 查询参数 | VolcEngine 参数 | 说明 |\n"
+                "| --- | --- | --- |\n"
+                "| `model` | `filter.model` | 既用于 Router 选路，也会转成供应商侧模型过滤条件。使用模型别名时会归一化为实际 VolcEngine model id。 |\n"
+                "| `filter.model` | `filter.model` | 显式模型过滤条件；优先于 `model`。 |\n"
+                "| `limit` | `page_size` | 每页数量。 |\n"
+                "| `page_num` | `page_num` | VolcEngine 推荐页码分页参数。 |\n"
+                "| `after` | `page_num` | 仅当解码后是正整数时映射为页码；推荐直接使用 `page_num`。 |\n"
+                "| `status` / `filter.status` | `filter.status` | `completed` 映射为 `succeeded`，`in_progress` 映射为 `running`。 |\n"
+                "| `order` / `page_token` | 不透传 | VolcEngine list 不使用 OpenAI-style 排序和 page token。 |\n\n"
+                "#### 媒体输入\n\n"
+                "- `input_reference`、`image`、`video`、`audio` 支持 URL 字符串、`asset://...` 已上传资产引用，或包含 `url` / `image_url.url` / `video_url.url` / `audio_url.url` 的对象。\n"
+                "- 本地文件需要先上传到可访问的资产端点，再把 URL 或 `asset://...` 传给接口。\n"
+                "- `extra_body.content` 会作为 VolcEngine 原生 content 透传，调用方需自行保证媒体地址符合上游要求。\n"
+            )
+        return (
+            "### 2. Seedance Parameter Notes\n\n"
+            + info_hint(
+                "`/v1/videos` keeps an OpenAI-compatible Videos path externally and maps requests to Ark Seedance task APIs upstream. Media convenience parameters only support URLs or uploaded `asset://...` references; local file objects, BytesIO values, and multipart UploadFile payloads are not uploaded automatically."
+            )
+            + "\n"
+            "#### Task List Query\n\n"
+            "| Query parameter | VolcEngine parameter | Notes |\n"
+            "| --- | --- | --- |\n"
+            "| `model` | `filter.model` | Used for Router selection and also converted to the provider-side model filter. Router aliases are normalized to the actual VolcEngine model id. |\n"
+            "| `filter.model` | `filter.model` | Explicit model filter; takes precedence over `model`. |\n"
+            "| `limit` | `page_size` | Page size. |\n"
+            "| `page_num` | `page_num` | Recommended VolcEngine page-number pagination parameter. |\n"
+            "| `after` | `page_num` | Mapped only when the decoded value is a positive integer; prefer `page_num`. |\n"
+            "| `status` / `filter.status` | `filter.status` | `completed` maps to `succeeded`; `in_progress` maps to `running`. |\n"
+            "| `order` / `page_token` | Not forwarded | VolcEngine list does not use OpenAI-style ordering or page tokens. |\n\n"
+            "#### Media Inputs\n\n"
+            "- `input_reference`, `image`, `video`, and `audio` support URL strings, uploaded `asset://...` references, or objects containing `url`, `image_url.url`, `video_url.url`, or `audio_url.url`.\n"
+            "- Upload local files to an accessible asset endpoint first, then pass the URL or `asset://...` reference.\n"
+            "- `extra_body.content` is passed through as native VolcEngine content; callers must ensure media URLs meet upstream requirements.\n"
         )
     return ""
 

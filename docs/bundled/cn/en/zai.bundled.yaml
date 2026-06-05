@@ -1707,11 +1707,11 @@ components:
           $ref: '#/components/schemas/ImageUsage'
     VideoMediaReference:
       type: object
-      description: 'URL-based media reference used by Seedance video generation. Roles verified in acceptance include first_frame, last_frame, reference_image, reference_video, and reference_audio.'
+      description: 'URL-based media reference used by Seedance video generation. Pass a public URL or an uploaded asset reference such as asset://...; local file objects, BytesIO values, and multipart UploadFile payloads are not uploaded automatically. Roles verified in acceptance include first_frame, last_frame, reference_image, reference_video, and reference_audio.'
       properties:
         url:
           type: string
-          description: Publicly accessible media URL.
+          description: 'Publicly accessible media URL or uploaded asset reference such as asset://asset-id.'
         role:
           type: string
           description: Role of this media item in the generation request.
@@ -1742,6 +1742,7 @@ components:
           properties:
             url:
               type: string
+              description: 'Publicly accessible image URL or uploaded asset reference such as asset://asset-id.'
           required:
             - url
         video_url:
@@ -1749,6 +1750,7 @@ components:
           properties:
             url:
               type: string
+              description: 'Publicly accessible video URL or uploaded asset reference such as asset://asset-id.'
           required:
             - url
         audio_url:
@@ -1756,6 +1758,7 @@ components:
           properties:
             url:
               type: string
+              description: 'Publicly accessible audio URL or uploaded asset reference such as asset://asset-id.'
           required:
             - url
         role:
@@ -1808,6 +1811,17 @@ components:
             - type: array
               items:
                 $ref: '#/components/schemas/VideoMediaReference'
+        input_reference:
+          description: 'OpenAI-compatible image reference alias. Seedance accepts URL or asset references only; upload local files first and pass the resulting URL or asset://... reference.'
+          oneOf:
+            - $ref: '#/components/schemas/VideoMediaReference'
+            - type: string
+              description: 'Publicly accessible image URL or uploaded asset reference such as asset://asset-id.'
+            - type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/VideoMediaReference'
+                  - type: string
         video:
           description: 'Video reference or references for video edit, extension, remix, and reference-video workflows.'
           oneOf:
