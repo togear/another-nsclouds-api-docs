@@ -691,73 +691,73 @@ paths:
       tags:
         - video_generations_volcengine
       summary: 列出视频任务
-      description: "列出视频任务，并按状态或模型过滤。网关会将 OpenAI 兼容查询参数映射为 VolcEngine 任务列表参数：model 转为 filter.model，limit 转为 page_size，completed/in_progress 状态过滤转为 succeeded/running。"
+      description: "列出当前 API key 在 AILLM 持久任务索引中的视频任务。网关不会暴露 VolcEngine 上游全量任务列表；只有已写入 LiteLLM_VideoTaskTable 的任务会出现在列表中。历史未索引任务仍可通过创建时返回的 video_id 调用查询或内容下载接口获取状态和视频 URL。"
       operationId: listVideos_volcengine
       security:
         - APIKeyHeader: []
       parameters:
         - name: custom_llm_provider
           in: query
-          description: LiteLLM 厂家选择参数。Seedance 任务使用 volcengine；该值不会透传给 VolcEngine。
+          description: LiteLLM 厂家选择参数。刷新索引内任务状态时可指定 volcengine；通常也可以由 video_... 任务 ID 自动解析。
           schema:
             type: string
           example: volcengine
         - name: model
           in: query
-          description: 公开模型名或 Router 别名。网关用它完成 Router 选路，并转换为 VolcEngine filter.model；如果是别名，会尽量归一化为实际供应商模型 ID。
+          description: 按 AILLM 任务索引中的公开模型名或模型 ID 过滤。推荐使用 model，而不是 filter.model。
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: limit
           in: query
-          description: 最多返回的任务数量，会映射为 VolcEngine page_size。
+          description: 本地分页大小。不会映射为 VolcEngine page_size；最大 100。
           schema:
             type: integer
           example: 20
         - name: after
           in: query
-          description: OpenAI 兼容分页游标。对 VolcEngine，仅当解码后是正整数时映射为 page_num；页码分页建议直接使用 page_num。
+          description: 为兼容 OpenAI-style 分页保留；本地任务索引列表当前不使用该游标。请使用 page_num。
           schema:
             type: string
         - name: order
           in: query
-          description: 网关接受的 OpenAI 兼容排序参数，但不会透传给 VolcEngine Seedance list。
+          description: 为兼容 OpenAI-style 排序保留；本地任务索引列表当前不使用该参数。
           deprecated: true
           schema:
             type: string
         - name: status
           in: query
-          description: OpenAI 兼容状态过滤。completed 映射为 VolcEngine succeeded；in_progress 映射为 VolcEngine running。其他值原样透传。
+          description: 按本地索引状态过滤。completed 和 in_progress 为推荐值；succeeded 会归一化为 completed，running 会归一化为 in_progress。
           schema:
             type: string
           example: completed
         - name: filter.status
           in: query
-          description: 厂家状态过滤。OpenAI 兼容的 completed 和 in_progress 会在透传前映射为 succeeded 和 running。
+          description: 兼容厂家风格状态过滤；用于本地索引过滤，不会透传给 VolcEngine 列表接口。succeeded/running 会归一化为 completed/in_progress。
           schema:
             type: string
           example: succeeded
         - name: filter.model
           in: query
-          description: 显式供应商侧模型过滤条件，优先于 model。
+          description: 兼容接收的厂家风格模型过滤参数；本地索引列表推荐使用 model。
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: page_size
           in: query
-          description: 厂家风格分页的每页数量。推荐使用 OpenAI 兼容别名 limit。
+          description: 本地分页大小的厂家风格别名。推荐使用 OpenAI 兼容别名 limit。
           schema:
             type: integer
           example: 1
         - name: page_num
           in: query
-          description: VolcEngine 厂家风格分页的页码。
+          description: 本地任务索引页码，从 1 开始。
           schema:
             type: integer
           example: 2
         - name: page_token
           in: query
-          description: 网关接受的 OpenAI 兼容 page token，但 VolcEngine Seedance list 会忽略该参数。请使用 page_num。
+          description: 为兼容 OpenAI-style page token 保留；本地任务索引列表当前不使用该参数。请使用 page_num。
           deprecated: true
           schema:
             type: string

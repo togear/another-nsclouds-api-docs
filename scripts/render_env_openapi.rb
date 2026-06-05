@@ -381,6 +381,13 @@ def operation_description(capability, vendor, lang)
   descriptions.fetch(lang).fetch(capability)
 end
 
+def preserve_source_operation_description?(operation, capability, vendor, source_vendor)
+  return false unless capability == "video_generations"
+  return false unless vendor == "volcengine" && source_vendor == "volcengine"
+
+  %w[listVideos_volcengine deleteVideo_volcengine].include?(operation["operationId"])
+end
+
 
 def rewrite_operation(operation, capability, vendor, example_model, source_vendor, lang)
   new_operation = deep_copy(operation)
@@ -388,8 +395,10 @@ def rewrite_operation(operation, capability, vendor, example_model, source_vendo
   if new_operation["operationId"]
     new_operation["operationId"] = new_operation["operationId"].gsub(/_(openai|anthropic|google|deepseek|volcengine|minimax|moonshotai|example)\z/, "_#{vendor}")
   end
-  description = operation_description(capability, vendor, lang)
-  new_operation["description"] = description if description
+  unless preserve_source_operation_description?(new_operation, capability, vendor, source_vendor)
+    description = operation_description(capability, vendor, lang)
+    new_operation["description"] = description if description
+  end
   apply_example_model!(new_operation, example_model) unless vendor == "openai"
   trim_generic_chat_examples!(new_operation) if capability == "chat" && source_vendor == "example"
   trim_generic_response_examples!(new_operation) if capability == "responses" && vendor != "openai"

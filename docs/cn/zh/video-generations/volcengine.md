@@ -22,15 +22,18 @@ Volcengine 在当前环境中提供的视频生成能力。
 
 #### 任务列表查询
 
-| 查询参数 | VolcEngine 参数 | 说明 |
+列表接口只返回当前 `sk-` 密钥创建并已写入 `LiteLLM_VideoTaskTable` 的视频任务。网关不会调用或暴露 VolcEngine 上游全量任务列表；历史未写入索引的任务不会出现在列表中，但仍可使用创建时返回的 `video_id` 调用查询或内容下载接口获取状态和视频 URL。
+
+生产环境需要完成 `LiteLLM_VideoTaskTable` 数据库迁移。数据库不可用时仅使用进程内临时缓存兜底，服务重启后会丢失任务与用户密钥的对应关系。
+
+| 查询参数 | 本地索引行为 | 说明 |
 | --- | --- | --- |
-| `model` | `filter.model` | 既用于 Router 选路，也会转成供应商侧模型过滤条件。使用模型别名时会归一化为实际 VolcEngine model id。 |
-| `filter.model` | `filter.model` | 显式模型过滤条件；优先于 `model`。 |
-| `limit` | `page_size` | 每页数量。 |
-| `page_num` | `page_num` | VolcEngine 推荐页码分页参数。 |
-| `after` | `page_num` | 仅当解码后是正整数时映射为页码；推荐直接使用 `page_num`。 |
-| `status` / `filter.status` | `filter.status` | `completed` 映射为 `succeeded`，`in_progress` 映射为 `running`。 |
-| `order` / `page_token` | 不透传 | VolcEngine list 不使用 OpenAI-style 排序和 page token。 |
+| `model` | 按 AILLM 索引里的公开模型名或模型 ID 过滤 | 推荐传入 `doubao-seedance-2-0-260128` 等公开模型名。 |
+| `limit` / `page_size` | 本地分页大小 | 默认按服务端配置；最大 100。 |
+| `page_num` | 本地页码 | 从 1 开始。 |
+| `status` / `filter.status` | 本地状态过滤 | `succeeded` 会归一化为 `completed`，`running` 会归一化为 `in_progress`。 |
+| `custom_llm_provider` | 刷新任务状态时的厂家提示 | 通常可由 `video_...` ID 自动解析；Seedance 使用 `volcengine`。 |
+| `after` / `order` / `page_token` / `filter.model` | 兼容接收，不参与本地索引分页 | 请使用 `page_num`、`limit` 和 `model`。 |
 
 #### 媒体输入
 

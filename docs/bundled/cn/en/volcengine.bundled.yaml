@@ -4,8 +4,8 @@ info:
   description: API documentation for OpenAI-compatible and provider-compatible AI endpoints.
   version: 1.11.0
 servers:
-  - url: '${SERVER_URL}'
-    description: '${SERVER_DESCRIPTION}'
+  - url: 'https://aillm.nsclouds.com'
+    description: China Server
 tags:
   - name: chat_completions
     x-page-title: Chat Completions
@@ -572,73 +572,73 @@ paths:
       tags:
         - video_generations_volcengine
       summary: List video tasks
-      description: Provides an OpenAI-compatible Videos endpoint. Supported capabilities may vary by model.
+      description: List video tasks recorded in AILLM's persistent task index for the current API key. The gateway does not expose the provider's full VolcEngine task list. Only tasks written to LiteLLM_VideoTaskTable appear in the list. Historical unindexed tasks can still be retrieved by ID or through the content endpoint to get task status and the video URL.
       operationId: listVideos_volcengine
       security:
         - APIKeyHeader: []
       parameters:
         - name: custom_llm_provider
           in: query
-          description: LiteLLM provider selector. Use volcengine for Seedance tasks; this value is not forwarded to VolcEngine.
+          description: LiteLLM provider selector. Use volcengine when refreshing indexed Seedance task status; the provider is usually inferred from the video_... task ID.
           schema:
             type: string
           example: volcengine
         - name: model
           in: query
-          description: Public model name or Router alias. The gateway uses it for Router selection and converts it to VolcEngine filter.model; aliases are normalized to the actual provider model ID when possible.
+          description: Filters by the public model name or model ID recorded in the AILLM task index. Prefer model instead of filter.model.
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: limit
           in: query
-          description: Maximum number of tasks to return. Mapped to VolcEngine page_size.
+          description: Local page size. This is not mapped to VolcEngine page_size; maximum 100.
           schema:
             type: integer
           example: 20
         - name: after
           in: query
-          description: 'OpenAI-compatible pagination cursor. For VolcEngine, only a decoded positive integer is mapped to page_num; prefer page_num for page-number pagination.'
+          description: OpenAI-style pagination cursor accepted for compatibility. The local task index list does not currently use this cursor; use page_num.
           schema:
             type: string
         - name: order
           in: query
-          description: OpenAI-compatible sort parameter accepted by the gateway but not forwarded to VolcEngine Seedance list.
+          description: OpenAI-style sort parameter accepted for compatibility. The local task index list does not currently use this parameter.
           deprecated: true
           schema:
             type: string
         - name: status
           in: query
-          description: OpenAI-compatible status filter. completed maps to VolcEngine succeeded; in_progress maps to VolcEngine running. Other values pass through.
+          description: 'Filters by local indexed task status. completed and in_progress are recommended; succeeded is normalized to completed, and running is normalized to in_progress.'
           schema:
             type: string
           example: completed
         - name: filter.status
           in: query
-          description: Provider status filter. OpenAI-compatible completed and in_progress are mapped to succeeded and running before forwarding.
+          description: Provider-style status filter accepted for compatibility and applied to the local index. It is not forwarded to a VolcEngine list API; succeeded/running are normalized to completed/in_progress.
           schema:
             type: string
           example: succeeded
         - name: filter.model
           in: query
-          description: Explicit provider-side model filter. Takes precedence over model.
+          description: Provider-style model filter accepted for compatibility. Prefer the model parameter for local index filtering.
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: page_size
           in: query
-          description: Provider-style page size. limit is the recommended OpenAI-compatible alias.
+          description: Provider-style alias for local page size. limit is the recommended OpenAI-compatible alias.
           schema:
             type: integer
           example: 1
         - name: page_num
           in: query
-          description: VolcEngine page number for provider-style pagination.
+          description: 'Local task index page number, starting from 1.'
           schema:
             type: integer
           example: 2
         - name: page_token
           in: query
-          description: OpenAI-compatible page token accepted by the gateway but ignored for VolcEngine Seedance list. Use page_num instead.
+          description: OpenAI-style page token accepted for compatibility. The local task index list does not currently use this parameter; use page_num instead.
           deprecated: true
           schema:
             type: string

@@ -22,15 +22,18 @@ This endpoint provides an OpenAI-compatible Videos path. Actual capabilities may
 
 #### Task List Query
 
-| Query parameter | VolcEngine parameter | Notes |
+The list endpoint returns only video tasks created by the current `sk-` key and recorded in `LiteLLM_VideoTaskTable`. The gateway does not call or expose the provider's full VolcEngine task list. Historical tasks that were not indexed do not appear in the list, but callers can still use the `video_id` returned at creation time with the retrieve or content endpoints to get task status and the video URL.
+
+Production deployments should run the `LiteLLM_VideoTaskTable` database migration. If the database is unavailable, the gateway falls back to in-process cache only, so task-to-key mappings are lost after a process restart.
+
+| Query parameter | Local index behavior | Notes |
 | --- | --- | --- |
-| `model` | `filter.model` | Used for Router selection and also converted to the provider-side model filter. Router aliases are normalized to the actual VolcEngine model id. |
-| `filter.model` | `filter.model` | Explicit model filter; takes precedence over `model`. |
-| `limit` | `page_size` | Page size. |
-| `page_num` | `page_num` | Recommended VolcEngine page-number pagination parameter. |
-| `after` | `page_num` | Mapped only when the decoded value is a positive integer; prefer `page_num`. |
-| `status` / `filter.status` | `filter.status` | `completed` maps to `succeeded`; `in_progress` maps to `running`. |
-| `order` / `page_token` | Not forwarded | VolcEngine list does not use OpenAI-style ordering or page tokens. |
+| `model` | Filters by the public model name or model ID in the AILLM index | Prefer public names such as `doubao-seedance-2-0-260128`. |
+| `limit` / `page_size` | Local page size | Defaults to the service configuration; maximum 100. |
+| `page_num` | Local page number | Starts from 1. |
+| `status` / `filter.status` | Local status filter | `succeeded` is normalized to `completed`; `running` is normalized to `in_progress`. |
+| `custom_llm_provider` | Provider hint when refreshing task status | Usually inferred from the `video_...` ID; use `volcengine` for Seedance. |
+| `after` / `order` / `page_token` / `filter.model` | Accepted for compatibility, not used for local index pagination | Use `page_num`, `limit`, and `model` instead. |
 
 #### Media Inputs
 
