@@ -10,6 +10,7 @@ tags:
 - "$ref": "./_common.yaml#/tags/2"
 - "$ref": "./_common.yaml#/tags/3"
 - "$ref": "./_common.yaml#/tags/4"
+- "$ref": "./_common.yaml#/tags/5"
 - name: chat_completions_xai
   x-parent: chat_completions
   x-page-title: xAI

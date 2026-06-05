@@ -691,66 +691,74 @@ paths:
       tags:
         - video_generations_volcengine
       summary: List video tasks
-      description: List video tasks and filter by provider status or model. Acceptance covers status filtering, model filtering, page number pagination, and page token pagination.
+      description: "List video tasks and filter by status or model. The gateway maps OpenAI-compatible query parameters to VolcEngine task-list parameters: model becomes filter.model, limit becomes page_size, and completed/in_progress status filters become succeeded/running."
       operationId: listVideos_volcengine
       security:
         - APIKeyHeader: []
       parameters:
         - name: custom_llm_provider
           in: query
-          description: Provider filter. Use volcengine for Seedance tasks.
+          description: LiteLLM provider selector. Use volcengine for Seedance tasks; this value is not forwarded to VolcEngine.
           schema:
             type: string
           example: volcengine
+        - name: model
+          in: query
+          description: Public model name or Router alias. The gateway uses it for Router selection and converts it to VolcEngine filter.model; aliases are normalized to the actual provider model ID when possible.
+          schema:
+            type: string
+          example: doubao-seedance-2-0-260128
         - name: limit
           in: query
-          description: Maximum number of tasks to return.
+          description: Maximum number of tasks to return. Mapped to VolcEngine page_size.
           schema:
             type: integer
           example: 20
         - name: after
           in: query
-          description: Cursor for OpenAI-compatible pagination.
+          description: OpenAI-compatible pagination cursor. For VolcEngine, only a decoded positive integer is mapped to page_num; prefer page_num for page-number pagination.
           schema:
             type: string
         - name: order
           in: query
-          description: Sort order when supported by the backend.
+          description: OpenAI-compatible sort parameter accepted by the gateway but not forwarded to VolcEngine Seedance list.
+          deprecated: true
           schema:
             type: string
         - name: status
           in: query
-          description: Provider status filter. Acceptance verifies succeeded mapping to completed tasks.
+          description: OpenAI-compatible status filter. completed maps to VolcEngine succeeded; in_progress maps to VolcEngine running. Other values pass through.
           schema:
             type: string
-          example: succeeded
+          example: completed
         - name: filter.status
           in: query
-          description: Provider status filter, such as succeeded.
+          description: Provider status filter. OpenAI-compatible completed and in_progress are mapped to succeeded and running before forwarding.
           schema:
             type: string
           example: succeeded
         - name: filter.model
           in: query
-          description: Public model name to filter tasks.
+          description: Explicit provider-side model filter. Takes precedence over model.
           schema:
             type: string
           example: doubao-seedance-2-0-260128
         - name: page_size
           in: query
-          description: Page size for provider-style pagination.
+          description: Provider-style page size. limit is the recommended OpenAI-compatible alias.
           schema:
             type: integer
           example: 1
         - name: page_num
           in: query
-          description: Page number for provider-style pagination.
+          description: VolcEngine page number for provider-style pagination.
           schema:
             type: integer
           example: 2
         - name: page_token
           in: query
-          description: Page token for provider-style pagination.
+          description: OpenAI-compatible page token accepted by the gateway but ignored for VolcEngine Seedance list. Use page_num instead.
+          deprecated: true
           schema:
             type: string
           example: video_seedance_123
