@@ -389,8 +389,123 @@ def capability_hint(capability: str, lang: str) -> str:
     return cfg[key]
 
 
+def page_capability_hint(capability: str, lang: str, vendor: str) -> str:
+    if vendor == "openai" and capability in {"image_generations", "image_edits"}:
+        if lang == "zh":
+            return "本接口提供 OpenAI Images API 的 gpt-image-2 图像能力。"
+        return "This endpoint provides gpt-image-2 image capabilities through the OpenAI Images API."
+    return capability_hint(capability, lang)
+
+
 def info_hint(text: str) -> str:
     return f'{{% hint style="info" %}}\n{text}\n{{% endhint %}}\n'
+
+
+GPT_IMAGE_2_SIZES = (
+    "auto",
+    "1024x1024",
+    "1024x1536",
+    "1536x1024",
+    "2048x2048",
+    "2048x1152",
+    "3840x2160",
+    "2160x3840",
+    "2048x1360",
+    "1360x2048",
+    "1152x2048",
+    "2048x1536",
+    "1536x2048",
+    "2048x880",
+    "880x2048",
+    "688x2048",
+    "2048x688",
+    "2048x1024",
+    "1024x2048",
+)
+
+
+def gpt_image_2_notes(lang: str, vendor: str, capability: str, models: list[str]) -> str:
+    if vendor != "openai" or "gpt-image-2" not in models or capability not in {"image_generations", "image_edits"}:
+        return ""
+
+    sizes = ", ".join(f"`{size}`" for size in GPT_IMAGE_2_SIZES)
+    if lang == "zh" and capability == "image_generations":
+        return (
+            "### 2. gpt-image-2 参数说明\n\n"
+            + info_hint(
+                "`gpt-image-2` 支持文本生成图像。`n` 可请求 1-10 张图像，实际返回数量可能少于请求数量。"
+            )
+            + "\n"
+            "| 参数 | 支持情况 |\n"
+            "| --- | --- |\n"
+            "| `prompt` | 必填，最长参考为 32000 个字符。 |\n"
+            "| `n` | 可选，范围参考为 1-10；实际返回图片数量可能少于请求数量。 |\n"
+            "| `size` | 可选，支持 `auto` 和下方列出的固定尺寸。 |\n"
+            "| `quality` | 可选，支持 `low`、`medium`、`high`；省略、`auto`、`standard` 按 `high` 计费。 |\n"
+            "| `background` | 可选，支持 `opaque`、`auto`。 |\n"
+            "| `moderation` | 可选，仅图像生成接口支持，支持 `low`、`auto`。 |\n"
+            "| `output_format` | 可选，支持 `png`、`jpeg`。 |\n"
+            "| `output_compression` | 可选，范围 0-100，仅 `jpeg` 使用；`png` 应省略或设为 100。 |\n\n"
+            f"支持尺寸：{sizes}\n"
+        )
+    if lang == "zh" and capability == "image_edits":
+        return (
+            "### 2. gpt-image-2 参数说明\n\n"
+            + info_hint(
+                "`gpt-image-2` 支持基于一张或多张输入图像进行编辑。`mask` 为可选参数，透明区域代表需要编辑的区域。"
+            )
+            + "\n"
+            "| 参数 | 支持情况 |\n"
+            "| --- | --- |\n"
+            "| `image` | 必填，支持单图或多图；可传 URL、base64、data URI 或文件上传。 |\n"
+            "| `prompt` | 必填，最长参考为 32000 个字符。 |\n"
+            "| `mask` | 可选，透明区域代表编辑区域。 |\n"
+            "| `n` | 可选，范围参考为 1-10；实际返回图片数量可能少于请求数量。 |\n"
+            "| `size` | 可选，支持 `auto` 和下方列出的固定尺寸。 |\n"
+            "| `quality` | 可选，支持 `low`、`medium`、`high`；省略、`auto`、`standard` 按 `high` 计费。 |\n"
+            "| `background` | 可选，支持 `opaque`、`auto`。 |\n"
+            "| `output_format` | 可选，支持 `png`、`jpeg`。 |\n\n"
+            f"支持尺寸：{sizes}\n"
+        )
+    if lang == "en" and capability == "image_generations":
+        return (
+            "### 2. gpt-image-2 Parameter Notes\n\n"
+            + info_hint(
+                "`gpt-image-2` supports text-to-image generation. `n` may request 1-10 images, and the actual number of returned images can be lower than requested."
+            )
+            + "\n"
+            "| Parameter | Support |\n"
+            "| --- | --- |\n"
+            "| `prompt` | Required. Reference maximum length is 32000 characters. |\n"
+            "| `n` | Optional. Reference range is 1-10; the actual number of returned images can be lower than requested. |\n"
+            "| `size` | Optional. Supports `auto` and the fixed sizes listed below. |\n"
+            "| `quality` | Optional. Supports `low`, `medium`, and `high`; omitted, `auto`, and `standard` are billed as `high`. |\n"
+            "| `background` | Optional. Supports `opaque` and `auto`. |\n"
+            "| `moderation` | Optional. Supported only on image generations; accepts `low` and `auto`. |\n"
+            "| `output_format` | Optional. Supports `png` and `jpeg`. |\n"
+            "| `output_compression` | Optional. Range is 0-100 and applies only to `jpeg`; omit it for `png` or set it to 100. |\n\n"
+            f"Supported sizes: {sizes}\n"
+        )
+    if lang == "en" and capability == "image_edits":
+        return (
+            "### 2. gpt-image-2 Parameter Notes\n\n"
+            + info_hint(
+                "`gpt-image-2` supports editing from one or more input images. `mask` is optional, and transparent areas represent regions to edit."
+            )
+            + "\n"
+            "| Parameter | Support |\n"
+            "| --- | --- |\n"
+            "| `image` | Required. Supports a single image or multiple images; accepts URLs, base64, data URIs, or file uploads. |\n"
+            "| `prompt` | Required. Reference maximum length is 32000 characters. |\n"
+            "| `mask` | Optional. Transparent areas represent the edit region. |\n"
+            "| `n` | Optional. Reference range is 1-10; the actual number of returned images can be lower than requested. |\n"
+            "| `size` | Optional. Supports `auto` and the fixed sizes listed below. |\n"
+            "| `quality` | Optional. Supports `low`, `medium`, and `high`; omitted, `auto`, and `standard` are billed as `high`. |\n"
+            "| `background` | Optional. Supports `opaque` and `auto`. |\n"
+            "| `output_format` | Optional. Supports `png` and `jpeg`. |\n\n"
+            f"Supported sizes: {sizes}\n"
+        )
+    return ""
 
 
 def file_input_notes(lang: str, vendor: str, capability: str) -> str:
@@ -479,12 +594,19 @@ def build_capability_page(env: str, lang: str, vendor: str, capability: str, mod
     cfg = LANG_CONFIG[lang]
     title = f"# {vendor_name(vendor)} - {capability_title(capability, lang)}"
     overview = capability_overview(capability, vendor, lang)
-    hint = capability_hint(capability, lang)
+    hint = page_capability_hint(capability, lang, vendor)
     spec_vendor = openapi_spec_vendor(vendor, capability)
     blocks = "\n".join(
         build_openapi_block(spec_vendor, env, lang, path, vendor_name(vendor)) for path in openapi_path(capability)
     )
-    extra_section = file_input_notes(lang, vendor, capability)
+    extra_section = "\n".join(
+        section
+        for section in (
+            file_input_notes(lang, vendor, capability),
+            gpt_image_2_notes(lang, vendor, capability, models),
+        )
+        if section
+    )
     extra_block = f"{extra_section}\n" if extra_section else ""
     openapi_section = cfg["openapi_section_after_extra"] if extra_section else cfg["openapi_section"]
     return (

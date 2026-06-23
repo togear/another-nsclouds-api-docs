@@ -495,50 +495,164 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateImageGenerationRequest'
+              type: object
+              description: gpt-image-2 图像生成请求体。
+              properties:
+                model:
+                  type: string
+                  description: 要调用的模型 ID。
+                prompt:
+                  type: string
+                  maxLength: 32000
+                  description: 图像生成提示词。
+                'n':
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+                  default: 1
+                  description: 请求生成的图片数量，实际返回数量可能少于请求数量。
+                size:
+                  type: string
+                  description: 请求的输出图片尺寸。
+                  enum:
+                    - auto
+                    - 1024x1024
+                    - 1024x1536
+                    - 1536x1024
+                    - 2048x2048
+                    - 2048x1152
+                    - 3840x2160
+                    - 2160x3840
+                    - 2048x1360
+                    - 1360x2048
+                    - 1152x2048
+                    - 2048x1536
+                    - 1536x2048
+                    - 2048x880
+                    - 880x2048
+                    - 688x2048
+                    - 2048x688
+                    - 2048x1024
+                    - 1024x2048
+                  default: 1024x1024
+                quality:
+                  type: string
+                  description: 请求的图像质量等级。
+                  enum:
+                    - low
+                    - medium
+                    - high
+                  default: high
+                background:
+                  type: string
+                  description: 背景处理模式。
+                  enum:
+                    - opaque
+                    - auto
+                moderation:
+                  type: string
+                  description: 图像生成的内容审核强度。
+                  enum:
+                    - low
+                    - auto
+                output_format:
+                  type: string
+                  description: 输出图片格式。
+                  enum:
+                    - png
+                    - jpeg
+                  default: png
+                output_compression:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                  description: 0-100 的压缩级别，仅适用于 jpeg；png 应省略或设为 100。
+              required:
+                - model
+                - prompt
             examples:
               default:
-                summary: 基础
-                description: 生成一张 1024x1024 的图像。
+                summary: 基础 PNG
+                description: 生成一张 low 质量的 1024x1024 PNG 图像。
                 value:
                   model: gpt-image-2
                   prompt: A cute cat sitting on a windowsill
                   'n': 1
+                  quality: low
                   size: 1024x1024
-              hd-quality:
-                summary: 高清质量
-                description: 生成高清质量的图像。
+                  background: opaque
+                  moderation: auto
+                  output_format: png
+              jpeg-compression:
+                summary: JPEG 输出
+                description: 生成一张带压缩参数的 JPEG 图像。
                 value:
                   model: gpt-image-2
                   prompt: A futuristic cityscape at sunset
                   'n': 1
-                  quality: hd
-                  size: 1792x1024
-              b64-json:
-                summary: Base64 格式
-                description: 返回 base64 编码的图像数据。
+                  quality: high
+                  size: 2048x1152
+                  background: auto
+                  moderation: low
+                  output_format: jpeg
+                  output_compression: 80
+              multiple-images:
+                summary: 多图请求
+                description: 请求多张 medium 质量的 PNG 图像。
                 value:
                   model: gpt-image-2
                   prompt: A beautiful landscape
                   'n': 2
-                  size: 512x512
-                  response_format: b64_json
+                  quality: medium
+                  size: 1536x1024
+                  output_format: png
       responses:
         '200':
           description: 成功响应
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
+                type: object
+                description: gpt-image-2 图像生成响应。
+                properties:
+                  created:
+                    type: integer
+                    description: 响应创建时间戳（Unix 秒）。
+                  background:
+                    type: string
+                    description: 生成图像的背景类型。
+                  output_format:
+                    type: string
+                    description: 输出图片格式。
+                  quality:
+                    type: string
+                    description: 实际使用的图像质量等级。
+                  size:
+                    type: string
+                    description: 实际返回的图像尺寸。
+                  data:
+                    type: array
+                    description: 图像结果列表。
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          description: 生成图片 URL。
+                        revised_prompt:
+                          type: string
+                          description: 模型实际使用或修正后的提示词。
+                  usage:
+                    $ref: '#/components/schemas/ImageUsage'
               examples:
                 default-response:
-                  summary: 基础响应
-                  description: 返回包含图像 URL 和可选字段的完整响应。
+                  summary: PNG 响应
+                  description: 返回包含 PNG 图片 URL 和可选元数据的完整响应。
                   value:
                     created: 1680000000
                     background: opaque
                     output_format: png
-                    quality: high
+                    quality: low
                     size: 1024x1024
                     data:
                       - url: 'https://example.com/images/cat.png'
@@ -550,26 +664,25 @@ paths:
                       input_tokens_details:
                         text_tokens: 10
                         image_tokens: 40
-                b64-response:
-                  summary: Base64 响应
-                  description: 返回包含 base64 编码图像数据和可选字段的响应。
+                jpeg-response:
+                  summary: JPEG 响应
+                  description: 返回包含 JPEG 图片 URL 和可选元数据的完整响应。
                   value:
                     created: 1680000001
-                    background: opaque
-                    output_format: png
+                    background: auto
+                    output_format: jpeg
                     quality: high
-                    size: 1024x1024
+                    size: 2048x1152
                     data:
-                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
-                        revised_prompt: A beautiful landscape with mountains and a lake
-                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
+                      - url: 'https://example.com/images/cityscape.jpg'
+                        revised_prompt: A futuristic cityscape at sunset with warm reflective glass towers
                     usage:
-                      total_tokens: 200
-                      input_tokens: 100
-                      output_tokens: 100
+                      total_tokens: 120
+                      input_tokens: 40
+                      output_tokens: 80
                       input_tokens_details:
-                        text_tokens: 20
-                        image_tokens: 80
+                        text_tokens: 12
+                        image_tokens: 28
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -590,7 +703,90 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CreateImageEditRequest'
+              type: object
+              description: gpt-image-2 图像编辑请求体。
+              properties:
+                model:
+                  type: string
+                  description: 要调用的模型 ID。
+                image:
+                  description: 输入的一张或多张图片，支持文件上传、URL、base64 字符串和 data URI。
+                  anyOf:
+                    - type: string
+                      format: binary
+                    - type: array
+                      items:
+                        type: string
+                        format: binary
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                prompt:
+                  type: string
+                  maxLength: 32000
+                  description: 图像编辑提示词。
+                mask:
+                  description: 可选蒙版，透明区域代表编辑区域。
+                  anyOf:
+                    - type: string
+                      format: binary
+                    - type: string
+                'n':
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+                  default: 1
+                  description: 请求生成的图片数量，实际返回数量可能少于请求数量。
+                size:
+                  type: string
+                  description: 请求的输出图片尺寸。
+                  enum:
+                    - auto
+                    - 1024x1024
+                    - 1024x1536
+                    - 1536x1024
+                    - 2048x2048
+                    - 2048x1152
+                    - 3840x2160
+                    - 2160x3840
+                    - 2048x1360
+                    - 1360x2048
+                    - 1152x2048
+                    - 2048x1536
+                    - 1536x2048
+                    - 2048x880
+                    - 880x2048
+                    - 688x2048
+                    - 2048x688
+                    - 2048x1024
+                    - 1024x2048
+                  default: 1024x1024
+                quality:
+                  type: string
+                  description: 请求的图像质量等级。
+                  enum:
+                    - low
+                    - medium
+                    - high
+                  default: high
+                background:
+                  type: string
+                  description: 背景处理模式。
+                  enum:
+                    - opaque
+                    - auto
+                output_format:
+                  type: string
+                  description: 输出图片格式。
+                  enum:
+                    - png
+                    - jpeg
+                  default: png
+              required:
+                - model
+                - image
+                - prompt
             encoding:
               image:
                 style: form
@@ -607,23 +803,61 @@ paths:
                   prompt: Add a hat to the person
                   'n': 1
                   size: 1024x1024
-              no-mask:
-                summary: 无蒙版
-                description: 仅使用图像和提示进行编辑。
+                  quality: medium
+                  background: auto
+                  output_format: png
+              multiple-references:
+                summary: 多参考图
+                description: 使用多张参考图进行编辑。
                 value:
                   model: gpt-image-2
                   image:
                     - '@body-lotion.png'
+                    - 'https://example.com/images/reference.png'
                   prompt: Change the background to a beach
                   'n': 1
-                  size: 1024x1024
+                  size: 2048x1152
+                  quality: high
+                  background: opaque
+                  output_format: jpeg
       responses:
         '200':
           description: 成功响应
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ImageResponse'
+                type: object
+                description: gpt-image-2 图像编辑响应。
+                properties:
+                  created:
+                    type: integer
+                    description: 响应创建时间戳（Unix 秒）。
+                  background:
+                    type: string
+                    description: 编辑图像的背景类型。
+                  output_format:
+                    type: string
+                    description: 输出图片格式。
+                  quality:
+                    type: string
+                    description: 实际使用的图像质量等级。
+                  size:
+                    type: string
+                    description: 实际返回的图像尺寸。
+                  data:
+                    type: array
+                    description: 编辑图像结果列表。
+                    items:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          description: 编辑图片 URL。
+                        revised_prompt:
+                          type: string
+                          description: 模型实际使用或修正后的提示词。
+                  usage:
+                    $ref: '#/components/schemas/ImageUsage'
               examples:
                 default-response:
                   summary: 编辑响应
