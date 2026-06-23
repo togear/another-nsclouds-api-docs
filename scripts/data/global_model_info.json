@@ -14330,6 +14330,62 @@
       }
     },
     {
+      "model_name": "gpt-image-2",
+      "litellm_params": {
+        "api_base": "https://api.openai.com/v1",
+        "custom_llm_provider": "openai",
+        "use_in_pass_through": false,
+        "use_litellm_proxy": false,
+        "merge_reasoning_content_in_choices": false,
+        "model": "gpt-image-2",
+        "weight": 1
+      },
+      "model_info": {
+        "id": "8d75f22b-0cbb-4e6e-8a88-a62405cc0f38",
+        "db_model": true,
+        "updated_at": "2026-06-23T00:00:00.000000+00:00",
+        "updated_by": "default_user_id",
+        "created_at": "2026-06-23T00:00:00.000000+00:00",
+        "created_by": "default_user_id",
+        "key": "gpt-image-2",
+        "input_cost_per_token": 0.000005,
+        "cache_read_input_token_cost": 0.00000125,
+        "input_cost_per_image_token": 0.000008,
+        "output_cost_per_token": 0.00001,
+        "output_cost_per_image_token": 0.00003,
+        "litellm_provider": "openai",
+        "mode": "image_generation",
+        "supports_vision": true,
+        "supports_pdf_input": true,
+        "supported_modalities": [
+          "text",
+          "image"
+        ],
+        "supported_output_modalities": [
+          "image"
+        ],
+        "supported_endpoints": [
+          "/v1/images/generations",
+          "/v1/images/edits"
+        ],
+        "model_details": "GPT-image-2 is OpenAI's image generation and image editing model, exposed through the OpenAI-compatible Images API.",
+        "original_provider": "openai",
+        "supported_openai_params": [
+          "image",
+          "prompt",
+          "background",
+          "mask",
+          "model",
+          "moderation",
+          "n",
+          "output_compression",
+          "output_format",
+          "quality",
+          "size"
+        ]
+      }
+    },
+    {
       "model_name": "qwen-image-2.0",
       "litellm_params": {
         "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1",

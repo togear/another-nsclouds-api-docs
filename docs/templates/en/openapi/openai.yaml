@@ -687,7 +687,7 @@ paths:
                 summary: Basic
                 description: Generate a 1024x1024 image.
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   prompt: A cute cat sitting on a windowsill
                   'n': 1
                   size: 1024x1024
@@ -695,7 +695,7 @@ paths:
                 summary: HD Quality
                 description: Generate high-definition quality images.
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   prompt: A futuristic cityscape at sunset
                   'n': 1
                   quality: hd
@@ -704,7 +704,7 @@ paths:
                 summary: Base64 Format
                 description: Return base64-encoded image data.
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   prompt: A beautiful landscape
                   'n': 2
                   size: 512x512
@@ -788,7 +788,7 @@ paths:
                 summary: With Mask
                 description: Edit using image, mask, and prompt.
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   image:
                     - '@person.png'
                   mask: '@mask.png'
@@ -799,7 +799,7 @@ paths:
                 summary: Without Mask
                 description: Edit using only image and prompt.
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   image:
                     - '@body-lotion.png'
                   prompt: Change the background to a beach

@@ -42,6 +42,16 @@ tags:
     x-page-title: OpenAI
     x-page-icon: brain
     description: OpenAI 的 Responses 协议 API
+  - name: image_generations_openai
+    x-parent: image_generations
+    x-page-title: OpenAI
+    x-page-icon: image
+    description: OpenAI 的图像生成 API
+  - name: image_edits_openai
+    x-parent: image_edits
+    x-page-title: OpenAI
+    x-page-icon: image
+    description: OpenAI 的图像编辑 API
 paths:
   /v1/chat/completions:
     post:
@@ -465,6 +475,175 @@ paths:
                     data: {"type":"response.output_text.delta","sequence_number":1,"item_id":"msg_123","output_index":0,"content_index":0,"delta":"Hello"}
                     data: {"type":"response.output_text.delta","sequence_number":2,"item_id":"msg_123","output_index":0,"content_index":0,"delta":" there!"}
                     data: {"type":"response.completed","sequence_number":3,"response":{"id":"resp_123","object":"response","created_at":1741487325,"status":"completed","model":"gpt-5.4","output":[{"id":"msg_123","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"Hello there!"}]}]}}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/images/generations:
+    post:
+      tags:
+        - image_generations_openai
+      summary: 创建图像
+      description: 根据文本提示生成图像。与 OpenAI 的 Images API 兼容。
+      operationId: createImageGeneration_openai
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateImageGenerationRequest'
+            examples:
+              default:
+                summary: 基础
+                description: 生成一张 1024x1024 的图像。
+                value:
+                  model: gpt-image-2
+                  prompt: A cute cat sitting on a windowsill
+                  'n': 1
+                  size: 1024x1024
+              hd-quality:
+                summary: 高清质量
+                description: 生成高清质量的图像。
+                value:
+                  model: gpt-image-2
+                  prompt: A futuristic cityscape at sunset
+                  'n': 1
+                  quality: hd
+                  size: 1792x1024
+              b64-json:
+                summary: Base64 格式
+                description: 返回 base64 编码的图像数据。
+                value:
+                  model: gpt-image-2
+                  prompt: A beautiful landscape
+                  'n': 2
+                  size: 512x512
+                  response_format: b64_json
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+              examples:
+                default-response:
+                  summary: 基础响应
+                  description: 返回包含图像 URL 和可选字段的完整响应。
+                  value:
+                    created: 1680000000
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - url: 'https://example.com/images/cat.png'
+                        revised_prompt: 'A cute cat sitting on a windowsill, looking out at a garden'
+                    usage:
+                      total_tokens: 100
+                      input_tokens: 50
+                      output_tokens: 50
+                      input_tokens_details:
+                        text_tokens: 10
+                        image_tokens: 40
+                b64-response:
+                  summary: Base64 响应
+                  description: 返回包含 base64 编码图像数据和可选字段的响应。
+                  value:
+                    created: 1680000001
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
+                        revised_prompt: A beautiful landscape with mountains and a lake
+                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
+                    usage:
+                      total_tokens: 200
+                      input_tokens: 100
+                      output_tokens: 100
+                      input_tokens_details:
+                        text_tokens: 20
+                        image_tokens: 80
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/images/edits:
+    post:
+      tags:
+        - image_edits_openai
+      summary: 编辑图像
+      description: 根据原始图像和文本提示创建编辑后的图像。与 OpenAI 的 Images API 兼容。
+      operationId: createImageEdit_openai
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateImageEditRequest'
+            encoding:
+              image:
+                style: form
+                explode: true
+            examples:
+              with-mask:
+                summary: 带蒙版
+                description: 使用图像、蒙版和提示进行编辑。
+                value:
+                  model: gpt-image-2
+                  image:
+                    - '@person.png'
+                  mask: '@mask.png'
+                  prompt: Add a hat to the person
+                  'n': 1
+                  size: 1024x1024
+              no-mask:
+                summary: 无蒙版
+                description: 仅使用图像和提示进行编辑。
+                value:
+                  model: gpt-image-2
+                  image:
+                    - '@body-lotion.png'
+                  prompt: Change the background to a beach
+                  'n': 1
+                  size: 1024x1024
+      responses:
+        '200':
+          description: 成功响应
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+              examples:
+                default-response:
+                  summary: 编辑响应
+                  description: 返回编辑后的图像及相关元数据。
+                  value:
+                    created: 1680000002
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - url: 'https://example.com/images/edited.png'
+                        revised_prompt: 'A person with a hat, standing in a sunny park'
+                    usage:
+                      total_tokens: 120
+                      input_tokens: 60
+                      output_tokens: 60
+                      input_tokens_details:
+                        text_tokens: 12
+                        image_tokens: 48
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':

@@ -17,7 +17,7 @@ This API is compatible with OpenAI interface format.
 
 **Model List:**
 
-* `gpt-image-1` (image_generation mode)
+* `gpt-image-2` (image_generation mode)
 
 ### 2. API Details
 

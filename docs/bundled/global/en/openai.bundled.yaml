@@ -42,6 +42,16 @@ tags:
     x-page-title: OpenAI
     x-page-icon: brain
     description: OpenAI's Responses API
+  - name: image_generations_openai
+    x-parent: image_generations
+    x-page-title: OpenAI
+    x-page-icon: image
+    description: OpenAI's image generations API
+  - name: image_edits_openai
+    x-parent: image_edits
+    x-page-title: OpenAI
+    x-page-icon: image
+    description: OpenAI's image edits API
 paths:
   /v1/chat/completions:
     post:
@@ -465,6 +475,175 @@ paths:
                     data: {"type":"response.output_text.delta","sequence_number":1,"item_id":"msg_123","output_index":0,"content_index":0,"delta":"Hello"}
                     data: {"type":"response.output_text.delta","sequence_number":2,"item_id":"msg_123","output_index":0,"content_index":0,"delta":" there!"}
                     data: {"type":"response.completed","sequence_number":3,"response":{"id":"resp_123","object":"response","created_at":1741487325,"status":"completed","model":"gpt-5.4","output":[{"id":"msg_123","type":"message","role":"assistant","status":"completed","content":[{"type":"output_text","text":"Hello there!"}]}]}}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/images/generations:
+    post:
+      tags:
+        - image_generations_openai
+      summary: Create Image
+      description: Generate images based on text prompts. Compatible with OpenAI's Images API.
+      operationId: createImageGeneration_openai
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateImageGenerationRequest'
+            examples:
+              default:
+                summary: Basic
+                description: Generate a 1024x1024 image.
+                value:
+                  model: gpt-image-2
+                  prompt: A cute cat sitting on a windowsill
+                  'n': 1
+                  size: 1024x1024
+              hd-quality:
+                summary: HD Quality
+                description: Generate high-definition quality images.
+                value:
+                  model: gpt-image-2
+                  prompt: A futuristic cityscape at sunset
+                  'n': 1
+                  quality: hd
+                  size: 1792x1024
+              b64-json:
+                summary: Base64 Format
+                description: Return base64-encoded image data.
+                value:
+                  model: gpt-image-2
+                  prompt: A beautiful landscape
+                  'n': 2
+                  size: 512x512
+                  response_format: b64_json
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+              examples:
+                default-response:
+                  summary: Basic Response
+                  description: Complete response containing image URL and optional fields.
+                  value:
+                    created: 1680000000
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - url: 'https://example.com/images/cat.png'
+                        revised_prompt: 'A cute cat sitting on a windowsill, looking out at a garden'
+                    usage:
+                      total_tokens: 100
+                      input_tokens: 50
+                      output_tokens: 50
+                      input_tokens_details:
+                        text_tokens: 10
+                        image_tokens: 40
+                b64-response:
+                  summary: Base64 Response
+                  description: Response containing base64-encoded image data and optional fields.
+                  value:
+                    created: 1680000001
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
+                        revised_prompt: A beautiful landscape with mountains and a lake
+                      - b64_json: iVBORw0KGgoAAAANSUhEUgAA...
+                    usage:
+                      total_tokens: 200
+                      input_tokens: 100
+                      output_tokens: 100
+                      input_tokens_details:
+                        text_tokens: 20
+                        image_tokens: 80
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+  /v1/images/edits:
+    post:
+      tags:
+        - image_edits_openai
+      summary: Edit Image
+      description: Create edited images based on original images and text prompts. Compatible with OpenAI's Images API.
+      operationId: createImageEdit_openai
+      security:
+        - APIKeyHeader: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateImageEditRequest'
+            encoding:
+              image:
+                style: form
+                explode: true
+            examples:
+              with-mask:
+                summary: With Mask
+                description: 'Edit using image, mask, and prompt.'
+                value:
+                  model: gpt-image-2
+                  image:
+                    - '@person.png'
+                  mask: '@mask.png'
+                  prompt: Add a hat to the person
+                  'n': 1
+                  size: 1024x1024
+              no-mask:
+                summary: Without Mask
+                description: Edit using only image and prompt.
+                value:
+                  model: gpt-image-2
+                  image:
+                    - '@body-lotion.png'
+                  prompt: Change the background to a beach
+                  'n': 1
+                  size: 1024x1024
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+              examples:
+                default-response:
+                  summary: Edit Response
+                  description: Return edited image and related metadata.
+                  value:
+                    created: 1680000002
+                    background: opaque
+                    output_format: png
+                    quality: high
+                    size: 1024x1024
+                    data:
+                      - url: 'https://example.com/images/edited.png'
+                        revised_prompt: 'A person with a hat, standing in a sunny park'
+                    usage:
+                      total_tokens: 120
+                      input_tokens: 60
+                      output_tokens: 60
+                      input_tokens_details:
+                        text_tokens: 12
+                        image_tokens: 48
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':

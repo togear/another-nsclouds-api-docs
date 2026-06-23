@@ -10,7 +10,7 @@ OpenAI 的图像生成 API，与 OpenAI 接口格式兼容。
 
 **模型列表：**
 
-* `gpt-image-1` (image_generation 模式)
+* `gpt-image-2` (image_generation 模式)
 
 ### 2. 接口详情
 

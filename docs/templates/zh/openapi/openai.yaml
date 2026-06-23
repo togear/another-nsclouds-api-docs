@@ -687,7 +687,7 @@ paths:
                 summary: 基础
                 description: 生成一张 1024x1024 的图像。
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   prompt: A cute cat sitting on a windowsill
                   'n': 1
                   size: 1024x1024
@@ -695,7 +695,7 @@ paths:
                 summary: 高清质量
                 description: 生成高清质量的图像。
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   prompt: A futuristic cityscape at sunset
                   'n': 1
                   quality: hd
@@ -704,7 +704,7 @@ paths:
                 summary: Base64 格式
                 description: 返回 base64 编码的图像数据。
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   prompt: A beautiful landscape
                   'n': 2
                   size: 512x512
@@ -788,7 +788,7 @@ paths:
                 summary: 带蒙版
                 description: 使用图像、蒙版和提示进行编辑。
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   image:
                     - '@person.png'
                   mask: '@mask.png'
@@ -799,7 +799,7 @@ paths:
                 summary: 无蒙版
                 description: 仅使用图像和提示进行编辑。
                 value:
-                  model: gpt-image-1
+                  model: gpt-image-2
                   image:
                     - '@body-lotion.png'
                   prompt: Change the background to a beach
