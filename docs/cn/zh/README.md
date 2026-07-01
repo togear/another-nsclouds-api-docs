@@ -8,4 +8,4 @@ NewStream AI Gateway 通过统一的 API 接口整合了主流的人工智能服
 
 更多产品信息与解决方案介绍，请访问[官网](https://www.ngaa.com.cn/product/aigateway.html)了解更多。
 
-如需获取访问授权或技术支持，请联系 NewStream 客户支持团队：[suport@ngaa.com.cn](mailto:dev@ngaa.com.cn).
+如需获取访问授权或技术支持，请联系 NewStream 客户支持团队：[support@ngaa.com.cn](mailto:dev@ngaa.com.cn).
